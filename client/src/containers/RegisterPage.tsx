@@ -8,9 +8,10 @@ import { useForm } from "react-hook-form"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "components/ui/form"
 import { Input } from "components/ui/input"
 import { Button } from "components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "components/ui/card"
 import { register } from "features/user"
 import { LoadingIcon } from "components/Icons"
+import LimeBoi from "assets/Jinx Soda_Lime Boi_Lime Boi.png"
 
 const RegisterPage = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -52,7 +53,11 @@ const RegisterPage = () => {
       <div className="flex items-center justify-center mt-[100px]">
         <Card className="sm:w-[400px] md:w-[600px]">
           <CardHeader>
-            <CardTitle>Register</CardTitle>
+            <img src={LimeBoi} alt="Lime Boi" className="w-40 mx-auto" />
+            <CardTitle className="text-center">Hello There!</CardTitle>
+            <CardDescription className="text-center">
+              Sign up for an account now and let the good times roll!
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>

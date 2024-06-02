@@ -1,4 +1,4 @@
-import { colorPalette } from "assets/theme"
+import { colorPalette } from "theme"
 
 export const JinxSodaLogoSingleLine = () => {
   return (

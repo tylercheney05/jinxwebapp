@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { resetRegistered, login } from "features/user"
 import Layout from "components/Layout"
-import { Card, CardContent, CardHeader, CardTitle } from "components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "components/ui/form"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -14,6 +14,7 @@ import { RootState } from "store"
 import { useSelector } from "react-redux"
 import { AppDispatch } from "store"
 import { Navigate } from "react-router-dom"
+import LimeBoi from "assets/Jinx Soda_Lime Boi_Lime Boi.png"
 
 const LoginPage = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -49,7 +50,9 @@ const LoginPage = () => {
       <div className="flex items-center justify-center mt-[200px]">
         <Card className="sm-w-[400px] md:w-[600px]">
           <CardHeader>
-            <CardTitle>Login</CardTitle>
+            <img src={LimeBoi} alt="Lime Boi" className="w-40 mx-auto" />
+            <CardTitle className="text-center">Welcome Back!</CardTitle>
+            <CardDescription className="text-center">Log in now and let's keep the fun flowing!</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
