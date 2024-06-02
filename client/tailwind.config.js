@@ -15,6 +15,11 @@ module.exports = {
     },
     extend: {
       colors: {
+        jinxYellow: "#FCD638",
+        jinxBlue: "#2A70E9",
+        jinxRed: "#DF4B44",
+
+        // ShadCN color pallete
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -67,6 +72,9 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        sans: ["WorkSansRegular", "Helvetica", "Arial", "sans-serif"],
       },
     },
   },

@@ -1,10 +1,15 @@
 import Layout from "components/Layout"
+import { JinxSodaLogoStacked } from "components/logos/JinxSodaLogoStacked"
 
 const HomePage = () => {
   return (
     <Layout title="Jinx | Home" content="Home Page">
-      <h1 className="text-3xl font-bold underline">Home Page</h1>
-      <p>Welcome to the home page!</p>
+      <div className="flex justify-center mt-[100px]">
+        <JinxSodaLogoStacked />
+      </div>
+      <h1 className="flex justify-center font-face-syne-bold text-3xl text-jinxRed">
+        This is your home for all things Jinx Soda!
+      </h1>
     </Layout>
   )
 }

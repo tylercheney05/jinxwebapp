@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { logout } from "features/user"
 import { cn } from "lib/utils"
+import { JinxSodaLogoSingleLine } from "./logos/JinxSodaLogoSingleLine"
 
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -20,7 +21,7 @@ const Navbar = () => {
       <NavigationMenuItem>
         <Link to="/dashboard">
           <NavigationMenuLink active={pathname === "/dashboard"} className={navigationMenuTriggerStyle()}>
-            Dashboard
+            <div className="font-semibold">Dashboard</div>
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
@@ -29,7 +30,7 @@ const Navbar = () => {
           className={cn("cursor-pointer", navigationMenuTriggerStyle())}
           onClick={() => dispatch(logout())}
         >
-          Logout
+          <div className="font-semibold">Logout</div>
         </NavigationMenuLink>
       </NavigationMenuItem>
     </>
@@ -40,14 +41,14 @@ const Navbar = () => {
       <NavigationMenuItem>
         <Link to="/login">
           <NavigationMenuLink active={pathname === "/login"} className={navigationMenuTriggerStyle()}>
-            Login
+            <div className="font-semibold">Login</div>
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
       <NavigationMenuItem>
         <Link to="/register">
           <NavigationMenuLink active={pathname === "/register"} className={navigationMenuTriggerStyle()}>
-            Register
+            <div className="font-semibold">Register</div>
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
@@ -55,13 +56,13 @@ const Navbar = () => {
   )
 
   return (
-    <NavigationMenu>
+    <NavigationMenu className="text-jinxRed">
       <div className="pull-left w-full">
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link to="/">
               <NavigationMenuLink active={pathname === "/"} className={navigationMenuTriggerStyle()}>
-                Jinx Soda
+                <JinxSodaLogoSingleLine />
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

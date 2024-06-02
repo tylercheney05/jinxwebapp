@@ -74,3 +74,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "WorkSansRegular";
+  src: local("WorkSansRegular"),
+    url("./fonts/worksans/WorkSans-Regular.ttf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "WorkSansSemiBold";
+  src: local("WorkSansSemiBold"),
+    url("./fonts/worksans/WorkSans-SemiBold.ttf") format("opentype");
+  font-weight: normal;
+}
+
+
+
+@font-face {
+  font-family: "SyneBold";
+  src: local("SyneBold"),
+    url("./fonts/syne/Syne-Bold.ttf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SyneExtraBold";
+  src: local("SyneExtrabold"),
+    url("./fonts/syne/Syne-ExtraBold.ttf") format("opentype");
+  font-weight: normal;
+}

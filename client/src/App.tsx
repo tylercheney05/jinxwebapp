@@ -7,6 +7,7 @@ import DashboardPage from "containers/DashboardPage"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
 import { checkAuth } from "features/user"
+import "./App.css"
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>()
