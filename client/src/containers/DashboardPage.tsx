@@ -2,14 +2,9 @@ import Layout from "components/Layout"
 import { RootState } from "store"
 import { useSelector } from "react-redux"
 import { LoadingIcon } from "components/Icons"
-import { Navigate } from "react-router-dom"
 
 const DashboardPage = () => {
-  const { user, loading, isAuthenticated } = useSelector((state: RootState) => state.user)
-
-  if (isAuthenticated === false && !loading && user === null) {
-    return <Navigate to="/login" />
-  }
+  const { user, loading } = useSelector((state: RootState) => state.user)
 
   return (
     <Layout title="Jinx | Dashboard" content="Dashboard Page">
