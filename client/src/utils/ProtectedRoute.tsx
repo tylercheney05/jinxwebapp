@@ -8,10 +8,10 @@ interface Props {
 }
 
 const ProtectedRoute = ({ children }: Props) => {
-  const { isAuthenticated } = useSelector((state: RootState) => state.user)
+  const { isAuthenticated, loading } = useSelector((state: RootState) => state.user)
   let location = useLocation()
 
-  return <>{isAuthenticated ? children : <Navigate to="/login" state={{ from: location }} replace />}</>
+  return <>{isAuthenticated === false ? <Navigate to="/login" state={{ from: location }} replace /> : children}</>
 }
 
 export default ProtectedRoute

@@ -13,10 +13,17 @@ interface LoginProps {
 }
 
 interface CounterState {
-  isAuthenticated: boolean;
-  user: null | UserProps,
+  isAuthenticated: boolean | null;
+  user: null | MeProps,
   loading: boolean;
   registered: boolean;
+}
+
+interface MeProps {
+  first_name: string;
+  last_name: string;
+  email: string;
+  is_admin: boolean;
 }
 
 export const register = createAsyncThunk(
@@ -153,7 +160,7 @@ export const logout = createAsyncThunk(
    }
 })
 
-const initialState = { isAuthenticated: false, user: null, loading: false, registered: false } satisfies CounterState as CounterState
+const initialState = { isAuthenticated: null, user: null, loading: false, registered: false } satisfies CounterState as CounterState
 
 const userSlice = createSlice({
   name: 'user',
@@ -204,6 +211,7 @@ const userSlice = createSlice({
       })
       .addCase(checkAuth.rejected, state => {
         state.loading = false;
+        state.isAuthenticated = false;
       })
       .addCase(logout.pending, state => {
         state.loading = true;

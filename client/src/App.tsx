@@ -1,14 +1,18 @@
 import { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { AppDispatch } from "store"
+import { checkAuth } from "features/user"
+
 import HomePage from "containers/HomePage"
 import LoginPage from "containers/LoginPage"
 import RegisterPage from "containers/RegisterPage"
 import DashboardPage from "containers/DashboardPage"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "store"
-import { checkAuth } from "features/user"
 import "./App.css"
+import AdminPage from "containers/AdminPage"
+
 import ProtectedRoute from "utils/ProtectedRoute"
+import AdminRoute from "utils/AdminRoute"
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -28,6 +32,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminRoute>
+                <AdminPage />
+              </AdminRoute>
             </ProtectedRoute>
           }
         />

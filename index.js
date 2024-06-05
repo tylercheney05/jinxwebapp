@@ -9,17 +9,24 @@ const loginRoute = require("./routes/auth/login")
 const logoutRoute = require("./routes/auth/logout")
 const meRoute = require("./routes/auth/me")
 const verifyRoute = require("./routes/auth/verify")
+const createSodaRoute = require("./routes/sodas/create")
+const listSodasRoute = require("./routes/sodas/list")
 
 const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
 
+// Auth Routes
 app.use(registerRoute)
 app.use(loginRoute)
 app.use(logoutRoute)
 app.use(meRoute)
 app.use(verifyRoute)
+
+// Soda Routes
+app.use(createSodaRoute)
+app.use(listSodasRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {

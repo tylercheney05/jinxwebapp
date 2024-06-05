@@ -15,7 +15,7 @@ import LimeBoi from "assets/Jinx Soda_Lime Boi_Lime Boi.png"
 
 const RegisterPage = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const { registered, loading } = useSelector((state: RootState) => state.user)
+  const { registered, loading, isAuthenticated } = useSelector((state: RootState) => state.user)
   const formSchema = z
     .object({
       first_name: z.string().min(2, { message: "First Name must be at least 2 characters long" }),
@@ -46,6 +46,10 @@ const RegisterPage = () => {
 
   if (registered) {
     return <Navigate to="/login" />
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" />
   }
 
   return (

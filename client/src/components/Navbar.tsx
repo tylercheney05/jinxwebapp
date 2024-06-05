@@ -4,6 +4,7 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   navigationMenuTriggerStyle,
+  NavigationMenuContent,
 } from "components/ui/navigation-menu"
 import { Link } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
@@ -11,27 +12,47 @@ import { AppDispatch, RootState } from "store"
 import { logout } from "features/user"
 import { cn } from "lib/utils"
 import { JinxSodaLogoSingleLine } from "./logos/JinxSodaLogoSingleLine"
+import { NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
+import { MenuIcon } from "./Icons"
 
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const { isAuthenticated } = useSelector((state: RootState) => state.user)
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.user)
   const pathname = window.location.pathname
   const authLinks = (
     <>
       <NavigationMenuItem>
         <Link to="/dashboard">
           <NavigationMenuLink active={pathname === "/dashboard"} className={navigationMenuTriggerStyle()}>
-            <div className="font-semibold">Dashboard</div>
+            <div className="font-semibold text-jinxRed">Dashboard</div>
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
-      <NavigationMenuItem>
-        <NavigationMenuLink
-          className={cn("cursor-pointer", navigationMenuTriggerStyle())}
-          onClick={() => dispatch(logout())}
-        >
-          <div className="font-semibold">Logout</div>
-        </NavigationMenuLink>
+      <NavigationMenuItem className="w-[35px]">
+        <NavigationMenuTrigger className="flex items-center">
+          <MenuIcon className="text-jinxRed" />
+        </NavigationMenuTrigger>
+        <NavigationMenuContent>
+          <ul className="w-[100px]">
+            {user && user.is_admin ? (
+              <li className="text-center w-full">
+                <Link to="/admin">
+                  <NavigationMenuLink active={pathname === "/admin"} className={navigationMenuTriggerStyle()}>
+                    <div className="text-jinxRed">Admin</div>
+                  </NavigationMenuLink>
+                </Link>
+              </li>
+            ) : null}
+            <li className="text-center w-full">
+              <NavigationMenuLink
+                className={cn("cursor-pointer", navigationMenuTriggerStyle())}
+                onClick={() => dispatch(logout())}
+              >
+                <div className="text-jinxRed">Logout</div>
+              </NavigationMenuLink>
+            </li>
+          </ul>
+        </NavigationMenuContent>
       </NavigationMenuItem>
     </>
   )
@@ -41,14 +62,14 @@ const Navbar = () => {
       <NavigationMenuItem>
         <Link to="/login">
           <NavigationMenuLink active={pathname === "/login"} className={navigationMenuTriggerStyle()}>
-            <div className="font-semibold">Login</div>
+            <div className="font-semibold text-jinxRed">Login</div>
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
       <NavigationMenuItem>
         <Link to="/register">
           <NavigationMenuLink active={pathname === "/register"} className={navigationMenuTriggerStyle()}>
-            <div className="font-semibold">Register</div>
+            <div className="font-semibold text-jinxRed">Register</div>
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
@@ -56,8 +77,8 @@ const Navbar = () => {
   )
 
   return (
-    <NavigationMenu className="text-jinxRed">
-      <div className="pull-left w-full">
+    <div className="flex justify-between">
+      <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link to="/">
@@ -67,9 +88,11 @@ const Navbar = () => {
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
-      </div>
-      <NavigationMenuList>{isAuthenticated ? authLinks : guestLinks}</NavigationMenuList>
-    </NavigationMenu>
+      </NavigationMenu>
+      <NavigationMenu>
+        <NavigationMenuList>{isAuthenticated ? authLinks : guestLinks}</NavigationMenuList>
+      </NavigationMenu>
+    </div>
   )
 }
 
