@@ -1,43 +1,40 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { PlusIcon, ZeroSugarIcon } from "../Icons"
+import { PlusIcon } from "../Icons"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
-import { createSoda, listSodas } from "features/sodas"
+import { createFlavor, listFlavors } from "features/flavors"
 import { toast } from "react-toastify"
-import { Switch } from "../ui/switch"
 import { useEffect, useState } from "react"
-import { SodaListItems } from "/types/SodaTypes"
+import { FlavorListItems } from "/types/FlavorTypes"
 
-const AddSodaForm = () => {
-  const [sodas, setSodas] = useState<SodaListItems>([])
+const AddFlavorForm = () => {
+  const [flavors, setFlavors] = useState<FlavorListItems>([])
   const dispatch = useDispatch<AppDispatch>()
   const formSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
-    zero_sugar: z.boolean(),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      zero_sugar: false,
     },
   })
 
   useEffect(() => {
-    dispatch(listSodas()).then((data) => setSodas(data.payload))
+    dispatch(listFlavors()).then((data) => setFlavors(data.payload))
   }, [])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    dispatch(createSoda(values)).then((data) => {
+    dispatch(createFlavor(values)).then((data) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()
-        dispatch(listSodas()).then((data) => setSodas(data.payload))
-        const notify = () => toast.success("Soda added successfully")
+        dispatch(listFlavors()).then((data) => setFlavors(data.payload))
+        const notify = () => toast.success("Flavor added successfully")
         notify()
       } else if (data.meta.requestStatus === "rejected") {
         const notify = () => toast.error(data.payload.error.message)
@@ -48,38 +45,22 @@ const AddSodaForm = () => {
 
   return (
     <Form {...form}>
-      {sodas.length > 0 ? <FormLabel>Existing Sodas</FormLabel> : null}
-      {sodas.map((soda) => (
-        <div key={soda.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {soda.name}
-          {soda.zero_sugar ? <ZeroSugarIcon className="w-4" /> : null}
+      {flavors.length > 0 ? <FormLabel>Existing Flavors</FormLabel> : null}
+      {flavors.map((flavor) => (
+        <div key={flavor.id} className="h-10 pl-2 flex items-center text-sm gap-1">
+          {flavor.name}
         </div>
       ))}
       <form className="items-center gap-4 grid grid-cols-5">
-        <div className="col-span-3">
+        <div className="col-span-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem className="mt-2">
-                <FormLabel className="text-sm">Add New Soda</FormLabel>
+                <FormLabel className="text-sm">Add New Flavor</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter Soda Brand Name" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div>
-          <FormLabel>Zero Sugar</FormLabel>
-          <FormField
-            control={form.control}
-            name="zero_sugar"
-            render={({ field }) => (
-              <FormItem className="mt-2 h-10 flex items-center justify-center">
-                <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  <Input {...field} placeholder="Enter Flavor Name" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -96,4 +77,4 @@ const AddSodaForm = () => {
   )
 }
 
-export default AddSodaForm
+export default AddFlavorForm

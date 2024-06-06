@@ -4,13 +4,20 @@ const path = require("path")
 
 require("dotenv").config()
 
+// import auth routes
 const registerRoute = require("./routes/auth/register")
 const loginRoute = require("./routes/auth/login")
 const logoutRoute = require("./routes/auth/logout")
 const meRoute = require("./routes/auth/me")
 const verifyRoute = require("./routes/auth/verify")
+
+// import soda routes
 const createSodaRoute = require("./routes/sodas/create")
 const listSodasRoute = require("./routes/sodas/list")
+
+// import flavor routes
+const createFlavorRoute = require("./routes/flavors/create")
+const listFlavorsRoute = require("./routes/flavors/list")
 
 const app = express()
 
@@ -27,6 +34,10 @@ app.use(verifyRoute)
 // Soda Routes
 app.use(createSodaRoute)
 app.use(listSodasRoute)
+
+// Flavor Routes
+app.use(createFlavorRoute)
+app.use(listFlavorsRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {
