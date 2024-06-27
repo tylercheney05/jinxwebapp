@@ -14,10 +14,22 @@ const verifyRoute = require("./routes/auth/verify")
 // import soda routes
 const createSodaRoute = require("./routes/sodas/create")
 const listSodasRoute = require("./routes/sodas/list")
+const dropdownSodasRoute = require("./routes/sodas/dropdown")
+
+// import flavor groups routes
+const createFlavorGroupRoute = require("./routes/flavorgroups/create")
+const listFlavorGroupsRoute = require("./routes/flavorgroups/list")
+const dropdownFlavorGroupsRoute = require("./routes/flavorgroups/dropdown")
 
 // import flavor routes
 const createFlavorRoute = require("./routes/flavors/create")
 const listFlavorsRoute = require("./routes/flavors/list")
+const dropdownFlavorsRoute = require("./routes/flavors/dropdown")
+const detailFlavorRoute = require("./routes/flavors/detail")
+
+// import menu item routes
+const createMenuItemRoute = require("./routes/menuitems/create")
+const listMenuItemsRoute = require("./routes/menuitems/list")
 
 const app = express()
 
@@ -34,10 +46,22 @@ app.use(verifyRoute)
 // Soda Routes
 app.use(createSodaRoute)
 app.use(listSodasRoute)
+app.use(dropdownSodasRoute)
+
+// Flavor Group Routes
+app.use(createFlavorGroupRoute)
+app.use(listFlavorGroupsRoute)
+app.use(dropdownFlavorGroupsRoute)
 
 // Flavor Routes
 app.use(createFlavorRoute)
 app.use(listFlavorsRoute)
+app.use(dropdownFlavorsRoute)
+app.use(detailFlavorRoute)
+
+// Menu Item Routes
+app.use(createMenuItemRoute)
+app.use(listMenuItemsRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {

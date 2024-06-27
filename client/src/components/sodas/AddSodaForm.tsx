@@ -4,12 +4,11 @@ import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { PlusIcon, ZeroSugarIcon } from "../Icons"
+import { PlusIcon } from "../Icons"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
 import { createSoda, listSodas } from "features/sodas"
 import { toast } from "react-toastify"
-import { Switch } from "../ui/switch"
 import { useEffect, useState } from "react"
 import { SodaListItems } from "/types/SodaTypes"
 
@@ -18,13 +17,11 @@ const AddSodaForm = () => {
   const dispatch = useDispatch<AppDispatch>()
   const formSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
-    zero_sugar: z.boolean(),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      zero_sugar: false,
     },
   })
 
@@ -49,37 +46,22 @@ const AddSodaForm = () => {
   return (
     <Form {...form}>
       {sodas.length > 0 ? <FormLabel>Existing Sodas</FormLabel> : null}
-      {sodas.map((soda) => (
-        <div key={soda.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {soda.name}
-          {soda.zero_sugar ? <ZeroSugarIcon className="w-4" /> : null}
-        </div>
-      ))}
+      {sodas &&
+        sodas.map((soda) => (
+          <div key={soda.id} className="h-10 pl-2 flex items-center text-sm gap-1">
+            {soda.name}
+          </div>
+        ))}
       <form className="items-center gap-4 grid grid-cols-5">
-        <div className="col-span-3">
+        <div className="col-span-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem className="mt-2">
-                <FormLabel className="text-sm">Add New Soda</FormLabel>
+                <FormLabel>Add New Soda</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Enter Soda Brand Name" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div>
-          <FormLabel>Zero Sugar</FormLabel>
-          <FormField
-            control={form.control}
-            name="zero_sugar"
-            render={({ field }) => (
-              <FormItem className="mt-2 h-10 flex items-center justify-center">
-                <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

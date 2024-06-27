@@ -7,20 +7,21 @@ import { Button } from "../ui/button"
 import { PlusIcon } from "../Icons"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
-import { createFlavor, dropdownFlavorGroups, listFlavors } from "features/flavors"
+import { createFlavorGroup, listFlavorGroups } from "features/flavors"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
-import { FlavorListItems } from "/types/FlavorTypes"
-import { SelectFromApiFormField } from "../forminputs/Select"
+import { FlavorGroupListItems } from "/types/FlavorTypes"
+import { SelectFormField } from "../forminputs/Select"
+import { UOM_OPTIONS } from "constants/FlavorConstants"
 import { cleanFormData } from "utils/FormUtils"
 
-const AddFlavorForm = () => {
-  const [flavors, setFlavors] = useState<FlavorListItems>([])
+const AddFlavorGroupForm = () => {
+  const [flavorGroups, setFlavorGroups] = useState<FlavorGroupListItems>([])
   const dispatch = useDispatch<AppDispatch>()
   const formSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
-    flavor_group: z.object({
-      value: z.number().int(),
+    uom: z.object({
+      value: z.string().min(1, { message: "Unit of measure is required" }),
       label: z.string(),
     }),
   })
@@ -28,23 +29,27 @@ const AddFlavorForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      flavor_group: {
-        value: 0,
-        label: "Select a flavor group",
+      uom: {
+        value: "",
+        label: "Select a unit of measure",
       },
     },
   })
 
   useEffect(() => {
-    dispatch(listFlavors()).then((data) => setFlavors(data.payload))
+    dispatch(listFlavorGroups()).then((data) => {
+      if (data.meta.requestStatus === "fulfilled") {
+        setFlavorGroups(data.payload)
+      }
+    })
   }, [])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    dispatch(createFlavor(cleanFormData(values))).then((data) => {
+    dispatch(createFlavorGroup(cleanFormData(values))).then((data) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()
-        dispatch(listFlavors()).then((data) => setFlavors(data.payload))
-        const notify = () => toast.success("Flavor added successfully")
+        dispatch(listFlavorGroups()).then((data) => setFlavorGroups(data.payload))
+        const notify = () => toast.success("Flavor group added successfully")
         notify()
       } else if (data.meta.requestStatus === "rejected") {
         const notify = () => toast.error(data.payload.error.message)
@@ -55,13 +60,12 @@ const AddFlavorForm = () => {
 
   return (
     <Form {...form}>
-      {flavors.length > 0 ? <FormLabel>Existing Flavors</FormLabel> : null}
-      {flavors &&
-        flavors.map((flavor) => (
-          <div key={flavor.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-            {flavor.name} - {flavor.flavor_group__name}
-          </div>
-        ))}
+      {flavorGroups.length > 0 ? <FormLabel>Existing Flavor Groups</FormLabel> : null}
+      {flavorGroups.map((flavorGroup) => (
+        <div key={flavorGroup.id} className="h-10 pl-2 flex items-center text-sm gap-1">
+          {flavorGroup.name}
+        </div>
+      ))}
       <form className="items-center gap-4 grid grid-cols-9">
         <div className="col-span-4">
           <FormField
@@ -69,9 +73,9 @@ const AddFlavorForm = () => {
             name="name"
             render={({ field }) => (
               <FormItem className="mt-2">
-                <FormLabel className="text-sm">Add New Flavor</FormLabel>
+                <FormLabel className="text-sm">Add New Flavor Group</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter flavor name" />
+                  <Input {...field} placeholder="Enter flavor group name" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -80,13 +84,7 @@ const AddFlavorForm = () => {
         </div>
         <div className="col-span-4">
           <div className="mt-10">
-            <SelectFromApiFormField
-              form={form}
-              name="flavor_group"
-              placeholder="Select a flavor group"
-              loadOptionsApi={dropdownFlavorGroups}
-              fieldsForDropdownLabel={["name"]}
-            />
+            <SelectFormField form={form} name="uom" placeholder="Select a unit of measure" options={UOM_OPTIONS} />
           </div>
         </div>
         <div className="text-right">
@@ -99,4 +97,4 @@ const AddFlavorForm = () => {
   )
 }
 
-export default AddFlavorForm
+export default AddFlavorGroupForm

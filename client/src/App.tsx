@@ -11,8 +11,8 @@ import DashboardPage from "containers/DashboardPage"
 import "./App.css"
 import AdminPage from "containers/AdminPage"
 
-import ProtectedRoute from "utils/ProtectedRoute"
-import AdminRoute from "utils/AdminRoute"
+import ProtectedRoute from "components/routes/ProtectedRoute"
+import AdminRoute from "components/routes/AdminRoute"
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>()

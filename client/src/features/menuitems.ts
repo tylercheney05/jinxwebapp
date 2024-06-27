@@ -1,15 +1,25 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-interface SodaProps {
-		name: string;
+interface MenuItemProps {
+	name: string;
+    soda: {
+        value: number;
+        label: string;
+    };
+    menu_item_flavors: Array<{
+        flavor: {
+            value: number;
+            label: string;
+        };
+    }>;
 }
 
-export const createSoda = createAsyncThunk(
-	'sodas/create', 
-	async ({ name }: SodaProps, thunkAPI) => {
-		const body = JSON.stringify({ name });
+export const createMenuItem = createAsyncThunk(
+	'menu-items/create', 
+	async ({ name, soda, menu_item_flavors }: MenuItemProps, thunkAPI) => {
+		const body = JSON.stringify({ name, soda, menu_item_flavors });
     try {
-        const res = await fetch("/api/sodas", {
+        const res = await fetch("/api/menu-items", {
             method: "POST",
             headers: {
                 Accept: 'application/json',
@@ -30,11 +40,11 @@ export const createSoda = createAsyncThunk(
     }
 })
 
-export const listSodas = createAsyncThunk(
-	'sodas/list', 
+export const listMenuItems = createAsyncThunk(
+	'menu-items/list', 
 	async (_, thunkAPI) => {
     try {
-        const res = await fetch("/api/sodas", {
+        const res = await fetch("/api/menu-items", {
             method: "GET",
             headers: {
                 Accept: 'application/json',
@@ -52,27 +62,3 @@ export const listSodas = createAsyncThunk(
         return thunkAPI.rejectWithValue(err.response.data);
     }
 })
-
-export const dropdownSodas = createAsyncThunk(
-	'sodas/dropdown', 
-	async (_, thunkAPI) => {
-    try {
-        const res = await fetch("/api/sodas/autocomplete", {
-            method: "GET",
-            headers: {
-                Accept: 'application/json',
-            },
-        })
-
-        const data = await res.json();
-
-        if (res.status === 200) {
-					return data;
-        } else {
-            return thunkAPI.rejectWithValue(data);
-        }
-    } catch(err: any) {
-        return thunkAPI.rejectWithValue(err.response.data);
-    }
-})
-

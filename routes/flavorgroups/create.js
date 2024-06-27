@@ -3,13 +3,13 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.post("/api/flavors", async (req, res) => {
-  const { name, flavor_group } = req.body
+router.post("/api/flavors/groups", async (req, res) => {
+  const { name, uom } = req.body
   const { access } = req.cookies
 
-  const body = JSON.stringify({ name, flavor_group })
+  const body = JSON.stringify({ name, uom })
   try {
-    const apiRes = await fetch(`${process.env.API_URL}/api/flavors/`, {
+    const apiRes = await fetch(`${process.env.API_URL}/api/flavors/groups/`, {
       method: "POST",
       headers: {
         Accept: "application/json",
