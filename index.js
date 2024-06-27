@@ -31,6 +31,10 @@ const detailFlavorRoute = require("./routes/flavors/detail")
 const createMenuItemRoute = require("./routes/menuitems/create")
 const listMenuItemsRoute = require("./routes/menuitems/list")
 
+// import cup routes
+const createCupRoute = require("./routes/cups/create")
+const listCupsRoute = require("./routes/cups/list")
+
 const app = express()
 
 app.use(express.json())
@@ -62,6 +66,10 @@ app.use(detailFlavorRoute)
 // Menu Item Routes
 app.use(createMenuItemRoute)
 app.use(listMenuItemsRoute)
+
+// Cup Routes
+app.use(createCupRoute)
+app.use(listCupsRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {

@@ -52,8 +52,8 @@ const AddSodaForm = () => {
             {soda.name}
           </div>
         ))}
-      <form className="items-center gap-4 grid grid-cols-5">
-        <div className="col-span-4">
+      <form className="items-center gap-4 grid grid-cols-10">
+        <div className="col-span-9">
           <FormField
             control={form.control}
             name="name"

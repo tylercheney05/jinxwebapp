@@ -8,6 +8,7 @@ interface MenuItemListItem {
     quantity: number,
     flavor__flavor_group__uom__display: string,
   }>;
+  cup_prices: object;
 }
 
 export interface MenuItemListItems extends Array<MenuItemListItem> {}

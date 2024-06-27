@@ -2,11 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 interface FlavorGroupProps {
         name: string;
-
         uom: {
                 value: string;
                 label: string;
-        }
+        },
+        price: number;
 }
 
 interface FlavorProps {
@@ -23,8 +23,8 @@ interface DetailFlavorProps {
 
 export const createFlavorGroup = createAsyncThunk(
 	'flavor-groups/create', 
-	async ({ name, uom }: FlavorGroupProps, thunkAPI) => {
-		const body = JSON.stringify({ name, uom });
+	async ({ name, uom, price }: FlavorGroupProps, thunkAPI) => {
+		const body = JSON.stringify({ name, uom, price });
     try {
         const res = await fetch("/api/flavors/groups", {
             method: "POST",

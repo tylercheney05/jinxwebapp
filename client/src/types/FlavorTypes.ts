@@ -1,6 +1,8 @@
 interface FlavorGroupListItem {
   id: number;
   name: string;
+  uom__display: string;
+  price: number;
 }
 
 export interface FlavorGroupListItems extends Array<FlavorGroupListItem> {}

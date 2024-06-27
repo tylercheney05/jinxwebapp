@@ -44,7 +44,7 @@ const MenuItemFlavorFormField = ({ form, index }: MenuItemFlavorFormFieldProps) 
       control={form.control}
       name="menu_item_flavors"
       render={({ field }) => (
-        <div className="grid grid-cols-5 gap-4">
+        <div className={`grid ${uom ? "grid-cols-5" : "grid-cols-4"} gap-4`}>
           <div className="col-span-2">
             <FlavorFormField field={field} index={index} />
           </div>
@@ -125,6 +125,7 @@ FlavorFormField.displayName = "FlavorFormField"
 const QuantityFormField = ({ field, index }: FlavorFormFieldProps) => {
   return (
     <Input
+      type="number"
       placeholder="Enter quantity"
       value={field.value[index].quantity}
       onChange={(val) => {

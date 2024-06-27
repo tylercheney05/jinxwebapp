@@ -117,6 +117,14 @@ const AddMenuItemForm = () => {
                   </div>
                 ))}
               </div>
+              <div className="text-jinxBlue flex gap-4 mt-2">
+                {Object.entries(menuitem.cup_prices).map(([key, value]) => (
+                  <div>
+                    <div>{key}</div>
+                    <strong>${parseFloat(value).toFixed(2)}</strong>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         ))}

@@ -24,6 +24,7 @@ const AddFlavorGroupForm = () => {
       value: z.string().min(1, { message: "Unit of measure is required" }),
       label: z.string(),
     }),
+    price: z.string().min(1, { message: "Price is required" }),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,6 +34,7 @@ const AddFlavorGroupForm = () => {
         value: "",
         label: "Select a unit of measure",
       },
+      price: "",
     },
   })
 
@@ -63,11 +65,11 @@ const AddFlavorGroupForm = () => {
       {flavorGroups.length > 0 ? <FormLabel>Existing Flavor Groups</FormLabel> : null}
       {flavorGroups.map((flavorGroup) => (
         <div key={flavorGroup.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {flavorGroup.name}
+          {flavorGroup.name} - ${flavorGroup.price} per {flavorGroup.uom__display}
         </div>
       ))}
-      <form className="items-center gap-4 grid grid-cols-9">
-        <div className="col-span-4">
+      <form className="items-center gap-4 grid grid-cols-10">
+        <div className="col-span-3">
           <FormField
             control={form.control}
             name="name"
@@ -82,9 +84,28 @@ const AddFlavorGroupForm = () => {
             )}
           />
         </div>
-        <div className="col-span-4">
+        <div className="col-span-3">
           <div className="mt-10">
             <SelectFormField form={form} name="uom" placeholder="Select a unit of measure" options={UOM_OPTIONS} />
+          </div>
+        </div>
+        <div className="col-span-3">
+          <div className="mt-10">
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="mt-2">
+                  <div className="flex items-center">
+                    <div className="mr-2">$</div>
+                    <FormControl>
+                      <Input type="number" {...field} placeholder="Enter price" />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
         <div className="text-right">
