@@ -1,4 +1,4 @@
-interface CupListItem {
+export interface CupListItem {
     id: number;
     size: string;
     size__display: string;

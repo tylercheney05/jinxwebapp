@@ -20,10 +20,12 @@ interface CounterState {
 }
 
 interface MeProps {
+  id: number;
   first_name: string;
   last_name: string;
   email: string;
   is_admin: boolean;
+  is_staff: boolean;
 }
 
 export const register = createAsyncThunk(

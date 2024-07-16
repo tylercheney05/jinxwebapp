@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
 import userReducer from "features/user"
+import ordersReducer from "features/orders"
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    orders: ordersReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 })

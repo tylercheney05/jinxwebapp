@@ -42,9 +42,12 @@ export const createMenuItem = createAsyncThunk(
 
 export const listMenuItems = createAsyncThunk(
 	'menu-items/list', 
-	async (_, thunkAPI) => {
+	async (params: { soda?: string } = {}, thunkAPI) => {
+    const queryParams = new URLSearchParams(params).toString();
+    const url = `/api/menu-items?${queryParams}`;
+
     try {
-        const res = await fetch("/api/menu-items", {
+        const res = await fetch(url, {
             method: "GET",
             headers: {
                 Accept: 'application/json',

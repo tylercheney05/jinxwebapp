@@ -27,6 +27,8 @@ const MenuItemFlavorFormField = ({ form, index }: MenuItemFlavorFormFieldProps) 
       if (
         name === "menu_item_flavors" &&
         form.watch("menu_item_flavors").length > 0 &&
+        form.watch("menu_item_flavors")[index] &&
+        form.watch("menu_item_flavors")[index].flavor &&
         form.watch("menu_item_flavors")[index].flavor.value
       ) {
         dispatch(detailFlavor({ id: form.watch("menu_item_flavors")[index].flavor.value })).then((data: any) => {

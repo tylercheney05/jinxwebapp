@@ -55,3 +55,26 @@ export const listCups = createAsyncThunk(
     }
 })
 
+export const dropdownCups = createAsyncThunk(
+	'cups/dropdown', 
+	async (_, thunkAPI) => {
+    try {
+        const res = await fetch("/api/cups/autocomplete", {
+            method: "GET",
+            headers: {
+                Accept: 'application/json',
+            },
+        })
+
+        const data = await res.json();
+
+        if (res.status === 200) {
+					return data;
+        } else {
+            return thunkAPI.rejectWithValue(data);
+        }
+    } catch(err: any) {
+        return thunkAPI.rejectWithValue(err.response.data);
+    }
+})
+

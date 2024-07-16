@@ -11,9 +11,10 @@ import { useSelector, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { logout } from "features/user"
 import { cn } from "lib/utils"
-import { JinxSodaLogoSingleLine } from "./logos/JinxSodaLogoSingleLine"
+import { JinxSodaLogoSingleLine } from "../logos/JinxSodaLogoSingleLine"
 import { NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
-import { MenuIcon } from "./Icons"
+import { MenuIcon } from "../Icons"
+import StaffNavigationMenuItems from "./navigationmenuitems/StaffNavigationMenuItems"
 
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -21,18 +22,12 @@ const Navbar = () => {
   const pathname = window.location.pathname
   const authLinks = (
     <>
-      <NavigationMenuItem>
-        <Link to="/dashboard">
-          <NavigationMenuLink active={pathname === "/dashboard"} className={navigationMenuTriggerStyle()}>
-            <div className="font-semibold text-jinxRed">Dashboard</div>
-          </NavigationMenuLink>
-        </Link>
-      </NavigationMenuItem>
+      {user && user.is_staff ? <StaffNavigationMenuItems /> : null}
       <NavigationMenuItem className="w-[35px]">
         <NavigationMenuTrigger className="flex items-center">
           <MenuIcon className="text-jinxRed" />
         </NavigationMenuTrigger>
-        <NavigationMenuContent>
+        <NavigationMenuContent asChild>
           <ul className="w-[100px]">
             {user && user.is_admin ? (
               <li className="text-center w-full">

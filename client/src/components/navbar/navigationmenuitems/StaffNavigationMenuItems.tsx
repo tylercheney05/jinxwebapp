@@ -1,0 +1,44 @@
+import { NavigationMenuItem, NavigationMenuLink, navigationMenuTriggerStyle } from "components/ui/navigation-menu"
+import { Link } from "react-router-dom"
+import { SodaIcon } from "components/Icons"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "store"
+import { listOrders } from "features/orders"
+import { NavigationMenuContent, NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
+import OrderContent from "components/orders/OrderContent"
+
+const StaffNavigationMenuItems = () => {
+  const pathname = window.location.pathname
+  const dispatch = useDispatch<AppDispatch>()
+  const { user } = useSelector((state: RootState) => state.user)
+  const { orders } = useSelector((state: RootState) => state.orders)
+
+  useEffect(() => {
+    dispatch(listOrders({ completed_by: String(user?.id), is_paid: "false" }))
+  }, [])
+
+  return (
+    <>
+      <NavigationMenuItem>
+        <Link to="/take-order">
+          <NavigationMenuLink active={pathname === "/take-order"} className={navigationMenuTriggerStyle()}>
+            <div className="font-semibold text-jinxRed">Take Order</div>
+          </NavigationMenuLink>
+        </Link>
+      </NavigationMenuItem>
+      {orders.length > 0 && (
+        <NavigationMenuItem className="flex pb-[5px] pr-[15px]">
+          <NavigationMenuTrigger>
+            <SodaIcon size="20px" className="text-jinxRed" />
+          </NavigationMenuTrigger>
+          <NavigationMenuContent asChild>
+            <OrderContent order={orders[0]} />
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      )}
+    </>
+  )
+}
+
+export default StaffNavigationMenuItems

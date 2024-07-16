@@ -1,4 +1,4 @@
-interface SodaListItem {
+export interface SodaListItem {
   id: number;
   name: string;
 }

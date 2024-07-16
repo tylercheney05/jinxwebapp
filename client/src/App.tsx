@@ -7,12 +7,13 @@ import { checkAuth } from "features/user"
 import HomePage from "containers/HomePage"
 import LoginPage from "containers/LoginPage"
 import RegisterPage from "containers/RegisterPage"
-import DashboardPage from "containers/DashboardPage"
+import TakeOrderPage from "containers/TakeOrderPage"
 import "./App.css"
 import AdminPage from "containers/AdminPage"
 
 import ProtectedRoute from "components/routes/ProtectedRoute"
 import AdminRoute from "components/routes/AdminRoute"
+import StaffRoute from "./components/routes/StaffRoute"
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -28,10 +29,12 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route
-          path="/dashboard"
+          path="/take-order"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <StaffRoute>
+                <TakeOrderPage />
+              </StaffRoute>
             </ProtectedRoute>
           }
         />

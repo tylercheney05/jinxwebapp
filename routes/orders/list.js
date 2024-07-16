@@ -3,12 +3,12 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.get("/api/menu-items", async (req, res) => {
+router.get("/api/orders", async (req, res) => {
   const { access } = req.cookies
   const queryParams = new URLSearchParams(req.query).toString()
 
   try {
-    const apiRes = await fetch(`${process.env.API_URL}/api/menu-items?${queryParams}`, {
+    const apiRes = await fetch(`${process.env.API_URL}/api/orders?${queryParams}`, {
       method: "GET",
       headers: {
         Accept: "application/json",

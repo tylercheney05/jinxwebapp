@@ -13,7 +13,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
-      <ToastContainer />
+      <ToastContainer position="bottom-right" />
     </Provider>
   </React.StrictMode>
 )

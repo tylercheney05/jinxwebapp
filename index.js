@@ -34,6 +34,15 @@ const listMenuItemsRoute = require("./routes/menuitems/list")
 // import cup routes
 const createCupRoute = require("./routes/cups/create")
 const listCupsRoute = require("./routes/cups/list")
+const dropdownCupsRoute = require("./routes/cups/dropdown")
+
+// import order item routes
+const createOrderItemRoute = require("./routes/orderitems/create")
+const listOrderItemsRoute = require("./routes/orderitems/list")
+
+// import order routes
+const listOrdersRoute = require("./routes/orders/list")
+const completeOrderRoute = require("./routes/orders/completeorder")
 
 const app = express()
 
@@ -70,6 +79,15 @@ app.use(listMenuItemsRoute)
 // Cup Routes
 app.use(createCupRoute)
 app.use(listCupsRoute)
+app.use(dropdownCupsRoute)
+
+// Order Item Routes
+app.use(createOrderItemRoute)
+app.use(listOrderItemsRoute)
+
+// Order Routes
+app.use(listOrdersRoute)
+app.use(completeOrderRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {

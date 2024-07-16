@@ -1,4 +1,4 @@
-interface MenuItemListItem {
+export interface MenuItemListItem {
   id: number;
   name: string;
   soda: number;
@@ -8,7 +8,12 @@ interface MenuItemListItem {
     quantity: number,
     flavor__flavor_group__uom__display: string,
   }>;
-  cup_prices: object;
+  cup_prices: Array<{
+    id: number,
+    size: string,
+    size__display: string,
+    price: number,
+  }>;
 }
 
 export interface MenuItemListItems extends Array<MenuItemListItem> {}
