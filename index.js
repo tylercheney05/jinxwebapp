@@ -10,6 +10,7 @@ const loginRoute = require("./routes/auth/login")
 const logoutRoute = require("./routes/auth/logout")
 const meRoute = require("./routes/auth/me")
 const verifyRoute = require("./routes/auth/verify")
+const refreshRoute = require("./routes/auth/refresh")
 
 // import soda routes
 const createSodaRoute = require("./routes/sodas/create")
@@ -55,6 +56,7 @@ app.use(loginRoute)
 app.use(logoutRoute)
 app.use(meRoute)
 app.use(verifyRoute)
+app.use(refreshRoute)
 
 // Soda Routes
 app.use(createSodaRoute)

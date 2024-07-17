@@ -127,7 +127,16 @@ export const checkAuth = createAsyncThunk(
         dispatch(getUser());
         
         return data;
-      } else {
+      } else if (res.status === 401) {
+        const { dispatch } = thunkAPI;
+
+        dispatch(refreshAuth()).then(response => {
+          if (response.meta.requestStatus === 'fulfilled') {
+            dispatch(checkAuth());
+          }
+        })
+      } 
+      else {
         return thunkAPI.rejectWithValue(data);
       }
     }
@@ -161,6 +170,34 @@ export const logout = createAsyncThunk(
     return thunkAPI.rejectWithValue(err.response.data);
    }
 })
+
+export const refreshAuth = createAsyncThunk(
+  "users/refresh", async (_, thunkAPI) => {
+    try {
+      const res = await fetch('/api/users/refresh', {
+        method: "POST",
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+    
+      const data = await res.json();
+    
+      if (res.status === 200) {
+        const { dispatch } = thunkAPI;
+  
+        dispatch(getUser());
+        
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue(data);
+      }
+    }
+     catch(err: any) {
+      return thunkAPI.rejectWithValue(err.response.data);
+     }
+  }
+)
 
 const initialState = { isAuthenticated: null, user: null, loading: false, registered: false } satisfies CounterState as CounterState
 
