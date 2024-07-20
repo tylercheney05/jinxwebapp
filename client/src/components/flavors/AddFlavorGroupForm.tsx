@@ -5,19 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { PlusIcon } from "../Icons"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "store"
-import { createFlavorGroup, listFlavorGroups } from "features/flavors"
-import { toast } from "react-toastify"
-import { useEffect, useState } from "react"
-import { FlavorGroupListItems } from "/types/FlavorTypes"
+import { useEffect } from "react"
 import { SelectFormField } from "../forminputs/Select"
 import { UOM_OPTIONS } from "constants/FlavorConstants"
-import { cleanFormData } from "utils/FormUtils"
+import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
+import { useCreateFlavorGroupMutation, useGetFlavorGroupsListQuery } from "services/flavors"
 
 const AddFlavorGroupForm = () => {
-  const [flavorGroups, setFlavorGroups] = useState<FlavorGroupListItems>([])
-  const dispatch = useDispatch<AppDispatch>()
+  const [createFlavorGroup, result] = useCreateFlavorGroupMutation()
+  const { data, refetch } = useGetFlavorGroupsListQuery({}, { refetchOnMountOrArgChange: true })
   const formSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
     uom: z.object({
@@ -39,31 +35,17 @@ const AddFlavorGroupForm = () => {
   })
 
   useEffect(() => {
-    dispatch(listFlavorGroups()).then((data) => {
-      if (data.meta.requestStatus === "fulfilled") {
-        setFlavorGroups(data.payload)
-      }
-    })
-  }, [])
+    handleFormSubmitResponse(result, form, "Flavor group added successfully", refetch)
+  }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    dispatch(createFlavorGroup(cleanFormData(values))).then((data) => {
-      if (data.meta.requestStatus === "fulfilled") {
-        form.reset()
-        dispatch(listFlavorGroups()).then((data) => setFlavorGroups(data.payload))
-        const notify = () => toast.success("Flavor group added successfully")
-        notify()
-      } else if (data.meta.requestStatus === "rejected") {
-        const notify = () => toast.error(data.payload.error.message)
-        notify()
-      }
-    })
+    createFlavorGroup(cleanFormData(values))
   }
 
   return (
     <Form {...form}>
-      {flavorGroups.length > 0 ? <FormLabel>Existing Flavor Groups</FormLabel> : null}
-      {flavorGroups.map((flavorGroup) => (
+      {data?.length && data?.length > 0 ? <FormLabel>Existing Flavor Groups</FormLabel> : null}
+      {data?.map((flavorGroup) => (
         <div key={flavorGroup.id} className="h-10 pl-2 flex items-center text-sm gap-1">
           {flavorGroup.name} - ${flavorGroup.price} per {flavorGroup.uom__display}
         </div>

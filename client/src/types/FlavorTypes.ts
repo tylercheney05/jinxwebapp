@@ -7,7 +7,7 @@ interface FlavorGroupListItem {
 
 export interface FlavorGroupListItems extends Array<FlavorGroupListItem> {}
 
-interface FlavorListItem {
+export interface FlavorListItem {
   id: number;
   name: string;
   flavor_group__name: string;

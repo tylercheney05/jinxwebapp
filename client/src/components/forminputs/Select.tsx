@@ -168,8 +168,8 @@ const SelectFromApiFormField = ({
 
   const loadOptions = () => {
     dispatch(loadOptionsApi()).then((response: any) => {
-      if (response.meta.requestStatus === "fulfilled") {
-        let options = convertToOptions(response.payload.results, fieldsForDropdownLabel)
+      if (response.status === "fulfilled") {
+        let options = convertToOptions(response.data.results, fieldsForDropdownLabel)
         setOptions(options)
       } else {
         setOptions([])

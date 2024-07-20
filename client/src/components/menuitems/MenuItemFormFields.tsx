@@ -3,10 +3,10 @@ import { convertToOptions } from "utils/FormUtils"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
 import { SelectInput } from "../forminputs/Select"
-import { detailFlavor, dropdownFlavors } from "features/flavors"
 import { Input } from "../ui/input"
 import { FormField } from "../ui/form"
 import { UseFormReturn } from "react-hook-form"
+import { flavorsApi } from "services/flavors"
 
 interface FlavorFormFieldProps {
   field: any
@@ -31,9 +31,11 @@ const MenuItemFlavorFormField = ({ form, index }: MenuItemFlavorFormFieldProps) 
         form.watch("menu_item_flavors")[index].flavor &&
         form.watch("menu_item_flavors")[index].flavor.value
       ) {
-        dispatch(detailFlavor({ id: form.watch("menu_item_flavors")[index].flavor.value })).then((data: any) => {
-          if (data.meta.requestStatus === "fulfilled") {
-            setUom(`${data.payload.flavor_group__uom__display}(s)`)
+        dispatch(
+          flavorsApi.endpoints.getFlavorDetail.initiate({ id: form.watch("menu_item_flavors")[index].flavor.value })
+        ).then((data: any) => {
+          if (data.status === "fulfilled") {
+            setUom(`${data.data.flavor_group__uom__display}(s)`)
           }
         })
       }
@@ -70,9 +72,10 @@ const FlavorFormField = ({ field, index }: FlavorFormFieldProps) => {
   const [loading, setLoading] = useState(false)
 
   const loadOptions = () => {
-    dispatch(dropdownFlavors()).then((response: any) => {
-      if (response.meta.requestStatus === "fulfilled") {
-        let options = convertToOptions(response.payload.results, ["name"])
+    // @ts-ignore
+    dispatch(flavorsApi.endpoints.getFlavorsDropdown.initiate()).then((response: any) => {
+      if (response.status === "fulfilled") {
+        let options = convertToOptions(response.data.results, ["name"])
         setOptions(options)
       } else {
         setOptions([])

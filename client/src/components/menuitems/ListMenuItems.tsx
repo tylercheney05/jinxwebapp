@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
-import { listMenuItems } from "features/menuitems"
 import { MenuItemListItems } from "types/MenuItemTypes"
 import { SodaListItem } from "types/SodaTypes"
 import ListMenuItem from "./ListMenuItem"
+import { menuItemsApi } from "services/menuitems"
 
 interface Props {
   soda: SodaListItem
@@ -20,8 +20,10 @@ const ListMenuItems = ({ soda, resetSodas = false, setResetSodas = undefined, is
   useEffect(() => {
     if (soda.id) {
       soda.id &&
-        dispatch(listMenuItems({ soda: soda.id.toString() })).then((data) => {
-          setMenuItems(data.payload)
+        dispatch(
+          menuItemsApi.endpoints.getMenuItemsList.initiate({ soda: soda.id.toString() }, { forceRefetch: true })
+        ).then((data) => {
+          setMenuItems(data.data)
           if (setResetSodas) {
             setResetSodas(false)
           }
@@ -32,7 +34,7 @@ const ListMenuItems = ({ soda, resetSodas = false, setResetSodas = undefined, is
   return (
     <div className="flex gap-4 flex-wrap justify-center">
       {soda.id &&
-        menuItems.map((menuItem) => <ListMenuItem key={menuItem.id} isClickable={isClickable} menuItem={menuItem} />)}
+        menuItems?.map((menuItem) => <ListMenuItem key={menuItem.id} isClickable={isClickable} menuItem={menuItem} />)}
     </div>
   )
 }

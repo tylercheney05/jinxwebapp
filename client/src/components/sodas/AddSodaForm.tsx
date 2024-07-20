@@ -5,16 +5,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { PlusIcon } from "../Icons"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "store"
-import { createSoda, listSodas } from "features/sodas"
-import { toast } from "react-toastify"
-import { useEffect, useState } from "react"
-import { SodaListItems } from "/types/SodaTypes"
+import { useEffect } from "react"
+import { useCreateSodaMutation, useGetSodasListQuery } from "services/sodas"
+import { handleFormSubmitResponse } from "utils/FormUtils"
+import { SodaListItem } from "/types/SodaTypes"
 
 const AddSodaForm = () => {
-  const [sodas, setSodas] = useState<SodaListItems>([])
-  const dispatch = useDispatch<AppDispatch>()
+  const [createSoda, result] = useCreateSodaMutation()
+  const { data, refetch } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
   const formSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
   })
@@ -26,32 +24,21 @@ const AddSodaForm = () => {
   })
 
   useEffect(() => {
-    dispatch(listSodas()).then((data) => setSodas(data.payload))
-  }, [])
+    handleFormSubmitResponse(result, form, "Soda added successfully", refetch)
+  }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    dispatch(createSoda(values)).then((data) => {
-      if (data.meta.requestStatus === "fulfilled") {
-        form.reset()
-        dispatch(listSodas()).then((data) => setSodas(data.payload))
-        const notify = () => toast.success("Soda added successfully")
-        notify()
-      } else if (data.meta.requestStatus === "rejected") {
-        const notify = () => toast.error(data.payload.error.message)
-        notify()
-      }
-    })
+    createSoda(values)
   }
 
   return (
     <Form {...form}>
-      {sodas.length > 0 ? <FormLabel>Existing Sodas</FormLabel> : null}
-      {sodas &&
-        sodas.map((soda) => (
-          <div key={soda.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-            {soda.name}
-          </div>
-        ))}
+      {data?.length && data?.length > 0 ? <FormLabel>Existing Sodas</FormLabel> : null}
+      {data?.map((soda: SodaListItem) => (
+        <div key={soda.id} className="h-10 pl-2 flex items-center text-sm gap-1">
+          {soda.name}
+        </div>
+      ))}
       <form className="items-center gap-4 grid grid-cols-10">
         <div className="col-span-9">
           <FormField

@@ -7,17 +7,14 @@ import { SIZE_OPTIONS } from "constants/CupConstants"
 import { SelectFormField } from "../forminputs/Select"
 import { Button } from "../ui/button"
 import { PlusIcon } from "../Icons"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "store"
-import { cleanFormData } from "utils/FormUtils"
-import { toast } from "react-toastify"
-import { CupListItems } from "types/CupTypes"
-import { useEffect, useState } from "react"
-import { createCup, listCups } from "features/cups"
+import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
+import { CupListItem } from "types/CupTypes"
+import { useEffect } from "react"
+import { useCreateCupMutation, useGetCupsListQuery } from "services/cups"
 
 const AddCupForm = () => {
-  const [cups, setCups] = useState<CupListItems>([])
-  const dispatch = useDispatch<AppDispatch>()
+  const [createCup, result] = useCreateCupMutation()
+  const { data, refetch } = useGetCupsListQuery({}, { refetchOnMountOrArgChange: true })
   const formSchema = z.object({
     size: z.object({
       value: z.string().min(1, { message: "Size is required" }),
@@ -39,45 +36,17 @@ const AddCupForm = () => {
   })
 
   useEffect(() => {
-    dispatch(listCups()).then((data) => {
-      if (data.meta.requestStatus === "fulfilled") {
-        setCups(data.payload)
-      }
-    })
-  }, [])
+    handleFormSubmitResponse(result, form, "Cup added successfully", refetch)
+  }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    dispatch(createCup(cleanFormData(values))).then((data) => {
-      if (data.meta.requestStatus === "fulfilled") {
-        form.reset()
-        dispatch(listCups()).then((data) => setCups(data.payload))
-        const notify = () => toast.success("Cup added successfully")
-        notify()
-      } else if (data.meta.requestStatus === "rejected") {
-        try {
-          Object.entries(data.payload as Record<string, Array<string>>).map(([key, value]) => {
-            form.setError(key as any, {
-              type: "custom",
-              message: value.join("\n"),
-            })
-          })
-        } catch {
-          try {
-            const notify = () => toast.error(data.payload.error.message)
-            notify()
-          } catch {
-            const notify = () => toast.error("Something went wrong")
-            notify()
-          }
-        }
-      }
-    })
+    createCup(cleanFormData(values))
   }
 
   return (
     <Form {...form}>
-      {cups.length > 0 ? <FormLabel>Existing Cups</FormLabel> : null}
-      {cups.map((cup) => (
+      {data?.length && data?.length > 0 ? <FormLabel>Existing Cups</FormLabel> : null}
+      {data?.map((cup: CupListItem) => (
         <div key={cup.id} className="h-10 pl-2 flex items-center text-sm gap-1">
           {cup.size__display} - ${cup.price}
         </div>

@@ -183,11 +183,7 @@ export const refreshAuth = createAsyncThunk(
     
       const data = await res.json();
     
-      if (res.status === 200) {
-        const { dispatch } = thunkAPI;
-  
-        dispatch(getUser());
-        
+      if (res.status === 200) {        
         return data;
       } else {
         return thunkAPI.rejectWithValue(data);

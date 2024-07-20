@@ -1,14 +1,37 @@
 import { configureStore } from "@reduxjs/toolkit"
 import userReducer from "features/user"
 import ordersReducer from "features/orders"
+import { orderItemsApi } from "./services/orders"
+import { setupListeners } from "@reduxjs/toolkit/query"
+import { cupsApi } from "./services/cups"
+import { flavorGroupsApi, flavorsApi } from "./services/flavors"
+import { menuItemsApi } from "./services/menuitems"
+import { sodasApi } from "./services/sodas"
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     orders: ordersReducer,
+    [orderItemsApi.reducerPath]: orderItemsApi.reducer,
+    [cupsApi.reducerPath]: cupsApi.reducer,
+    [flavorGroupsApi.reducerPath]: flavorGroupsApi.reducer,
+    [flavorsApi.reducerPath]: flavorsApi.reducer,
+    [menuItemsApi.reducerPath]: menuItemsApi.reducer,
+    [sodasApi.reducerPath]: sodasApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      orderItemsApi.middleware, 
+      cupsApi.middleware,
+      flavorGroupsApi.middleware,
+      flavorsApi.middleware,
+      menuItemsApi.middleware,
+      sodasApi.middleware
+    ),
   devTools: process.env.NODE_ENV !== "production",
 })
+
+setupListeners(store.dispatch)
 
 // Get the type of our store variable
 export type AppStore = typeof store

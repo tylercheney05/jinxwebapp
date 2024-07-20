@@ -4,22 +4,20 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "../ui/input"
 import { SelectFromApiFormField } from "../forminputs/Select"
-import { useDispatch } from "react-redux"
-import { dropdownSodas, listSodas } from "features/sodas"
-import { AppDispatch } from "store"
 import { Button } from "../ui/button"
-import { createMenuItem } from "features/menuitems"
 import { cleanFormData } from "utils/FormUtils"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
 import { MenuItemFlavorFormField } from "./MenuItemFormFields"
-import { SodaListItems } from "types/SodaTypes"
+import { SodaListItem } from "types/SodaTypes"
 import ListMenuItems from "./ListMenuItems"
+import { useCreateMenuItemMutation } from "services/menuitems"
+import { sodasApi, useGetSodasListQuery } from "services/sodas"
 
 const AddMenuItemForm = () => {
-  const [sodas, setSodas] = useState<SodaListItems>([])
+  const [createMenuItem, result] = useCreateMenuItemMutation()
+  const { data } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
   const [resetSodas, setResetSodas] = useState<boolean>(false)
-  const dispatch = useDispatch<AppDispatch>()
   const formSchema = z
     .object({
       name: z.string().min(1, { message: "Name is required" }),
@@ -66,10 +64,6 @@ const AddMenuItemForm = () => {
     },
   })
 
-  useEffect(() => {
-    dispatch(listSodas()).then((data) => setSodas(data.payload))
-  }, [])
-
   const cleanFlavorsData = (values: z.infer<typeof formSchema>) => {
     let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
     updatedValues["menu_item_flavors"] = values.menu_item_flavors
@@ -83,27 +77,29 @@ const AddMenuItemForm = () => {
     return updatedValues
   }
 
+  useEffect(() => {
+    if (result.isSuccess) {
+      form.reset()
+      setResetSodas(true)
+      const notify = () => toast.success("Menu Item added successfully")
+      notify()
+    } else if (result.isError) {
+      const notify = () => toast.error(result.data.message)
+      notify()
+    }
+  }, [result])
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanFlavorsData(updatedValues)
-    dispatch(createMenuItem(cleanFormData(updatedValues))).then((data) => {
-      if (data.meta.requestStatus === "fulfilled") {
-        form.reset()
-        setResetSodas(true)
-        const notify = () => toast.success("Menu Item added successfully")
-        notify()
-      } else if (data.meta.requestStatus === "rejected") {
-        const notify = () => toast.error(data.payload.error.message)
-        notify()
-      }
-    })
+    createMenuItem(cleanFormData(updatedValues))
   }
 
   return (
     <Form {...form}>
-      {sodas.length > 0 ? <FormLabel className="text-md">Existing Menu Items</FormLabel> : null}
+      {data?.length && data?.length > 0 ? <FormLabel className="text-md">Existing Menu Items</FormLabel> : null}
       <div>
-        {sodas.map((soda) => (
+        {data?.map((soda: SodaListItem) => (
           <div key={soda.id}>
             <div className="grid grid-cols-5 items-center">
               <div className="bg-black h-1 col-span-2 rounded-sm"></div>
@@ -139,7 +135,7 @@ const AddMenuItemForm = () => {
               name="soda"
               label="Soda"
               placeholder="Select a Soda"
-              loadOptionsApi={dropdownSodas}
+              loadOptionsApi={sodasApi.endpoints.getSodasDropdown.initiate}
               fieldsForDropdownLabel={["name"]}
             />
           </div>

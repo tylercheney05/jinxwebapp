@@ -1,3 +1,5 @@
+import { toast } from "react-toastify"
+
 export const loadSelectOptions = (
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   api: any,
@@ -42,4 +44,32 @@ export const cleanFormData = (values: object) => {
     }
   })
   return data
+}
+
+export const handleFormSubmitResponse = (result: any, form: any, successMsg: string, refetch?: any) => {
+  if (result.isSuccess) {
+    form.reset()
+    if (refetch) {
+      refetch()
+    }
+    const notify = () => toast.success(successMsg)
+    notify()
+  } else if (result.isError) {
+    try {
+      Object.entries(result.error as Record<string, Array<string>>).map(([key, value]) => {
+        form.setError(key as any, {
+          type: "custom",
+          message: value.join("\n"),
+        })
+      })
+    } catch {
+      try {
+        const notify = () => toast.error(result.data.message)
+        notify()
+      } catch {
+        const notify = () => toast.error("Something went wrong")
+        notify()
+      }
+    }
+  }
 }

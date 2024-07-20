@@ -2,17 +2,16 @@ import { useForm } from "react-hook-form"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { listCups } from "features/cups"
 import { MenuItemListItem } from "/types/MenuItemTypes"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { Button } from "../ui/button"
 import { cleanFormData } from "utils/FormUtils"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
-import { useEffect, useState } from "react"
-import { CupListItem, CupListItems } from "types/CupTypes"
+import { CupListItem } from "types/CupTypes"
 import { createOrderItem } from "features/orders"
 import { toast } from "react-toastify"
+import { useGetCupsListQuery } from "services/cups"
 
 interface Props {
   menuItem: MenuItemListItem
@@ -20,7 +19,7 @@ interface Props {
 }
 
 const OrderItemForm = ({ menuItem, setOpen }: Props) => {
-  const [cups, setCups] = useState<CupListItems>([])
+  const { data } = useGetCupsListQuery({}, { refetchOnMountOrArgChange: true })
   const dispatch = useDispatch<AppDispatch>()
 
   const formSchema = z.object({
@@ -37,12 +36,6 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
       menu_item: menuItem.id,
     },
   })
-
-  useEffect(() => {
-    dispatch(listCups()).then((data) => {
-      setCups(data.payload)
-    })
-  }, [])
 
   const cleanZeroSugar = (values: z.infer<typeof formSchema>) => {
     let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
@@ -85,8 +78,9 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
                   defaultValue={field.value}
                   className="flex flex-col space-y-1"
                 >
-                  {cups.length > 0 &&
-                    cups.map((cup: CupListItem) => (
+                  {data?.length &&
+                    data?.length > 0 &&
+                    data.map((cup: CupListItem) => (
                       <FormItem key={cup.id} className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value={String(cup.id)} />
