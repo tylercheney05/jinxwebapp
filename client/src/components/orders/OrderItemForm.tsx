@@ -6,8 +6,8 @@ import { MenuItemListItem } from "/types/MenuItemTypes"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { Button } from "../ui/button"
 import { cleanFormData } from "utils/FormUtils"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "store"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "store"
 import { CupListItem } from "types/CupTypes"
 import { createOrderItem } from "features/orders"
 import { toast } from "react-toastify"
@@ -19,11 +19,13 @@ interface Props {
 }
 
 const OrderItemForm = ({ menuItem, setOpen }: Props) => {
+  const { locationId } = useSelector((state: RootState) => state.location)
   const { data } = useGetCupsListQuery({}, { refetchOnMountOrArgChange: true })
   const dispatch = useDispatch<AppDispatch>()
 
   const formSchema = z.object({
     menu_item: z.number(),
+    order__location: z.number(),
     cup: z.string().min(1, { message: "You need to select a size" }),
     zero_sugar: z.enum(["normal", "zero_sugar"], {
       required_error: "You need to select a soda type",
@@ -34,6 +36,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       menu_item: menuItem.id,
+      order__location: Number(locationId),
     },
   })
 

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { getLocationCookie } from './location';
 
 interface UserProps {
   first_name: string;
@@ -125,6 +126,7 @@ export const checkAuth = createAsyncThunk(
         const { dispatch } = thunkAPI;
   
         dispatch(getUser());
+        dispatch(getLocationCookie());
         
         return data;
       } else if (res.status === 401) {
@@ -133,6 +135,8 @@ export const checkAuth = createAsyncThunk(
         dispatch(refreshAuth()).then(response => {
           if (response.meta.requestStatus === 'fulfilled') {
             dispatch(checkAuth());
+          } else {
+            return thunkAPI.rejectWithValue(data);
           }
         })
       } 

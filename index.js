@@ -45,6 +45,14 @@ const listOrderItemsRoute = require("./routes/orderitems/list")
 const listOrdersRoute = require("./routes/orders/list")
 const completeOrderRoute = require("./routes/orders/completeorder")
 
+// import locations routes
+const createLocationRoute = require("./routes/locations/create")
+const listLocationsRoute = require("./routes/locations/list")
+const dropdownLocationsRoute = require("./routes/locations/dropdown")
+const setCookieLocationRoute = require("./routes/locations/setCookie")
+const getCookieLocationRoute = require("./routes/locations/getCookie")
+const detailLocationRoute = require("./routes/locations/detail")
+
 const app = express()
 
 app.use(express.json())
@@ -90,6 +98,14 @@ app.use(listOrderItemsRoute)
 // Order Routes
 app.use(listOrdersRoute)
 app.use(completeOrderRoute)
+
+// Locations Routes
+app.use(createLocationRoute)
+app.use(listLocationsRoute)
+app.use(dropdownLocationsRoute)
+app.use(setCookieLocationRoute)
+app.use(getCookieLocationRoute)
+app.use(detailLocationRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {

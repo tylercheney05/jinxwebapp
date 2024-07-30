@@ -48,7 +48,7 @@ const AddSodaForm = () => {
               <FormItem className="mt-2">
                 <FormLabel>Add New Soda</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter Soda Brand Name" />
+                  <Input {...field} placeholder="Enter soda brand name" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -1,4 +1,4 @@
-import { LoaderCircle, Menu, Plus, CandyOff, CupSoda, Candy, CircleAlert } from "lucide-react"
+import { LoaderCircle, Menu, Plus, CandyOff, CupSoda, Candy, CircleAlert, MapPinOff, MapPin } from "lucide-react"
 
 interface Props {
   className?: string
@@ -26,4 +26,20 @@ SodaIcon.displayName = "SodaIcon"
 const WarningIcon = ({ className, size }: Props) => <CircleAlert className={className} size={size} />
 WarningIcon.displayName = "WarningIcon"
 
-export { LoadingIcon, MenuIcon, PlusIcon, SugarIcon, ZeroSugarIcon, SodaIcon, WarningIcon }
+const LocationIcon = ({ className, size }: Props) => <MapPin className={className} size={size} />
+LocationIcon.displayName = "LocationIcon"
+
+const NoLocationIcon = ({ className, size }: Props) => <MapPinOff className={className} size={size} />
+NoLocationIcon.displayName = "LocationIcon"
+
+export {
+  LoadingIcon,
+  MenuIcon,
+  PlusIcon,
+  SugarIcon,
+  ZeroSugarIcon,
+  SodaIcon,
+  WarningIcon,
+  NoLocationIcon,
+  LocationIcon,
+}

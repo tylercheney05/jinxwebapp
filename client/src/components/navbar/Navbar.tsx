@@ -25,7 +25,7 @@ const Navbar = () => {
       {user && user.is_staff ? <StaffNavigationMenuItems /> : null}
       <NavigationMenuItem className="w-[35px]">
         <NavigationMenuTrigger className="flex items-center">
-          <MenuIcon className="text-jinxRed" />
+          <MenuIcon className="text-jinxBlue" />
         </NavigationMenuTrigger>
         <NavigationMenuContent asChild>
           <ul className="w-[100px]">
@@ -33,7 +33,7 @@ const Navbar = () => {
               <li className="text-center w-full">
                 <Link to="/admin">
                   <NavigationMenuLink active={pathname === "/admin"} className={navigationMenuTriggerStyle()}>
-                    <div className="text-jinxRed">Admin</div>
+                    <div className="text-jinxBlue">Admin</div>
                   </NavigationMenuLink>
                 </Link>
               </li>
@@ -43,7 +43,7 @@ const Navbar = () => {
                 className={cn("cursor-pointer", navigationMenuTriggerStyle())}
                 onClick={() => dispatch(logout())}
               >
-                <div className="text-jinxRed">Logout</div>
+                <div className="text-jinxBlue">Logout</div>
               </NavigationMenuLink>
             </li>
           </ul>
@@ -57,14 +57,14 @@ const Navbar = () => {
       <NavigationMenuItem>
         <Link to="/login">
           <NavigationMenuLink active={pathname === "/login"} className={navigationMenuTriggerStyle()}>
-            <div className="font-semibold text-jinxRed">Login</div>
+            <div className="font-semibold text-jinxBlue">Login</div>
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
       <NavigationMenuItem>
         <Link to="/register">
           <NavigationMenuLink active={pathname === "/register"} className={navigationMenuTriggerStyle()}>
-            <div className="font-semibold text-jinxRed">Register</div>
+            <div className="font-semibold text-jinxBlue">Register</div>
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>

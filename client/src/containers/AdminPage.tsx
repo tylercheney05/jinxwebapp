@@ -6,6 +6,7 @@ import AddFlavorForm from "components/flavors/AddFlavorForm"
 import AddMenuItemForm from "components/menuitems/AddMenuItemForm"
 import AddFlavorGroupForm from "components/flavors/AddFlavorGroupForm"
 import AddCupForm from "components/cups/AddCupForm"
+import AddLocationForm from "components/locations/AddLocationForm"
 
 const AdminPage = () => {
   return (
@@ -22,6 +23,7 @@ const AdminPage = () => {
                 <TabsTrigger value="sodas">Sodas</TabsTrigger>
                 <TabsTrigger value="flavors">Flavors</TabsTrigger>
                 <TabsTrigger value="menuItems">Menu Items</TabsTrigger>
+                <TabsTrigger value="locations">Locations</TabsTrigger>
               </TabsList>
               <TabsContent value="cups">
                 <div className="px-4">
@@ -60,6 +62,11 @@ const AdminPage = () => {
               <TabsContent value="menuItems" className="w-full">
                 <div className="px-4">
                   <AddMenuItemForm />
+                </div>
+              </TabsContent>
+              <TabsContent value="locations" className="w-full">
+                <div className="px-4">
+                  <AddLocationForm />
                 </div>
               </TabsContent>
             </Tabs>
