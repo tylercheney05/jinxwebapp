@@ -12,6 +12,7 @@ import { CupListItem } from "types/CupTypes"
 import { createOrderItem } from "features/orders"
 import { toast } from "react-toastify"
 import { useGetCupsListQuery } from "services/cups"
+import { Textarea } from "../ui/textarea"
 
 interface Props {
   menuItem: MenuItemListItem
@@ -30,6 +31,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     zero_sugar: z.enum(["normal", "zero_sugar"], {
       required_error: "You need to select a soda type",
     }),
+    note: z.string().optional(),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,6 +39,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     defaultValues: {
       menu_item: menuItem.id,
       order__location: Number(locationId),
+      note: "",
     },
   })
 
@@ -122,6 +125,19 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
                     <FormLabel className="font-normal">Zero Sugar</FormLabel>
                   </FormItem>
                 </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Note</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Add a note about this order item" className="resize-none" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
