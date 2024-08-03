@@ -8,7 +8,7 @@ import { Button } from "../ui/button"
 import { cleanFormData } from "utils/FormUtils"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
-import { MenuItemFlavorFormField } from "./MenuItemFormFields"
+import { ItemFlavorFormField, cleanFlavorsData } from "../shared/ItemFormFields"
 import { SodaListItem } from "types/SodaTypes"
 import ListMenuItems from "./ListMenuItems"
 import { useCreateMenuItemMutation } from "services/menuitems"
@@ -64,19 +64,6 @@ const AddMenuItemForm = () => {
     },
   })
 
-  const cleanFlavorsData = (values: z.infer<typeof formSchema>) => {
-    let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
-    updatedValues["menu_item_flavors"] = values.menu_item_flavors
-      .filter((flavor) => flavor.flavor.value !== 0) // Filter out flavors with value 0
-      .map((flavor) => {
-        return {
-          flavor: flavor.flavor.value,
-          quantity: flavor.quantity,
-        }
-      }) // Transform the array to contain just the value
-    return updatedValues
-  }
-
   useEffect(() => {
     if (result.isSuccess) {
       form.reset()
@@ -91,7 +78,7 @@ const AddMenuItemForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
-    updatedValues = cleanFlavorsData(updatedValues)
+    updatedValues = cleanFlavorsData(updatedValues, "menu_item_flavors")
     createMenuItem(cleanFormData(updatedValues))
   }
 
@@ -148,7 +135,7 @@ const AddMenuItemForm = () => {
               <>
                 <FormLabel>Flavors</FormLabel>
                 {form.watch("menu_item_flavors").map((flavor, index) => (
-                  <MenuItemFlavorFormField key={index} form={form} index={index} />
+                  <ItemFlavorFormField key={index} form={form} index={index} fieldName="menu_item_flavors" />
                 ))}
                 <FormMessage />
               </>

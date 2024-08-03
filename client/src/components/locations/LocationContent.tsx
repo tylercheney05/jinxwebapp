@@ -35,9 +35,12 @@ const LocationContent = () => {
   }
 
   return (
-    <div className="xs:w-[200px] sm:w-[500px] p-8 min-h-[300px]">
+    <div className="xs:w-[500px] sm:w-[500px] p-8 min-h-[300px]">
       <div className="text-xl mb-8">
-        Current Location: <strong>{!locationId ? "No location selected" : data?.name && data.name}</strong>
+        Current Location:{" "}
+        <div>
+          <strong>{!locationId ? "No location selected" : data?.name && data.name}</strong>
+        </div>
       </div>
       <Form {...form}>
         <form>

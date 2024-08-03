@@ -7,37 +7,39 @@ import { Input } from "../ui/input"
 import { FormField } from "../ui/form"
 import { UseFormReturn } from "react-hook-form"
 import { flavorsApi } from "services/flavors"
+import { z } from "zod"
 
 interface FlavorFormFieldProps {
   field: any
   index: number
 }
 
-interface MenuItemFlavorFormFieldProps {
+interface ItemFlavorFormFieldProps {
   form: UseFormReturn<any>
   index: number
+  fieldName: string
 }
 
-const MenuItemFlavorFormField = ({ form, index }: MenuItemFlavorFormFieldProps) => {
+const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const [uom, setUom] = useState<string>("")
 
   useEffect(() => {
     form.watch((value, { name, type }) => {
       if (
-        name === "menu_item_flavors" &&
-        form.watch("menu_item_flavors").length > 0 &&
-        form.watch("menu_item_flavors")[index] &&
-        form.watch("menu_item_flavors")[index].flavor &&
-        form.watch("menu_item_flavors")[index].flavor.value
+        name === fieldName &&
+        form.watch(fieldName).length > 0 &&
+        form.watch(fieldName)[index] &&
+        form.watch(fieldName)[index].flavor &&
+        form.watch(fieldName)[index].flavor.value
       ) {
-        dispatch(
-          flavorsApi.endpoints.getFlavorDetail.initiate({ id: form.watch("menu_item_flavors")[index].flavor.value })
-        ).then((data: any) => {
-          if (data.status === "fulfilled") {
-            setUom(`${data.data.flavor_group__uom__display}(s)`)
+        dispatch(flavorsApi.endpoints.getFlavorDetail.initiate({ id: form.watch(fieldName)[index].flavor.value })).then(
+          (data: any) => {
+            if (data.status === "fulfilled") {
+              setUom(`${data.data.flavor_group__uom__display}(s)`)
+            }
           }
-        })
+        )
       }
     })
   }, [form.watch])
@@ -46,7 +48,7 @@ const MenuItemFlavorFormField = ({ form, index }: MenuItemFlavorFormFieldProps) 
     <FormField
       key={index}
       control={form.control}
-      name="menu_item_flavors"
+      name={fieldName}
       render={({ field }) => (
         <div className={`grid ${uom ? "grid-cols-5" : "grid-cols-4"} gap-4`}>
           <div className="col-span-2">
@@ -61,7 +63,7 @@ const MenuItemFlavorFormField = ({ form, index }: MenuItemFlavorFormFieldProps) 
     />
   )
 }
-MenuItemFlavorFormField.displayName = "MenuItemFlavorFormField"
+ItemFlavorFormField.displayName = "ItemFlavorFormField"
 
 const FlavorFormField = ({ field, index }: FlavorFormFieldProps) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -146,4 +148,17 @@ const QuantityFormField = ({ field, index }: FlavorFormFieldProps) => {
 }
 QuantityFormField.displayName = "QuantityFormField"
 
-export { FlavorFormField, QuantityFormField, MenuItemFlavorFormField }
+const cleanFlavorsData = (values: any, fieldName: string) => {
+  let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
+  updatedValues[fieldName] = values[fieldName]
+    .filter((flavor: any) => flavor.flavor.value !== 0) // Filter out flavors with value 0
+    .map((flavor: any) => {
+      return {
+        flavor: flavor.flavor.value,
+        quantity: flavor.quantity,
+      }
+    }) // Transform the array to contain just the value
+  return updatedValues
+}
+
+export { FlavorFormField, QuantityFormField, ItemFlavorFormField, cleanFlavorsData }

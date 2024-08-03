@@ -10,6 +10,7 @@ export interface OrderItemListItem {
     cup__size__display: string;
     zero_sugar: boolean;
     price: number;
+    custom_order_name: string;
 }
 
 export interface OrderItemListItems extends Array<OrderItemListItem> {}

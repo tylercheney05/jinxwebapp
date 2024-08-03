@@ -43,7 +43,11 @@ const OrderContent = ({ order }: Props) => {
                 <Label className="underline mb-2">Item #{index + 1}</Label>
                 <div className="flex gap-2 items-center">
                   {item.zero_sugar ? <ZeroSugarIcon size="16px" /> : <SugarIcon size="16px" />}
-                  {item.menu_item__name} - {item.cup__size__display} - ${item.price.toFixed(2)}
+                  {item.menu_item__name ? item.menu_item__name : item.custom_order_name}
+                </div>
+                <div className="pl-4">
+                  <div>- {item.cup__size__display}</div>
+                  <div>- ${item.price.toFixed(2)}</div>
                 </div>
               </div>
             ))}

@@ -1,3 +1,4 @@
+import { UseFormReturn } from "react-hook-form"
 import { toast } from "react-toastify"
 
 export const loadSelectOptions = (
@@ -35,10 +36,13 @@ export const cleanFormData = (values: object) => {
       typeof value === "object" &&
       value !== null &&
       value.hasOwnProperty("value") &&
-      value.hasOwnProperty("label") &&
-      value.value !== 0
+      value.hasOwnProperty("label")
     ) {
-      data[key] = value.value
+      if (value.value !== 0) {
+        data[key] = value.value
+      } else {
+        data[key] = null
+      }
     } else {
       data[key] = value
     }
@@ -55,21 +59,25 @@ export const handleFormSubmitResponse = (result: any, form: any, successMsg: str
     const notify = () => toast.success(successMsg)
     notify()
   } else if (result.isError) {
-    try {
-      Object.entries(result.error as Record<string, Array<string>>).map(([key, value]) => {
-        form.setError(key as any, {
-          type: "custom",
-          message: value.join("\n"),
-        })
+    handleError(result, form)
+  }
+}
+
+export const handleError = (result: any, form: UseFormReturn<any>) => {
+  try {
+    Object.entries(result.error as Record<string, Array<string>>).map(([key, value]) => {
+      form.setError(key as any, {
+        type: "custom",
+        message: value.join("\n"),
       })
+    })
+  } catch {
+    try {
+      const notify = () => toast.error(result.data.message)
+      notify()
     } catch {
-      try {
-        const notify = () => toast.error(result.data.message)
-        notify()
-      } catch {
-        const notify = () => toast.error("Something went wrong")
-        notify()
-      }
+      const notify = () => toast.error("Something went wrong")
+      notify()
     }
   }
 }

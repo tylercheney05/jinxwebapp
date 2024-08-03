@@ -8,6 +8,8 @@ interface OrderItemProps {
     zero_sugar: boolean;
     order__location: number;
     note: string;
+    custom_order__soda: number;
+    custom_order_flavors: any[];
 }
 
 interface CompleteOrderProps {
@@ -56,8 +58,8 @@ export const listOrders = createAsyncThunk(
 
 export const createOrderItem = createAsyncThunk(
 	'order-items/create', 
-	async ({ menu_item, cup, zero_sugar, order__location, note }: OrderItemProps, thunkAPI) => {
-		const body = JSON.stringify({ menu_item, cup, zero_sugar, order__location, note });
+	async ({ menu_item, cup, zero_sugar, order__location, note, custom_order__soda, custom_order_flavors }: OrderItemProps, thunkAPI) => {
+		const body = JSON.stringify({ menu_item, cup, zero_sugar, order__location, note, custom_order__soda, custom_order_flavors });
     function callApi() {
       return fetch("/api/orders/items", {
           method: "POST",

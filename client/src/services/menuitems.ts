@@ -22,7 +22,10 @@ export const menuItemsApi = createApi({
         return `/api/menu-items?${queryParams}`;
       },
     }),
+    getMenuItemDetail: builder.query({
+      query: ({ id }) => `/api/menu-items/${id}`
+    })
   }),
 })
 
-export const { useCreateMenuItemMutation } = menuItemsApi
+export const { useCreateMenuItemMutation, useGetMenuItemDetailQuery } = menuItemsApi
