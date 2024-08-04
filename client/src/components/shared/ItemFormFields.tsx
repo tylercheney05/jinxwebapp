@@ -4,9 +4,14 @@ import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
 import { SelectInput } from "../forminputs/Select"
 import { Input } from "../ui/input"
-import { FormField } from "../ui/form"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { UseFormReturn } from "react-hook-form"
-import { flavorsApi } from "services/flavors"
+import { flavorsApi, useGetFlavorsListQuery } from "services/flavors"
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
+import { CupListItem } from "types/CupTypes"
+import { useGetCupsListQuery } from "services/cups"
+import { MenuItemListItem } from "types/MenuItemTypes"
+import { Textarea } from "../ui/textarea"
 import { z } from "zod"
 
 interface FlavorFormFieldProps {
@@ -18,6 +23,16 @@ interface ItemFlavorFormFieldProps {
   form: UseFormReturn<any>
   index: number
   fieldName: string
+}
+
+interface FormProps {
+  form: UseFormReturn<any>
+}
+
+interface PriceProps {
+  menuItem?: MenuItemListItem
+  form: UseFormReturn<any>
+  isCustomized: boolean
 }
 
 const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProps) => {
@@ -161,4 +176,168 @@ const cleanFlavorsData = (values: any, fieldName: string) => {
   return updatedValues
 }
 
-export { FlavorFormField, QuantityFormField, ItemFlavorFormField, cleanFlavorsData }
+const CupFormField = ({ form }: FormProps) => {
+  const { data } = useGetCupsListQuery({}, { refetchOnMountOrArgChange: true })
+
+  return (
+    <FormField
+      control={form.control}
+      name="cup"
+      render={({ field }) => (
+        <FormItem className="space-y-3">
+          <FormLabel>Size</FormLabel>
+          <FormControl>
+            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
+              {data?.length &&
+                data?.length > 0 &&
+                data.map((cup: CupListItem) => (
+                  <FormItem key={cup.id} className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={String(cup.id)} />
+                    </FormControl>
+                    <FormLabel className="font-normal">{cup.size__display}</FormLabel>
+                  </FormItem>
+                ))}
+            </RadioGroup>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}
+CupFormField.displayName = "CupFormField"
+
+const ZeroSugarFormField = ({ form }: FormProps) => {
+  return (
+    <FormField
+      control={form.control}
+      name="zero_sugar"
+      render={({ field }) => (
+        <FormItem className="space-y-3">
+          <FormLabel>Normal or zero sugar?</FormLabel>
+          <FormControl>
+            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
+              <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormControl>
+                  <RadioGroupItem value="normal" />
+                </FormControl>
+                <FormLabel className="font-normal">Normal</FormLabel>
+              </FormItem>
+              <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormControl>
+                  <RadioGroupItem value="zero_sugar" />
+                </FormControl>
+                <FormLabel className="font-normal">Zero Sugar</FormLabel>
+              </FormItem>
+            </RadioGroup>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}
+ZeroSugarFormField.displayName = "ZeroSugarFormField"
+
+const Price = ({ menuItem, form, isCustomized }: PriceProps) => {
+  const { data: flavorsData } = useGetFlavorsListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data: cupsData } = useGetCupsListQuery({}, { refetchOnMountOrArgChange: true })
+  const [flavors, setFlavors] = useState<any>({})
+  const [cups, setCups] = useState<any>({})
+
+  useEffect(() => {
+    if (flavorsData?.length > 0) {
+      setFlavors(
+        flavorsData.reduce((acc: any, { id, flavor_group__price }: any) => {
+          acc[id] = flavor_group__price
+          return acc
+        }, {})
+      )
+    }
+  }, [flavorsData])
+
+  useEffect(() => {
+    if (cupsData && cupsData?.length > 0) {
+      setCups(
+        cupsData.reduce((acc: any, { id, price }: any) => {
+          acc[id] = price
+          return acc
+        }, {})
+      )
+    }
+  }, [cupsData])
+
+  const totalPrice = () => {
+    if (!isCustomized) {
+      if (!menuItem) {
+        return ""
+      }
+      return menuItem.cup_prices.find((obj: any) => String(obj.id) === form.watch("cup"))?.price.toFixed(2)
+    } else {
+      let custom_flavors = form
+        .watch("custom_order_flavors")
+        .filter((flavor: any) => flavor.flavor.value !== 0)
+        .map((flavor: any) => {
+          return { [flavor.flavor.value]: flavor.quantity }
+        })
+
+      let flavorsSumPrice = custom_flavors.reduce((acc: any, obj: any) => {
+        let flavorId = Object.keys(obj)[0]
+        const value = Object.values(obj).reduce((sum: number, val) => sum + Number(val) * flavors[flavorId], 0)
+        return acc + value
+      }, 0)
+      let cupPrice = cups[Number(form.watch("cup"))]
+
+      return (Number(flavorsSumPrice) + Number(cupPrice)).toFixed(2)
+    }
+  }
+
+  return (
+    <div>
+      <strong>Price: </strong>${totalPrice() ?? "Price not available"}
+    </div>
+  )
+}
+Price.displayName = "Price"
+
+const NoteFormField = ({ form }: FormProps) => {
+  return (
+    <FormField
+      control={form.control}
+      name="note"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Note</FormLabel>
+          <FormControl>
+            <Textarea placeholder="Add a note about this order item" className="resize-none" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}
+NoteFormField.displayName = "NoteFormField"
+
+const cleanZeroSugar = (values: any) => {
+  let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
+  if (values.zero_sugar === "normal") {
+    updatedValues["zero_sugar"] = false
+  } else {
+    updatedValues["zero_sugar"] = true
+  }
+  return updatedValues
+}
+
+export {
+  FlavorFormField,
+  QuantityFormField,
+  ItemFlavorFormField,
+  cleanFlavorsData,
+  CupFormField,
+  ZeroSugarFormField,
+  Price,
+  NoteFormField,
+  cleanZeroSugar,
+}

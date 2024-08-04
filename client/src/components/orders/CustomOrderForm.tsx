@@ -1,19 +1,7 @@
-import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { MenuItemListItem } from "/types/MenuItemTypes"
-import { Button } from "../ui/button"
-import { cleanFormData, handleError } from "utils/FormUtils"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "store"
-import { createOrderItem } from "features/orders"
-import { toast } from "react-toastify"
-import { Textarea } from "../ui/textarea"
-import { useState } from "react"
-import { Switch } from "../ui/switch"
-import MenuItemCustomOrder from "./MenuItemCustomOrder"
-import { Card, CardContent } from "../ui/card"
+import { Form } from "../ui/form"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import {
   CupFormField,
   NoteFormField,
@@ -22,28 +10,30 @@ import {
   cleanFlavorsData,
   cleanZeroSugar,
 } from "../shared/ItemFormFields"
-import { useDidMountEffect } from "utils/SharedUtils"
+import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
+import { Button } from "../ui/button"
+import { useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "store"
+import { createOrderItem } from "features/orders"
+import { cleanFormData, handleError } from "utils/FormUtils"
+import { toast } from "react-toastify"
 
 interface Props {
-  menuItem: MenuItemListItem
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const OrderItemForm = ({ menuItem, setOpen }: Props) => {
+const CustomOrderForm = ({ setOpen }: Props) => {
   const { locationId } = useSelector((state: RootState) => state.location)
   const dispatch = useDispatch<AppDispatch>()
-  const [isCustomized, setIsCustomized] = useState(false)
 
   const formSchema = z.object({
-    menu_item: z.number(),
     order__location: z.number(),
     cup: z.string().min(1, { message: "You need to select a size" }),
     zero_sugar: z.enum(["normal", "zero_sugar"], {
       required_error: "You need to select a soda type",
     }),
-    note: z.string().optional(),
     custom_order__soda: z.object({
-      value: z.number().int().optional(),
+      value: z.number().int(),
       label: z.string(),
     }),
     custom_order_flavors: z.array(
@@ -55,14 +45,16 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
         quantity: z.string(),
       })
     ),
+    note: z.string().optional(),
   })
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      menu_item: menuItem.id,
       order__location: Number(locationId),
-      note: "",
+      custom_order__soda: {
+        value: 0,
+        label: "Select a Soda",
+      },
       custom_order_flavors: [
         {
           flavor: {
@@ -91,42 +83,14 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     })
   }
 
-  useDidMountEffect(() => {
-    if (!isCustomized) {
-      form.setValue("custom_order_flavors", [
-        {
-          flavor: {
-            value: 0,
-            label: "Select a flavor",
-          },
-          quantity: "",
-        },
-      ])
-      // Assuming 'custom_order__soda' has a similar default value you want to reset to
-      form.setValue("custom_order__soda", { value: 0, label: "Select a soda" })
-    }
-  }, [isCustomized])
-
   return (
     <Form {...form}>
       <form className="flex gap-8 flex-col">
         <CupFormField form={form} />
         <ZeroSugarFormField form={form} />
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex flex-col gap-4">
-              <FormLabel>Customize?</FormLabel>
-              <Switch
-                checked={isCustomized}
-                onCheckedChange={(checked: boolean) => setIsCustomized(checked)}
-                disabled={!form.watch("cup")}
-              />
-              {isCustomized ? <MenuItemCustomOrder menuItem={menuItem} form={form} /> : ""}
-            </div>
-          </CardContent>
-        </Card>
+        <CustomOrderFlavorForm form={form} />
         <NoteFormField form={form} />
-        {form.watch("cup") ? <Price menuItem={menuItem} form={form} isCustomized={isCustomized} /> : ""}
+        {form.watch("cup") ? <Price form={form} isCustomized={true} /> : ""}
         <div>
           <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
             Add to order
@@ -137,4 +101,4 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
   )
 }
 
-export default OrderItemForm
+export default CustomOrderForm

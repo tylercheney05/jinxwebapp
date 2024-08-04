@@ -11,6 +11,7 @@ export interface OrderItemListItem {
     zero_sugar: boolean;
     price: number;
     custom_order_name: string;
+    note: string;
 }
 
 export interface OrderItemListItems extends Array<OrderItemListItem> {}

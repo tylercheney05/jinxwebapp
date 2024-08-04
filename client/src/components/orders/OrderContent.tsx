@@ -48,6 +48,7 @@ const OrderContent = ({ order }: Props) => {
                 <div className="pl-4">
                   <div>- {item.cup__size__display}</div>
                   <div>- ${item.price.toFixed(2)}</div>
+                  {item.note && <div>- {item.note}</div>}
                 </div>
               </div>
             ))}

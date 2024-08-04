@@ -1,4 +1,15 @@
-import { LoaderCircle, Menu, Plus, CandyOff, CupSoda, Candy, CircleAlert, MapPinOff, MapPin } from "lucide-react"
+import {
+  LoaderCircle,
+  Menu,
+  Plus,
+  CandyOff,
+  CupSoda,
+  Candy,
+  CircleAlert,
+  MapPinOff,
+  MapPin,
+  ClipboardPlus,
+} from "lucide-react"
 
 interface Props {
   className?: string
@@ -32,6 +43,9 @@ LocationIcon.displayName = "LocationIcon"
 const NoLocationIcon = ({ className, size }: Props) => <MapPinOff className={className} size={size} />
 NoLocationIcon.displayName = "LocationIcon"
 
+const AddCustomOrderIcon = ({ className, size }: Props) => <ClipboardPlus className={className} size={size} />
+AddCustomOrderIcon.displayName = "AddCustomOrder"
+
 export {
   LoadingIcon,
   MenuIcon,
@@ -42,4 +56,5 @@ export {
   WarningIcon,
   NoLocationIcon,
   LocationIcon,
+  AddCustomOrderIcon,
 }

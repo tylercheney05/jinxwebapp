@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import MenuItemCard from "./MenuItemCard"
 import OrderItemForm from "../orders/OrderItemForm"
 import { MenuItemListItem } from "/types/MenuItemTypes"
+import { ScrollArea } from "../ui/scroll-area"
 
 interface Props {
   isClickable?: boolean
@@ -20,10 +21,12 @@ const ListMenuItem = ({ isClickable = false, menuItem }: Props) => {
             <MenuItemCard menuItem={menuItem} isClickable={isClickable} />
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{menuItem.name}</DialogTitle>
-            </DialogHeader>
-            {menuItem && <OrderItemForm menuItem={menuItem} setOpen={setOpen} />}
+            <ScrollArea className="max-h-[800px]">
+              <DialogHeader>
+                <DialogTitle className="mb-4">{menuItem.name}</DialogTitle>
+              </DialogHeader>
+              {menuItem && <OrderItemForm menuItem={menuItem} setOpen={setOpen} />}
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       ) : (
