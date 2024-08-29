@@ -4,7 +4,7 @@ import { LocationIcon, NoLocationIcon, SodaIcon } from "components/Icons"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
-import { listOrders } from "features/orders"
+import { listUserOrders } from "features/orders"
 import { NavigationMenuContent, NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
 import OrderContent from "components/orders/OrderContent"
 import LocationContent from "components/locations/LocationContent"
@@ -17,7 +17,7 @@ const StaffNavigationMenuItems = () => {
   const { locationId } = useSelector((state: RootState) => state.location)
 
   useEffect(() => {
-    dispatch(listOrders({ completed_by: String(user?.id), is_paid: "false" }))
+    dispatch(listUserOrders({ collected_by: String(user?.id), is_paid: "false" }))
   }, [])
 
   return (
@@ -29,13 +29,20 @@ const StaffNavigationMenuItems = () => {
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
+      <NavigationMenuItem>
+        <Link to="/make-orders">
+          <NavigationMenuLink active={pathname === "/make-orders"} className={navigationMenuTriggerStyle()}>
+            <div className="font-semibold text-jinxBlue">Make Orders</div>
+          </NavigationMenuLink>
+        </Link>
+      </NavigationMenuItem>
       {orders.length > 0 && (
         <NavigationMenuItem className="flex pb-[5px] pr-[15px]">
           <NavigationMenuTrigger>
             <SodaIcon size="20px" className="text-jinxBlue" />
           </NavigationMenuTrigger>
           <NavigationMenuContent asChild>
-            <OrderContent order={orders[0]} />
+            {locationId ? <OrderContent order={orders[0]} /> : <LocationContent />}
           </NavigationMenuContent>
         </NavigationMenuItem>
       )}

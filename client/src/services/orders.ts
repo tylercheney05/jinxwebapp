@@ -1,6 +1,6 @@
 // Or from '@reduxjs/toolkit/query/react'
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { OrderItemListItems } from '/types/OrderTypes'
+import { OrderItemListItems, OrderNameItems } from 'types/OrderTypes'
 import { baseQueryWithReauth } from './baseQuery';
 
 export const orderItemsApi = createApi({
@@ -14,7 +14,24 @@ export const orderItemsApi = createApi({
         return `/api/orders/items?${queryParams}`
       },
     }),
+    createOrderName: builder.mutation({
+      query: ({ name }) => ({
+        url: '/api/orders/order-names',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name }),
+    })
   }),
+  getOrderNameList: builder.query<OrderNameItems, object>({
+    query: () => '/api/orders/order-names',
+  }),
+  getOrderNameDropdown: builder.query({
+    query: () => '/api/orders/order-names/autocomplete',
+  })
+})
 })
 
-export const { useGetOrderItemListQuery } = orderItemsApi
+export const { useGetOrderItemListQuery, useCreateOrderNameMutation, useGetOrderNameListQuery } = orderItemsApi

@@ -15,18 +15,54 @@ interface OrderItemProps {
 interface CompleteOrderProps {
     id: number;
     is_paid: boolean;
+    order_name: number;
 }
 
 interface CounterState {
   orders: OrderListItems;
 	loading: boolean;
+  ordersQueued: OrderListItems;
 }
 
-export const listOrders = createAsyncThunk(
-	'orders/list', 
-	async (params: { completed_by?: string, is_paid?: string } = {}, thunkAPI) => {
+export const listUserOrders = createAsyncThunk(
+	'user-orders/list', 
+	async (params: { collected_by?: string, is_paid?: string } = {}, thunkAPI) => {
     const queryParams = new URLSearchParams(params).toString();
-    const url = `/api/orders?${queryParams}`;
+    const url = `/api/user-orders?${queryParams}`;
+    function callApi() {
+      return fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: 'application/json',
+        }
+      })
+    }
+    try {
+
+        const res = await callApi();
+        const data = await res.json();
+
+				if (res.status === 401) {
+					const { dispatch } = thunkAPI;
+					await dispatch(refreshAuth());
+          const res = await callApi();
+          const data = await res.json();
+          return data;
+				} else if (res.status === 200) {
+					return data;
+				} else {
+					return thunkAPI.rejectWithValue(data);
+				}
+    } catch(err: any) {
+        return thunkAPI.rejectWithValue(err.response.data);
+    }
+})
+
+export const listOrdersQueue = createAsyncThunk(
+	'orders-queue/list', 
+	async (params: { location?: string, is_prepared?: string, is_paid?: string } = {}, thunkAPI) => {
+    const queryParams = new URLSearchParams(params).toString();
+    const url = `/api/orders-queue?${queryParams}`;
     function callApi() {
       return fetch(url, {
         method: "GET",
@@ -81,7 +117,7 @@ export const createOrderItem = createAsyncThunk(
           return data;
 				} else if (res.status === 201) {
 					const { dispatch } = thunkAPI;
-					dispatch(listOrders({ completed_by: String(data.order__completed_by), is_paid: "false" }));
+					dispatch(listUserOrders({ collected_by: String(data.order__collected_by), is_paid: "false" }));
 					return data;
 				} else {
 					return thunkAPI.rejectWithValue(data);
@@ -91,12 +127,12 @@ export const createOrderItem = createAsyncThunk(
     }
 })
 
-export const completeOrder = createAsyncThunk(
+export const completeOrderPayment = createAsyncThunk(
 	'order/complete', 
-	async ({ id, is_paid }: CompleteOrderProps, thunkAPI) => {
-		const body = JSON.stringify({ is_paid });
+	async ({ id, is_paid, order_name }: CompleteOrderProps, thunkAPI) => {
+		const body = JSON.stringify({ is_paid, order_name });
     function callApi() {
-      return fetch(`/api/orders/${id}/complete-order`, {
+      return fetch(`/api/orders/${id}/complete-order-payment`, {
         method: "PATCH",
         headers: {
             Accept: 'application/json',
@@ -117,8 +153,9 @@ export const completeOrder = createAsyncThunk(
           return data;
 				} else if (res.status === 200) {
 					const { dispatch } = thunkAPI;
-					dispatch(listOrders({ completed_by: String(data.completed_by), is_paid: "false" }));
-					return data;
+					dispatch(listUserOrders({ collected_by: String(data.collected_by), is_paid: "false" }));
+					dispatch(listOrdersQueue({ location: String(data.location), is_prepared: "false", is_paid: "true" }));
+          return data;
 				} else {
 					return thunkAPI.rejectWithValue(data);
 				}
@@ -127,7 +164,7 @@ export const completeOrder = createAsyncThunk(
     }
 })
 
-const initialState = { orders: [], loading: false } satisfies CounterState as CounterState;
+const initialState = { orders: [], loading: false, ordersQueued: [] } satisfies CounterState as CounterState;
 
 const ordersSlice = createSlice({
     name: 'orders',
@@ -135,16 +172,19 @@ const ordersSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
       builder
-				.addCase(listOrders.pending, state => {
+				.addCase(listUserOrders.pending, state => {
 					state.loading = true;
 				})
-				.addCase(listOrders.fulfilled, (state, action) => {
+				.addCase(listUserOrders.fulfilled, (state, action) => {
 					state.loading = false;
 					state.orders = action.payload;
 				})
-				.addCase(listOrders.rejected, state => {
+				.addCase(listUserOrders.rejected, state => {
 					state.loading = false;
 				})
+        .addCase(listOrdersQueue.fulfilled, (state, action) => {
+          state.ordersQueued = action.payload;
+        })
     }
 })
 

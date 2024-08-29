@@ -8,6 +8,7 @@ import AddFlavorGroupForm from "components/flavors/AddFlavorGroupForm"
 import AddCupForm from "components/cups/AddCupForm"
 import AddLocationForm from "components/locations/AddLocationForm"
 import { useEffect, useState } from "react"
+import AddOrderNameForm from "components/orders/AddOrderNameForm"
 
 const AdminPage = () => {
   const [width, setWidth] = useState<number>(window.innerWidth)
@@ -42,6 +43,7 @@ const AdminPage = () => {
                   <TabsTrigger value="flavors">Flavors</TabsTrigger>
                   <TabsTrigger value="menuItems">Menu Items</TabsTrigger>
                   <TabsTrigger value="locations">Locations</TabsTrigger>
+                  <TabsTrigger value="orderNames">Order Names</TabsTrigger>
                 </TabsList>
                 <TabsContent value="cups">
                   <div className="px-4">
@@ -85,6 +87,11 @@ const AdminPage = () => {
                 <TabsContent value="locations" className="w-full">
                   <div className="px-4">
                     <AddLocationForm />
+                  </div>
+                </TabsContent>
+                <TabsContent value="orderNames" className="w-full">
+                  <div className="px-4">
+                    <AddOrderNameForm />
                   </div>
                 </TabsContent>
               </Tabs>
