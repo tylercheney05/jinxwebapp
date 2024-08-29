@@ -3,16 +3,16 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.patch("/api/orders/:id/complete-order-payment", async (req, res) => {
-  const { is_paid, order_name } = req.body
+router.post("/api/orders/order-names", async (req, res) => {
+  const { name } = req.body
   const { access } = req.cookies
-  const { id } = req.params
 
-  const body = JSON.stringify({ is_paid, order_name })
+  const body = JSON.stringify({ name })
   try {
-    const apiRes = await fetch(`${process.env.API_URL}/api/orders/${id}/complete-order-payment/`, {
-      method: "PATCH",
+    const apiRes = await fetch(`${process.env.API_URL}/api/orders/order-names/`, {
+      method: "POST",
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: `Bearer ${access}`,
       },

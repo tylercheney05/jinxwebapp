@@ -43,8 +43,9 @@ const createOrderItemRoute = require("./routes/orderitems/create")
 const listOrderItemsRoute = require("./routes/orderitems/list")
 
 // import order routes
-const listOrdersRoute = require("./routes/orders/list")
-const completeOrderRoute = require("./routes/orders/completeorder")
+const listUserOrdersRoute = require("./routes/orders/userorderslist")
+const completeOrderPaymentRoute = require("./routes/orders/completeorder")
+const listOrdersQueueRoute = require("./routes/orders/ordersqueuelist")
 
 // import locations routes
 const createLocationRoute = require("./routes/locations/create")
@@ -53,6 +54,11 @@ const dropdownLocationsRoute = require("./routes/locations/dropdown")
 const setCookieLocationRoute = require("./routes/locations/setCookie")
 const getCookieLocationRoute = require("./routes/locations/getCookie")
 const detailLocationRoute = require("./routes/locations/detail")
+
+// import order name routes
+const createOrderNameRoute = require("./routes/ordernames/create")
+const listOrderNamesRoute = require("./routes/ordernames/list")
+const dropdownOrderNamesRoute = require("./routes/ordernames/dropdown")
 
 const app = express()
 
@@ -96,10 +102,11 @@ app.use(dropdownCupsRoute)
 // Order Item Routes
 app.use(createOrderItemRoute)
 app.use(listOrderItemsRoute)
+app.use(listOrdersQueueRoute)
 
 // Order Routes
-app.use(listOrdersRoute)
-app.use(completeOrderRoute)
+app.use(listUserOrdersRoute)
+app.use(completeOrderPaymentRoute)
 
 // Locations Routes
 app.use(createLocationRoute)
@@ -108,6 +115,11 @@ app.use(dropdownLocationsRoute)
 app.use(setCookieLocationRoute)
 app.use(getCookieLocationRoute)
 app.use(detailLocationRoute)
+
+// Order Name Routes
+app.use(createOrderNameRoute)
+app.use(listOrderNamesRoute)
+app.use(dropdownOrderNamesRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {
