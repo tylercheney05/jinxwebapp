@@ -2,17 +2,17 @@ import { completeOrderPayment } from "features/orders"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { OrderListItem } from "types/OrderTypes"
-import { Label } from "../ui/label"
-import { LoadingIcon, SugarIcon, ZeroSugarIcon } from "../Icons"
+import { LoadingIcon } from "../Icons"
 import DoubleClickButton from "../ui/button/doubleclickbutton"
 import { toast } from "react-toastify"
-import { orderItemsApi, useGetOrderItemListQuery } from "services/orders"
+import { orderNamesApi, useGetOrderItemListQuery } from "services/orders"
 import { w3cwebsocket as W3CWebSocket } from "websocket"
 import { Form } from "../ui/form"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SelectFromApiFormField } from "../forminputs/Select"
+import OrderContentItems from "./OrderContentItems"
 
 interface Props {
   order: OrderListItem
@@ -43,7 +43,7 @@ const OrderContent = ({ order }: Props) => {
   const { locationId } = useSelector((state: RootState) => state.location)
   const totalPrice = data?.reduce((acc, item) => acc + item.price, 0) || 0
 
-  const client = new W3CWebSocket(`ws://127.0.0.1:8000/ws/orders/${locationId}/`)
+  const client = new W3CWebSocket(`ws://127.0.0.1:8000/ws/orders/${locationId}/?user_id=${user?.id}`)
 
   const handleClick = () => {
     dispatch(
@@ -64,27 +64,14 @@ const OrderContent = ({ order }: Props) => {
   return (
     <Form {...form}>
       <form>
-        <div className="xs:w-[200px] sm:w-[500px] p-8 max-h-[800px] overflow-auto">
+        <div className="xs:w-[200px] sm:w-[500px] p-8 h-[800px] overflow-auto">
           <h1 className="text-xl font-bold mb-8">Order</h1>
           {isLoading ? (
             <LoadingIcon />
           ) : (
             <>
               <div>
-                {data?.map((item, index) => (
-                  <div key={item.id} className="flex flex-col mb-4">
-                    <Label className="underline mb-2">Item #{index + 1}</Label>
-                    <div className="flex gap-2 items-center">
-                      {item.zero_sugar ? <ZeroSugarIcon size="16px" /> : <SugarIcon size="16px" />}
-                      {item.menu_item__name ? item.menu_item__name : item.custom_order_name}
-                    </div>
-                    <div className="pl-4">
-                      <div>- {item.cup__size__display}</div>
-                      <div>- ${item.price.toFixed(2)}</div>
-                      {item.note && <div>- {item.note}</div>}
-                    </div>
-                  </div>
-                ))}
+                <OrderContentItems data={data} />
                 <div className="mt-4">
                   <strong>Total Price:</strong> ${totalPrice.toFixed(2)}
                 </div>
@@ -94,7 +81,7 @@ const OrderContent = ({ order }: Props) => {
                   form={form}
                   name="order_name"
                   placeholder="Select an order name"
-                  loadOptionsApi={orderItemsApi.endpoints.getOrderNameDropdown.initiate}
+                  loadOptionsApi={orderNamesApi.endpoints.getOrderNameDropdown.initiate}
                   fieldsForDropdownLabel={["name"]}
                   label="Assign an order name"
                 />

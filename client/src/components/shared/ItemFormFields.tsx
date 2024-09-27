@@ -9,12 +9,17 @@ import { UseFormReturn } from "react-hook-form"
 import { flavorsApi, useGetFlavorsListQuery } from "services/flavors"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { CupListItem } from "types/CupTypes"
-import { useGetCupsListQuery } from "services/cups"
+import { cupsApi, useGetCupsListQuery } from "services/cups"
 import { MenuItemListItem } from "types/MenuItemTypes"
 import { Textarea } from "../ui/textarea"
-import { z } from "zod"
 
 interface FlavorFormFieldProps {
+  field: any
+  index: number
+  form: UseFormReturn<any>
+}
+
+interface QuantityFormFieldProps {
   field: any
   index: number
 }
@@ -67,7 +72,7 @@ const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProp
       render={({ field }) => (
         <div className={`grid ${uom ? "grid-cols-5" : "grid-cols-4"} gap-4`}>
           <div className="col-span-2">
-            <FlavorFormField field={field} index={index} />
+            <FlavorFormField field={field} index={index} form={form} />
           </div>
           <div className="col-span-2">
             <QuantityFormField field={field} index={index} />
@@ -80,7 +85,7 @@ const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProp
 }
 ItemFlavorFormField.displayName = "ItemFlavorFormField"
 
-const FlavorFormField = ({ field, index }: FlavorFormFieldProps) => {
+const FlavorFormField = ({ field, index, form }: FlavorFormFieldProps) => {
   const dispatch = useDispatch<AppDispatch>()
 
   // Use this component if <select> uses an API to generate <options>
@@ -130,6 +135,14 @@ const FlavorFormField = ({ field, index }: FlavorFormFieldProps) => {
               label: val.label,
             },
           }
+          if (form.watch("cup")) {
+            dispatch(cupsApi.endpoints.getCupDetail.initiate({ id: form.watch("cup") })).then((data: any) => {
+              if (data.status === "fulfilled") {
+                updatedValues[index].quantity = Math.round(data.data.conversion_factor).toString()
+                return field.onChange(updatedValues)
+              }
+            })
+          }
           return field.onChange(updatedValues)
         } else {
           const updatedValues = field.value
@@ -144,7 +157,7 @@ const FlavorFormField = ({ field, index }: FlavorFormFieldProps) => {
 }
 FlavorFormField.displayName = "FlavorFormField"
 
-const QuantityFormField = ({ field, index }: FlavorFormFieldProps) => {
+const QuantityFormField = ({ field, index }: QuantityFormFieldProps) => {
   return (
     <Input
       type="number"
@@ -212,7 +225,7 @@ const ZeroSugarFormField = ({ form }: FormProps) => {
   return (
     <FormField
       control={form.control}
-      name="zero_sugar"
+      name="low_sugar"
       render={({ field }) => (
         <FormItem className="space-y-3">
           <FormLabel>Normal or zero sugar?</FormLabel>
@@ -226,7 +239,7 @@ const ZeroSugarFormField = ({ form }: FormProps) => {
               </FormItem>
               <FormItem className="flex items-center space-x-3 space-y-0">
                 <FormControl>
-                  <RadioGroupItem value="zero_sugar" />
+                  <RadioGroupItem value="low_sugar" />
                 </FormControl>
                 <FormLabel className="font-normal">Zero Sugar</FormLabel>
               </FormItem>
@@ -322,10 +335,10 @@ NoteFormField.displayName = "NoteFormField"
 
 const cleanZeroSugar = (values: any) => {
   let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
-  if (values.zero_sugar === "normal") {
-    updatedValues["zero_sugar"] = false
+  if (values.low_sugar === "normal") {
+    updatedValues["low_sugar"] = false
   } else {
-    updatedValues["zero_sugar"] = true
+    updatedValues["low_sugar"] = true
   }
   return updatedValues
 }

@@ -1,9 +1,9 @@
-import { Card, CardHeader, CardTitle } from "../ui/card"
 import { w3cwebsocket as W3CWebSocket } from "websocket"
 import { useSelector } from "react-redux"
 import { RootState } from "store"
 import { useEffect, useState } from "react"
 import { OrderListItem } from "/types/OrderTypes"
+import PendingOrder from "./PendingOrder"
 
 const PendingOrders = () => {
   const [ordersQueued, setOrdersQueued] = useState([])
@@ -19,16 +19,15 @@ const PendingOrders = () => {
     }
   }, [])
 
+  if (ordersQueued.length === 0) {
+    return <div className="text-center text-lg">No orders in queue</div>
+  }
+
   return (
     <div>
-      <h1 className="text-xl font-bold mb-8">Orders Queue</h1>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 items-center">
         {ordersQueued.map((order: OrderListItem) => (
-          <Card key={order.id}>
-            <CardHeader>
-              <CardTitle>{order.order_name__name}</CardTitle>
-            </CardHeader>
-          </Card>
+          <PendingOrder order={order} client={client} />
         ))}
       </div>
     </div>

@@ -51,7 +51,6 @@ export const flavorsApi = createApi({
       query: ({ id }) => `/api/flavors/${id}`
     })
   })
-
 })
 
 export const { useCreateFlavorGroupMutation, useGetFlavorGroupsListQuery } = flavorGroupsApi

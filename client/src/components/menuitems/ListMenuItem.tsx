@@ -4,6 +4,8 @@ import MenuItemCard from "./MenuItemCard"
 import OrderItemForm from "../orders/OrderItemForm"
 import { MenuItemListItem } from "/types/MenuItemTypes"
 import { ScrollArea } from "../ui/scroll-area"
+import { useMediaQuery } from "@material-ui/core"
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer"
 
 interface Props {
   isClickable?: boolean
@@ -12,23 +14,44 @@ interface Props {
 
 const ListMenuItem = ({ isClickable = false, menuItem }: Props) => {
   const [open, setOpen] = useState<boolean>(false)
+  const isDesktop = useMediaQuery("(min-width: 768px)")
+
+  const dialogComponent = (
+    <Dialog open={open} modal onOpenChange={setOpen}>
+      <DialogTrigger>
+        <MenuItemCard menuItem={menuItem} isClickable={isClickable} />
+      </DialogTrigger>
+      <DialogContent>
+        <ScrollArea className="max-h-[800px]">
+          <DialogHeader>
+            <DialogTitle className="mb-4">{menuItem.name}</DialogTitle>
+          </DialogHeader>
+          {menuItem && <OrderItemForm menuItem={menuItem} setOpen={setOpen} />}
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  )
+
+  const drawerComponent = (
+    <Drawer open={open} modal onOpenChange={setOpen}>
+      <DrawerTrigger>
+        <MenuItemCard menuItem={menuItem} isClickable={isClickable} />
+      </DrawerTrigger>
+      <DrawerContent>
+        <ScrollArea className="max-h-[800px]">
+          <DrawerHeader>
+            <DrawerTitle className="mb-4">{menuItem.name}</DrawerTitle>
+          </DrawerHeader>
+          {menuItem && <OrderItemForm menuItem={menuItem} setOpen={setOpen} />}
+        </ScrollArea>
+      </DrawerContent>
+    </Drawer>
+  )
 
   return (
     <div>
       {isClickable ? (
-        <Dialog open={open} modal onOpenChange={setOpen}>
-          <DialogTrigger>
-            <MenuItemCard menuItem={menuItem} isClickable={isClickable} />
-          </DialogTrigger>
-          <DialogContent>
-            <ScrollArea className="max-h-[800px]">
-              <DialogHeader>
-                <DialogTitle className="mb-4">{menuItem.name}</DialogTitle>
-              </DialogHeader>
-              {menuItem && <OrderItemForm menuItem={menuItem} setOpen={setOpen} />}
-            </ScrollArea>
-          </DialogContent>
-        </Dialog>
+        <>{isDesktop ? dialogComponent : drawerComponent}</>
       ) : (
         <MenuItemCard menuItem={menuItem} isClickable={isClickable} />
       )}

@@ -18,6 +18,8 @@ module.exports = {
         jinxYellow: "#FCD638",
         jinxBlue: "#2A70E9",
         jinxRed: "#DF4B44",
+        jinxGreen: "#10905D",
+        jinxLime: "#B4D819",
 
         // ShadCN color pallete
         border: "hsl(var(--border))",

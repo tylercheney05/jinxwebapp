@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "store"
 import { LoadingIcon } from "components/Icons"
 import PendingOrders from "components/orders/PendingOrders"
+import { useEffect } from "react"
 
 const MakeOrdersPage = () => {
   const { user, loading } = useSelector((state: RootState) => state.user)

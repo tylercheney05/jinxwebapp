@@ -37,15 +37,18 @@ const detailMenuItemRoute = require("./routes/menuitems/detail")
 const createCupRoute = require("./routes/cups/create")
 const listCupsRoute = require("./routes/cups/list")
 const dropdownCupsRoute = require("./routes/cups/dropdown")
+const detailCupRoute = require("./routes/cups/detail")
 
 // import order item routes
 const createOrderItemRoute = require("./routes/orderitems/create")
 const listOrderItemsRoute = require("./routes/orderitems/list")
+const prepareOrderItemRoute = require("./routes/orderitems/prepareOrderItem")
 
 // import order routes
 const listUserOrdersRoute = require("./routes/orders/userorderslist")
 const completeOrderPaymentRoute = require("./routes/orders/completeorder")
 const listOrdersQueueRoute = require("./routes/orders/ordersqueuelist")
+const detailOrderRoute = require("./routes/orders/detail")
 
 // import locations routes
 const createLocationRoute = require("./routes/locations/create")
@@ -98,15 +101,18 @@ app.use(detailMenuItemRoute)
 app.use(createCupRoute)
 app.use(listCupsRoute)
 app.use(dropdownCupsRoute)
+app.use(detailCupRoute)
 
 // Order Item Routes
 app.use(createOrderItemRoute)
 app.use(listOrderItemsRoute)
 app.use(listOrdersQueueRoute)
+app.use(prepareOrderItemRoute)
 
 // Order Routes
 app.use(listUserOrdersRoute)
 app.use(completeOrderPaymentRoute)
+app.use(detailOrderRoute)
 
 // Locations Routes
 app.use(createLocationRoute)

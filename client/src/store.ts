@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit"
 import userReducer from "features/user"
 import ordersReducer from "features/orders"
 import locationReducer from "features/location"
-import { orderItemsApi } from "./services/orders"
+import { orderItemsApi, ordersApi, orderNamesApi } from "./services/orders"
 import { setupListeners } from "@reduxjs/toolkit/query"
 import { cupsApi } from "./services/cups"
 import { flavorGroupsApi, flavorsApi } from "./services/flavors"
@@ -15,7 +15,9 @@ export const store = configureStore({
     user: userReducer,
     orders: ordersReducer,
     location: locationReducer,
+    [ordersApi.reducerPath]: ordersApi.reducer,
     [orderItemsApi.reducerPath]: orderItemsApi.reducer,
+    [orderNamesApi.reducerPath]: orderNamesApi.reducer,
     [cupsApi.reducerPath]: cupsApi.reducer,
     [flavorGroupsApi.reducerPath]: flavorGroupsApi.reducer,
     [flavorsApi.reducerPath]: flavorsApi.reducer,
@@ -25,7 +27,9 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
+      ordersApi.middleware,
       orderItemsApi.middleware, 
+      orderNamesApi.middleware,
       cupsApi.middleware,
       flavorGroupsApi.middleware,
       flavorsApi.middleware,

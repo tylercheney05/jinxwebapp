@@ -23,7 +23,10 @@ export const cupsApi = createApi({
         return `/api/cups?${queryParams}`
       }
     }),
+    getCupDetail: builder.query({
+      query: ({ id }) => `/api/cups/${id}`
+    })
   })
 })
 
-export const { useCreateCupMutation, useGetCupsListQuery } = cupsApi
+export const { useCreateCupMutation, useGetCupsListQuery, useGetCupDetailQuery } = cupsApi

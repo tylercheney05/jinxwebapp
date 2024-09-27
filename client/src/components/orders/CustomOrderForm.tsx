@@ -17,6 +17,8 @@ import { AppDispatch, RootState } from "store"
 import { createOrderItem } from "features/orders"
 import { cleanFormData, handleError } from "utils/FormUtils"
 import { toast } from "react-toastify"
+import { useEffect } from "react"
+import { cupsApi } from "services/cups"
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -29,7 +31,7 @@ const CustomOrderForm = ({ setOpen }: Props) => {
   const formSchema = z.object({
     order__location: z.number(),
     cup: z.string().min(1, { message: "You need to select a size" }),
-    zero_sugar: z.enum(["normal", "zero_sugar"], {
+    low_sugar: z.enum(["normal", "low_sugar"], {
       required_error: "You need to select a soda type",
     }),
     custom_order__soda: z.object({
@@ -82,6 +84,24 @@ const CustomOrderForm = ({ setOpen }: Props) => {
       }
     })
   }
+
+  useEffect(() => {
+    var conversionFactor: string
+    if (form.watch("cup")) {
+      dispatch(cupsApi.endpoints.getCupDetail.initiate({ id: form.watch("cup") })).then((data: any) => {
+        if (data.status === "fulfilled") {
+          conversionFactor = Math.round(data.data.conversion_factor).toString()
+          form.watch("custom_order_flavors").map((flavor, index) => {
+            let updatedValues = form.getValues()
+            if (flavor.flavor.value) {
+              updatedValues.custom_order_flavors[index].quantity = conversionFactor
+              form.setValue("custom_order_flavors", updatedValues.custom_order_flavors)
+            }
+          })
+        }
+      })
+    }
+  }, [form.watch("cup")])
 
   return (
     <Form {...form}>

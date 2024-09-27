@@ -1,18 +1,24 @@
 export interface OrderListItem {
     id: number;
     order_name__name: string;
+    is_complete: boolean;
+    is_in_progress: boolean;
 }
 
 export interface OrderListItems extends Array<OrderListItem> {}
 
 export interface OrderItemListItem {
     id: number;
-    menu_item__name: string;
+    order_item_name: string;
     cup__size__display: string;
-    zero_sugar: boolean;
+    low_sugar: boolean;
     price: number;
-    custom_order_name: string;
     note: string;
+    soda_name: string;
+    order_item_flavors: {
+        [key: string]: string;
+    };
+    is_prepared: boolean
 }
 
 export interface OrderItemListItems extends Array<OrderItemListItem> {}

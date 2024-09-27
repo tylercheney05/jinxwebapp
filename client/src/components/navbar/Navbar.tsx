@@ -15,11 +15,14 @@ import { JinxSodaLogoSingleLine } from "../logos/JinxSodaLogoSingleLine"
 import { NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
 import { MenuIcon } from "../Icons"
 import StaffNavigationMenuItems from "./navigationmenuitems/StaffNavigationMenuItems"
+import { useMediaQuery } from "@material-ui/core"
 
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>()
   const { isAuthenticated, user } = useSelector((state: RootState) => state.user)
   const pathname = window.location.pathname
+  const isDesktop = useMediaQuery("(min-width: 768px)")
+
   const authLinks = (
     <>
       {user && user.is_staff ? <StaffNavigationMenuItems /> : null}
@@ -29,6 +32,24 @@ const Navbar = () => {
         </NavigationMenuTrigger>
         <NavigationMenuContent asChild>
           <ul className="w-[100px]">
+            {!isDesktop && (
+              <>
+                <li className="text-center w-full">
+                  <Link to="/take-order">
+                    <NavigationMenuLink active={pathname === "/take-order"} className={navigationMenuTriggerStyle()}>
+                      <div className="text-jinxBlue">Take Order</div>
+                    </NavigationMenuLink>
+                  </Link>
+                </li>
+                <li className="text-center w-full">
+                  <Link to="/make-orders">
+                    <NavigationMenuLink active={pathname === "/make-orders"} className={navigationMenuTriggerStyle()}>
+                      <div className="text-jinxBlue">Make Orders</div>
+                    </NavigationMenuLink>
+                  </Link>
+                </li>
+              </>
+            )}
             {user && user.is_admin ? (
               <li className="text-center w-full">
                 <Link to="/admin">
@@ -61,13 +82,13 @@ const Navbar = () => {
           </NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
-      <NavigationMenuItem>
+      {/* <NavigationMenuItem>
         <Link to="/register">
           <NavigationMenuLink active={pathname === "/register"} className={navigationMenuTriggerStyle()}>
             <div className="font-semibold text-jinxBlue">Register</div>
           </NavigationMenuLink>
         </Link>
-      </NavigationMenuItem>
+      </NavigationMenuItem> */}
     </>
   )
 

@@ -5,7 +5,7 @@ import { refreshAuth } from "./user";
 interface OrderItemProps {
     menu_item: number;
     cup: number;
-    zero_sugar: boolean;
+    low_sugar: boolean;
     order__location: number;
     note: string;
     custom_order__soda: number;
@@ -60,7 +60,7 @@ export const listUserOrders = createAsyncThunk(
 
 export const listOrdersQueue = createAsyncThunk(
 	'orders-queue/list', 
-	async (params: { location?: string, is_prepared?: string, is_paid?: string } = {}, thunkAPI) => {
+	async (params: { location?: string, is_complete?: string, is_paid?: string } = {}, thunkAPI) => {
     const queryParams = new URLSearchParams(params).toString();
     const url = `/api/orders-queue?${queryParams}`;
     function callApi() {
@@ -94,8 +94,8 @@ export const listOrdersQueue = createAsyncThunk(
 
 export const createOrderItem = createAsyncThunk(
 	'order-items/create', 
-	async ({ menu_item, cup, zero_sugar, order__location, note, custom_order__soda, custom_order_flavors }: OrderItemProps, thunkAPI) => {
-		const body = JSON.stringify({ menu_item, cup, zero_sugar, order__location, note, custom_order__soda, custom_order_flavors });
+	async ({ menu_item, cup, low_sugar, order__location, note, custom_order__soda, custom_order_flavors }: OrderItemProps, thunkAPI) => {
+		const body = JSON.stringify({ menu_item, cup, low_sugar, order__location, note, custom_order__soda, custom_order_flavors });
     function callApi() {
       return fetch("/api/orders/items", {
           method: "POST",
@@ -154,7 +154,7 @@ export const completeOrderPayment = createAsyncThunk(
 				} else if (res.status === 200) {
 					const { dispatch } = thunkAPI;
 					dispatch(listUserOrders({ collected_by: String(data.collected_by), is_paid: "false" }));
-					dispatch(listOrdersQueue({ location: String(data.location), is_prepared: "false", is_paid: "true" }));
+					dispatch(listOrdersQueue({ location: String(data.location), is_complete: "false", is_paid: "true" }));
           return data;
 				} else {
 					return thunkAPI.rejectWithValue(data);
