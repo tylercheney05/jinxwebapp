@@ -9,6 +9,7 @@ import { flavorGroupsApi, flavorsApi } from "./services/flavors"
 import { menuItemsApi } from "./services/menuitems"
 import { sodasApi } from "./services/sodas"
 import { locationsApi } from "./services/locations"
+import { limitedTimePromosApi } from "./services/limitedtimepromos"
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     [menuItemsApi.reducerPath]: menuItemsApi.reducer,
     [sodasApi.reducerPath]: sodasApi.reducer,
     [locationsApi.reducerPath]: locationsApi.reducer,
+    [limitedTimePromosApi.reducerPath]: limitedTimePromosApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -36,6 +38,7 @@ export const store = configureStore({
       menuItemsApi.middleware,
       sodasApi.middleware,
       locationsApi.middleware,
+      limitedTimePromosApi.middleware,
     ),
   devTools: process.env.NODE_ENV !== "production",
 })

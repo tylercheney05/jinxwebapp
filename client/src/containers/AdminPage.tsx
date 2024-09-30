@@ -9,6 +9,7 @@ import AddCupForm from "components/cups/AddCupForm"
 import AddLocationForm from "components/locations/AddLocationForm"
 import { useEffect, useState } from "react"
 import AddOrderNameForm from "components/orders/AddOrderNameForm"
+import AddLimitedTimePromoForm from "components/limitedtimepromos/AddLimitedTimePromoForm"
 
 const AdminPage = () => {
   const [width, setWidth] = useState<number>(window.innerWidth)
@@ -44,6 +45,7 @@ const AdminPage = () => {
                   <TabsTrigger value="menuItems">Menu Items</TabsTrigger>
                   <TabsTrigger value="locations">Locations</TabsTrigger>
                   <TabsTrigger value="orderNames">Order Names</TabsTrigger>
+                  <TabsTrigger value="limitedTimePromos">Limited Time Promos</TabsTrigger>
                 </TabsList>
                 <TabsContent value="cups">
                   <div className="px-4">
@@ -92,6 +94,11 @@ const AdminPage = () => {
                 <TabsContent value="orderNames" className="w-full">
                   <div className="px-4">
                     <AddOrderNameForm />
+                  </div>
+                </TabsContent>
+                <TabsContent value="limitedTimePromos" className="w-full">
+                  <div className="px-4">
+                    <AddLimitedTimePromoForm />
                   </div>
                 </TabsContent>
               </Tabs>

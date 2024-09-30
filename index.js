@@ -63,6 +63,10 @@ const createOrderNameRoute = require("./routes/ordernames/create")
 const listOrderNamesRoute = require("./routes/ordernames/list")
 const dropdownOrderNamesRoute = require("./routes/ordernames/dropdown")
 
+// import limited time offer routes
+const createLimitedTimePromoRoute = require("./routes/limitedtimepromos/create")
+const listLimitedTimePromosRoute = require("./routes/limitedtimepromos/list")
+
 const app = express()
 
 app.use(express.json())
@@ -126,6 +130,10 @@ app.use(detailLocationRoute)
 app.use(createOrderNameRoute)
 app.use(listOrderNamesRoute)
 app.use(dropdownOrderNamesRoute)
+
+// Limited Time Offer Routes
+app.use(createLimitedTimePromoRoute)
+app.use(listLimitedTimePromosRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {
