@@ -13,8 +13,12 @@ import { SodaListItem } from "types/SodaTypes"
 import ListMenuItems from "./ListMenuItems"
 import { useCreateMenuItemMutation } from "services/menuitems"
 import { sodasApi, useGetSodasListQuery } from "services/sodas"
+import { Switch } from "../ui/switch"
+import { Label } from "../ui/label"
+import { limitedTimePromosApi } from "services/limitedtimepromos"
 
 const AddMenuItemForm = () => {
+  const [isLimitedTime, setIsLimitedTime] = useState<boolean>(false)
   const [createMenuItem, result] = useCreateMenuItemMutation()
   const { data } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
   const [resetSodas, setResetSodas] = useState<boolean>(false)
@@ -34,6 +38,10 @@ const AddMenuItemForm = () => {
           quantity: z.string(),
         })
       ),
+      limited_time_promo: z.object({
+        value: z.number().int(),
+        label: z.string(),
+      }),
     })
     .superRefine((val, ctx) => {
       if (val.menu_item_flavors.length < 2) {
@@ -61,6 +69,10 @@ const AddMenuItemForm = () => {
           quantity: "",
         },
       ],
+      limited_time_promo: {
+        value: 0,
+        label: "Select a limited time promo",
+      },
     },
   })
 
@@ -68,6 +80,7 @@ const AddMenuItemForm = () => {
     if (result.isSuccess) {
       form.reset()
       setResetSodas(true)
+      setIsLimitedTime(false)
       const notify = () => toast.success("Menu Item added successfully")
       notify()
     } else if (result.isError) {
@@ -142,6 +155,21 @@ const AddMenuItemForm = () => {
             )}
           />
         </div>
+        <div className="flex items-center space-x-2">
+          <Switch checked={isLimitedTime} onCheckedChange={() => setIsLimitedTime(!isLimitedTime)} />
+          <Label>Is this a limited-time flavor?</Label>
+        </div>
+        {isLimitedTime && (
+          <div>
+            <SelectFromApiFormField
+              form={form}
+              name="limited_time_promo"
+              placeholder="Select a limited time promo"
+              loadOptionsApi={limitedTimePromosApi.endpoints.getLimitedTimePromosDropdown.initiate}
+              fieldsForDropdownLabel={["name"]}
+            />
+          </div>
+        )}
         <div>
           <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
             Add Menu Item

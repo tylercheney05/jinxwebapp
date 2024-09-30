@@ -19,6 +19,9 @@ export const limitedTimePromosApi = createApi({
     getLimitedTimePromosList: builder.query({
       query: () => "/api/menu-items/limited-time-promotions/"
     }),
+    getLimitedTimePromosDropdown: builder.query({
+      query: () => "/api/menu-items/limited-time-promotions/autocomplete",
+    }),
   }),
 })
 
