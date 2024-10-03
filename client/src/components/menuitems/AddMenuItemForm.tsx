@@ -15,12 +15,14 @@ import { useCreateMenuItemMutation } from "services/menuitems"
 import { sodasApi, useGetSodasListQuery } from "services/sodas"
 import { Switch } from "../ui/switch"
 import { Label } from "../ui/label"
-import { limitedTimePromosApi } from "services/limitedtimepromos"
+import { limitedTimePromosApi, useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
+import { LimitedTimePromoListItem } from "/types/LimitedTimePromoTypes"
 
 const AddMenuItemForm = () => {
   const [isLimitedTime, setIsLimitedTime] = useState<boolean>(false)
   const [createMenuItem, result] = useCreateMenuItemMutation()
-  const { data } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data: sodaData } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data: limitedTimePromosData } = useGetLimitedTimePromosListQuery({}, { refetchOnMountOrArgChange: true })
   const [resetSodas, setResetSodas] = useState<boolean>(false)
   const formSchema = z
     .object({
@@ -97,9 +99,9 @@ const AddMenuItemForm = () => {
 
   return (
     <Form {...form}>
-      {data?.length && data?.length > 0 ? <FormLabel className="text-md">Existing Menu Items</FormLabel> : null}
+      {sodaData?.length && sodaData?.length > 0 ? <FormLabel className="text-md">Existing Menu Items</FormLabel> : null}
       <div>
-        {data?.map((soda: SodaListItem) => (
+        {sodaData?.map((soda: SodaListItem) => (
           <div key={soda.id}>
             <div className="grid grid-cols-5 items-center">
               <div className="bg-black h-1 col-span-2 rounded-sm"></div>
@@ -111,6 +113,20 @@ const AddMenuItemForm = () => {
             </div>
           </div>
         ))}
+        {limitedTimePromosData?.length &&
+          limitedTimePromosData?.length > 0 &&
+          limitedTimePromosData?.map((promo: LimitedTimePromoListItem) => (
+            <div key={promo.id}>
+              <div className="grid grid-cols-5 items-center">
+                <div className="bg-black h-1 col-span-2 rounded-sm"></div>
+                <div className="text-center text-lg">{promo.name}</div>
+                <div className="bg-black h-1 col-span-2 rounded-sm"></div>
+              </div>
+              <div className="my-2">
+                <ListMenuItems promo={promo} resetSodas={resetSodas} setResetSodas={setResetSodas} />
+              </div>
+            </div>
+          ))}
       </div>
       <form className="flex gap-4 flex-col">
         <div className="items-center gap-4 grid grid-cols-2">

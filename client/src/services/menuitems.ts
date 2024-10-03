@@ -17,8 +17,16 @@ export const menuItemsApi = createApi({
       }),
     }),
     getMenuItemsList: builder.query({
-      query: (params: { soda?: string } = {}) => {
-        const queryParams = new URLSearchParams(params).toString();
+      query: (params: { soda?: string, limited_time_promotions?: string, limited_time_promotions__isnull?: boolean } = {}) => {
+        // Convert boolean to string
+        const queryParams = new URLSearchParams(
+          Object.entries(params).reduce((acc, [key, value]) => {
+            if (value !== undefined) {
+              acc[key] = String(value);
+            }
+            return acc;
+          }, {} as Record<string, string>)
+        ).toString();
         return `/api/menu-items?${queryParams}`;
       },
     }),
