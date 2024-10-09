@@ -25,7 +25,10 @@ export const cupsApi = createApi({
     }),
     getCupDetail: builder.query({
       query: ({ id }) => `/api/cups/${id}`
-    })
+    }),
+    getCupDropdown: builder.query({
+      query: () => "/api/cups/autocomplete"
+    }),
   })
 })
 
