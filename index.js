@@ -71,6 +71,7 @@ const dropdownLimitedTimePromosRoute = require("./routes/limitedtimepromos/dropd
 // import discount routes
 const listDiscountsRoute = require("./routes/discounts/list")
 const createDiscountRoute = require("./routes/discounts/create")
+const dropdownDiscountRoute = require("./routes/discounts/dropdown")
 
 const app = express()
 
@@ -144,6 +145,7 @@ app.use(dropdownLimitedTimePromosRoute)
 // Discount Routes
 app.use(listDiscountsRoute)
 app.use(createDiscountRoute)
+app.use(dropdownDiscountRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {

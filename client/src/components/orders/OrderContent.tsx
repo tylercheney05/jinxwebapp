@@ -13,19 +13,35 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SelectFromApiFormField } from "../forminputs/Select"
 import OrderContentItems from "./OrderContentItems"
+import { discountsApi } from "services/discounts"
+import { Switch } from "../ui/switch"
+import { Label } from "../ui/label"
+import { useState } from "react"
+import { cleanFormData } from "utils/FormUtils"
 
 interface Props {
   order: OrderListItem
 }
 
 const OrderContent = ({ order }: Props) => {
+  const [showDiscount, setShowDiscount] = useState<boolean>(false)
   const dispatch = useDispatch<AppDispatch>()
-  const formSchema = z.object({
-    order_name: z.object({
-      value: z.number().int(),
-      label: z.string(),
-    }),
-  })
+  const formSchema = z
+    .object({
+      order_name: z.object({
+        value: z.number().int(),
+        label: z.string(),
+      }),
+      discount: z.object({
+        value: z.number().int(),
+        label: z.string(),
+      }),
+    })
+    .refine((data) => data.order_name.value !== 0, {
+      path: ["order_name"],
+      message: "Please select an order name",
+    })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,11 +49,19 @@ const OrderContent = ({ order }: Props) => {
         value: 0,
         label: "Select an order name",
       },
+      discount: {
+        value: 0,
+        label: "Select a discount",
+      },
     },
   })
   const { user } = useSelector((state: RootState) => state.user)
   const { data, isLoading } = useGetOrderItemListQuery(
-    { order__collected_by: String(user?.id), order__is_paid: "false" },
+    {
+      order__collected_by: String(user?.id),
+      order__is_paid: "false",
+      discount: form.watch("discount") ? form.watch("discount").value : 0,
+    },
     { refetchOnMountOrArgChange: true }
   )
   const { locationId } = useSelector((state: RootState) => state.location)
@@ -47,7 +71,15 @@ const OrderContent = ({ order }: Props) => {
 
   const handleClick = () => {
     dispatch(
-      completeOrderPayment({ id: order.id, is_paid: true, order_name: form.getValues("order_name").value })
+      completeOrderPayment(
+        cleanFormData({
+          id: order.id,
+          is_paid: true,
+          order_name: form.getValues("order_name"),
+          paid_amount: totalPrice,
+          discount: form.watch("discount") ? form.watch("discount").value : 0,
+        })
+      )
     ).then((data) => {
       if (data.meta.requestStatus === "fulfilled") {
         const notify = () => toast.success("Order completed successfully")
@@ -61,6 +93,10 @@ const OrderContent = ({ order }: Props) => {
     })
   }
 
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    handleClick()
+  }
+
   return (
     <Form {...form}>
       <form>
@@ -72,6 +108,21 @@ const OrderContent = ({ order }: Props) => {
             <>
               <div>
                 <OrderContentItems data={data} />
+                <div className="flex items-center space-x-2">
+                  <Switch checked={showDiscount} onCheckedChange={setShowDiscount} />
+                  <Label>Apply Discount</Label>
+                </div>
+                {showDiscount && (
+                  <div className="mt-4">
+                    <SelectFromApiFormField
+                      form={form}
+                      name="discount"
+                      placeholder="Select a discount"
+                      loadOptionsApi={discountsApi.endpoints.getDiscountsDropdown.initiate}
+                      fieldsForDropdownLabel={["name"]}
+                    />
+                  </div>
+                )}
                 <div className="mt-4">
                   <strong>Total Price:</strong> ${totalPrice.toFixed(2)}
                 </div>
@@ -89,7 +140,7 @@ const OrderContent = ({ order }: Props) => {
               <div className="mt-8">
                 <DoubleClickButton
                   variant="default"
-                  onClick={handleClick}
+                  onClick={form.handleSubmit(onSubmit)}
                   alertMsg="Please ensure the order is paid for and then click button again to confirm."
                 >
                   Complete Order

@@ -16,6 +16,8 @@ interface CompleteOrderProps {
     id: number;
     is_paid: boolean;
     order_name: number;
+    paid_amount: number;
+    discount: number;
 }
 
 interface CounterState {
@@ -129,8 +131,8 @@ export const createOrderItem = createAsyncThunk(
 
 export const completeOrderPayment = createAsyncThunk(
 	'order/complete', 
-	async ({ id, is_paid, order_name }: CompleteOrderProps, thunkAPI) => {
-		const body = JSON.stringify({ is_paid, order_name });
+	async ({ id, is_paid, order_name, paid_amount, discount }: CompleteOrderProps, thunkAPI) => {
+		const body = JSON.stringify({ is_paid, order_name, paid_amount, discount });
     function callApi() {
       return fetch(`/api/orders/${id}/complete-order-payment`, {
         method: "PATCH",
