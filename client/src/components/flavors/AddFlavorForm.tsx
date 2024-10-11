@@ -4,12 +4,12 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { PlusIcon } from "../Icons"
 import { useEffect } from "react"
 import { SelectFromApiFormField } from "../forminputs/Select"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
 import { flavorGroupsApi, useCreateFlavorMutation, useGetFlavorsListQuery } from "services/flavors"
 import { FlavorListItem } from "/types/FlavorTypes"
+import { Switch } from "../ui/switch"
 
 const AddFlavorForm = () => {
   const [createFlavor, result] = useCreateFlavorMutation()
@@ -20,6 +20,7 @@ const AddFlavorForm = () => {
       value: z.number().int(),
       label: z.string(),
     }),
+    sugar_free_available: z.boolean(),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -29,6 +30,7 @@ const AddFlavorForm = () => {
         value: 0,
         label: "Select a flavor group",
       },
+      sugar_free_available: false,
     },
   })
 
@@ -48,36 +50,52 @@ const AddFlavorForm = () => {
           {flavor.name} - {flavor.flavor_group__name}
         </div>
       ))}
-      <form className="items-center gap-4 grid grid-cols-9">
-        <div className="col-span-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem className="mt-2">
-                <FormLabel className="text-sm">Add New Flavor</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Enter flavor name" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="col-span-4">
-          <div className="mt-10">
-            <SelectFromApiFormField
-              form={form}
-              name="flavor_group"
-              placeholder="Select a flavor group"
-              loadOptionsApi={flavorGroupsApi.endpoints.getFlavorGroupsDropdown.initiate}
-              fieldsForDropdownLabel={["name"]}
+      <form>
+        <div className="items-center gap-4 grid grid-cols-2">
+          <div className="col-span-1">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="mt-2">
+                  <FormLabel className="text-sm">Add New Flavor</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Enter flavor name" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           </div>
+          <div className="col-span-1">
+            <div className="mt-10">
+              <SelectFromApiFormField
+                form={form}
+                name="flavor_group"
+                placeholder="Select a flavor group"
+                loadOptionsApi={flavorGroupsApi.endpoints.getFlavorGroupsDropdown.initiate}
+                fieldsForDropdownLabel={["name"]}
+              />
+            </div>
+          </div>
         </div>
-        <div className="text-right">
-          <Button type="submit" className="mt-10" onClick={form.handleSubmit(onSubmit)}>
-            <PlusIcon />
+        <FormField
+          control={form.control}
+          name="sugar_free_available"
+          render={({ field }) => (
+            <FormItem className="mt-2">
+              <div>
+                <FormLabel>Is this item available in sugar free?</FormLabel>
+              </div>
+              <FormControl>
+                <Switch className="mt-0" checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <div>
+          <Button type="submit" className="mt-2" onClick={form.handleSubmit(onSubmit)}>
+            Add Flavor
           </Button>
         </div>
       </form>

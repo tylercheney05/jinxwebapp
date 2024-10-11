@@ -31,14 +31,14 @@ export const flavorsApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     createFlavor: builder.mutation({
-      query: ({ name, flavor_group }) => ({
+      query: ({ name, flavor_group, sugar_free_available }) => ({
         url: "/api/flavors",
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, flavor_group }),
+        body: JSON.stringify({ name, flavor_group, sugar_free_available }),
       })
     }),
     getFlavorsList: builder.query({
