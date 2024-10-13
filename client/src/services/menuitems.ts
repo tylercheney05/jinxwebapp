@@ -17,7 +17,7 @@ export const menuItemsApi = createApi({
       }),
     }),
     getMenuItemsList: builder.query({
-      query: (params: { soda?: string, limited_time_promotions?: string, limited_time_promotions__isnull?: boolean } = {}) => {
+      query: (params: { soda?: string, limited_time_promotions__limited_time_promo?: string, limited_time_promotions__isnull?: boolean } = {}) => {
         // Convert boolean to string
         const queryParams = new URLSearchParams(
           Object.entries(params).reduce((acc, [key, value]) => {
