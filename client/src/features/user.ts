@@ -82,7 +82,7 @@ export const login = createAsyncThunk(
   'users/login', 
   async ({ email, password}: LoginProps, thunkAPI) => {
   const body = JSON.stringify({ email, password });
-  
+
   try {
     const res = await fetch('/api/users/login', {
       method: "POST",
