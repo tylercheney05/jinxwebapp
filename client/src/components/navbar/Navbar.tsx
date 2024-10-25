@@ -15,7 +15,7 @@ import { JinxSodaLogoSingleLine } from "../logos/JinxSodaLogoSingleLine"
 import { NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
 import { MenuIcon } from "../Icons"
 import StaffNavigationMenuItems from "./navigationmenuitems/StaffNavigationMenuItems"
-import { useMediaQuery } from "@material-ui/core"
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>()

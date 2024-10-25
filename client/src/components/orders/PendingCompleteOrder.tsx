@@ -2,7 +2,7 @@ import { useGetOrderItemListQuery } from "services/orders"
 import { OrderListItem } from "types/OrderTypes"
 import OrderContentItems from "./OrderContentItems"
 import { DialogHeader, DialogTitle } from "../ui/dialog"
-import { useMediaQuery } from "@material-ui/core"
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { DrawerHeader, DrawerTitle } from "../ui/drawer"
 
 interface Props {

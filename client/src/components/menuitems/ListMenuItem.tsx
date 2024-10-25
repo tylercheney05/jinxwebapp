@@ -4,7 +4,7 @@ import MenuItemCard from "./MenuItemCard"
 import OrderItemForm from "../orders/OrderItemForm"
 import { MenuItemListItem } from "/types/MenuItemTypes"
 import { ScrollArea } from "../ui/scroll-area"
-import { useMediaQuery } from "@material-ui/core"
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer"
 
 interface Props {

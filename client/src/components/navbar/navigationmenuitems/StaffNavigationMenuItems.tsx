@@ -8,7 +8,7 @@ import { listUserOrders } from "features/orders"
 import { NavigationMenuContent, NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
 import OrderContent from "components/orders/OrderContent"
 import LocationContent from "components/locations/LocationContent"
-import { useMediaQuery } from "@material-ui/core"
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Drawer, DrawerContent, DrawerTrigger } from "components/ui/drawer"
 import { ScrollArea } from "components/ui/scroll-area"
 

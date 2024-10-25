@@ -5,7 +5,7 @@ import { DialogHeader, DialogTitle } from "../ui/dialog"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { DrawerHeader, DrawerTitle } from "../ui/drawer"
-import { useMediaQuery } from "@material-ui/core"
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect } from "react"
 import { w3cwebsocket as W3CWebSocket } from "websocket"
 import { toast } from "react-toastify"

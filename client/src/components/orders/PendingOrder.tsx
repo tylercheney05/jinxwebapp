@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog"
 import { useState } from "react"
 import PendingOrderContent from "./PendingOrderContent"
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer"
-import { useMediaQuery } from "@material-ui/core"
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { w3cwebsocket as W3CWebSocket } from "websocket"
 import { useDidMountEffect } from "utils/SharedUtils"
 import { cn } from "lib/utils"

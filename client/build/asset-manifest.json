@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c4ed60dd.css",
+    "main.js": "/static/js/main.467bec8b.js",
+    "static/js/453.419a5d54.chunk.js": "/static/js/453.419a5d54.chunk.js",
+    "static/media/Jinx Soda_Lime Boi_Lime Boi.png": "/static/media/Jinx Soda_Lime Boi_Lime Boi.b021a180b73b028146b7.png",
+    "static/media/WorkSans-SemiBold.ttf": "/static/media/WorkSans-SemiBold.8988ce2e3e8957a63db8.ttf",
+    "static/media/WorkSans-Regular.ttf": "/static/media/WorkSans-Regular.ca211a55c3d9d8690c63.ttf",
+    "static/media/Syne-ExtraBold.ttf": "/static/media/Syne-ExtraBold.ec26051cf662d73d9c4d.ttf",
+    "static/media/Syne-Bold.ttf": "/static/media/Syne-Bold.17bf8885cfa0dfe236df.ttf",
+    "index.html": "/index.html",
+    "main.c4ed60dd.css.map": "/static/css/main.c4ed60dd.css.map",
+    "main.467bec8b.js.map": "/static/js/main.467bec8b.js.map",
+    "453.419a5d54.chunk.js.map": "/static/js/453.419a5d54.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c4ed60dd.css",
+    "static/js/main.467bec8b.js"
+  ]
+}
