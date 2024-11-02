@@ -67,7 +67,7 @@ const OrderContent = ({ order }: Props) => {
   const { locationId } = useSelector((state: RootState) => state.location)
   const totalPrice = data?.reduce((acc, item) => acc + item.price, 0) || 0
 
-  const client = new W3CWebSocket(`ws://127.0.0.1:8000/ws/orders/${locationId}/?user_id=${user?.id}`)
+  const client = new W3CWebSocket(`${process.env.REACT_APP_WEBSOCKET_URL}/ws/orders/${locationId}/?user_id=${user?.id}`)
 
   const handleClick = () => {
     dispatch(

@@ -10,7 +10,7 @@ const PendingOrders = () => {
   const { locationId } = useSelector((state: RootState) => state.location)
   const { user } = useSelector((state: RootState) => state.user)
 
-  const client = new W3CWebSocket(`ws://127.0.0.1:8000/ws/orders/${locationId}/?user_id=${user?.id}`)
+  const client = new W3CWebSocket(`${process.env.REACT_APP_WEBSOCKET_URL}/ws/orders/${locationId}/?user_id=${user?.id}`)
 
   useEffect(() => {
     client.onmessage = (message) => {
