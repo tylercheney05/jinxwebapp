@@ -45,13 +45,16 @@ const PendingOrder = ({ order, client }: Props) => {
           order_id: order.id,
         })
       )
+      client.close()
     } else if (!open && startOpen) {
-      client.send(
-        JSON.stringify({
-          order_in_progress: false,
-          order_id: order.id,
-        })
-      )
+      client.onopen = () => {
+        client.send(
+          JSON.stringify({
+            order_in_progress: false,
+            order_id: order.id,
+          })
+        )
+      }
     }
   }, [open])
 
