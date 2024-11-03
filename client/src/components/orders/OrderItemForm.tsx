@@ -63,6 +63,10 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
       menu_item: menuItem.id,
       order__location: Number(locationId),
       note: "",
+      custom_order__soda: {
+        value: 0,
+        label: "Select a soda",
+      },
       custom_order_flavors: [
         {
           flavor: {
