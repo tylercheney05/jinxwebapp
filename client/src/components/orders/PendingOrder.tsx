@@ -1,23 +1,21 @@
-import { Card, CardHeader, CardTitle } from "../ui/card"
-import { OrderListItem } from "types/OrderTypes"
+import useMediaQuery from "@mui/material/useMediaQuery"
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog"
 import { useState } from "react"
-import PendingOrderContent from "./PendingOrderContent"
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer"
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { w3cwebsocket as W3CWebSocket } from "websocket"
-import { useDidMountEffect } from "utils/SharedUtils"
+import { Card, CardHeader, CardTitle } from "../ui/card"
 import { cn } from "lib/utils"
+import { OrderListItem } from "types/OrderTypes"
 import PendingCompleteOrder from "./PendingCompleteOrder"
+import StartOrder from "./StartOrder"
+import { w3cwebsocket } from "websocket"
 
 interface Props {
   order: OrderListItem
-  client: W3CWebSocket
+  client: w3cwebsocket
 }
 
 const PendingOrder = ({ order, client }: Props) => {
   const [open, setOpen] = useState<boolean>(false)
-  const [startOpen, setStartOpen] = useState<boolean>(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const card = (
@@ -36,54 +34,28 @@ const PendingOrder = ({ order, client }: Props) => {
     </Card>
   )
 
-  useDidMountEffect(() => {
-    if (open) {
-      setStartOpen(true)
-      client.send(
-        JSON.stringify({
-          order_in_progress: true,
-          order_id: order.id,
-        })
-      )
-      client.close()
-    } else if (!open && startOpen) {
-      client.onopen = () => {
-        client.send(
-          JSON.stringify({
-            order_in_progress: false,
-            order_id: order.id,
-          })
-        )
-      }
-    }
-  }, [open])
-
   return (
-    <>
-      <div className="w-[400px]">
-        {isDesktop ? (
-          <Dialog open={open} modal onOpenChange={setOpen}>
-            <DialogTrigger className="w-full" disabled={order.is_in_progress}>
-              {card}
-            </DialogTrigger>
-            <DialogContent>
-              {order.is_complete ? (
-                <PendingCompleteOrder order={order} />
-              ) : (
-                <PendingOrderContent order={order} client={client} setOpen={setOpen} />
-              )}
-            </DialogContent>
-          </Dialog>
-        ) : (
-          <Drawer open={open} modal onOpenChange={setOpen}>
-            <DrawerTrigger className="w-full">{card}</DrawerTrigger>
-            <DrawerContent>
-              <PendingOrderContent order={order} client={client} setOpen={setOpen} />
-            </DrawerContent>
-          </Drawer>
-        )}
-      </div>
-    </>
+    <div className="w-[400px]">
+      {isDesktop ? (
+        <Dialog open={open} modal onOpenChange={setOpen}>
+          <DialogTrigger className="w-full" disabled={order.is_in_progress}>
+            {card}
+          </DialogTrigger>
+          <DialogContent>
+            {order.is_complete ? <PendingCompleteOrder order={order} /> : <StartOrder order={order} client={client} />}
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerTrigger className="w-full" disabled={order.is_in_progress}>
+            {card}
+          </DrawerTrigger>
+          <DrawerContent>
+            {order.is_complete ? <PendingCompleteOrder order={order} /> : <StartOrder order={order} client={client} />}
+          </DrawerContent>
+        </Drawer>
+      )}
+    </div>
   )
 }
 

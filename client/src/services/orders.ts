@@ -1,13 +1,13 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { OrderItemListItems, OrderNameItems } from 'types/OrderTypes'
+import { OrderDetailItem, OrderItemListItems, OrderNameItems } from 'types/OrderTypes'
 import { baseQueryWithReauth } from './baseQuery';
 
 export const ordersApi = createApi({
   reducerPath: "ordersApi",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    getOrderDetail: builder.query({
-      query: ({ id }) => `/api/orders/${id}`
+    getOrderDetail: builder.query<OrderDetailItem, object>({
+      query: ({ id }: {id: number}) => `/api/orders/${id}`
     }),
   })
 })
