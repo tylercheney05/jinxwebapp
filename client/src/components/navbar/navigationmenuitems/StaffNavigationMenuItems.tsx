@@ -8,7 +8,7 @@ import { listUserOrders } from "features/orders"
 import { NavigationMenuContent, NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
 import OrderContent from "components/orders/OrderContent"
 import LocationContent from "components/locations/LocationContent"
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery"
 import { Drawer, DrawerContent, DrawerTrigger } from "components/ui/drawer"
 import { ScrollArea } from "components/ui/scroll-area"
 
@@ -62,7 +62,7 @@ const StaffNavigationMenuItems = () => {
                   <SodaIcon size="20px" className="text-jinxBlue" />
                 </DrawerTrigger>
                 <DrawerContent>
-                  <ScrollArea className="max-h-[500px] overflow-auto">
+                  <ScrollArea className="max-h-[800px] overflow-auto">
                     {locationId ? <OrderContent order={orders[0]} /> : <LocationContent />}
                   </ScrollArea>
                 </DrawerContent>
@@ -95,7 +95,7 @@ const StaffNavigationMenuItems = () => {
               )}
             </DrawerTrigger>
             <DrawerContent>
-              <ScrollArea className="max-h-[500px] overflow-auto">
+              <ScrollArea className="max-h-[800px] overflow-auto">
                 <LocationContent />
               </ScrollArea>
             </DrawerContent>

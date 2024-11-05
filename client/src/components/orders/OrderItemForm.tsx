@@ -1,27 +1,27 @@
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { Form, FormLabel } from "../ui/form"
 import { z } from "zod"
-import { MenuItemListItem } from "/types/MenuItemTypes"
-import { Button } from "../ui/button"
-import { cleanFormData, handleError } from "utils/FormUtils"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { MenuItemListItem } from "types/MenuItemTypes"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
-import { createOrderItem } from "features/orders"
-import { toast } from "react-toastify"
-import { Textarea } from "../ui/textarea"
-import { useState } from "react"
-import { Switch } from "../ui/switch"
-import MenuItemCustomOrder from "./MenuItemCustomOrder"
-import { Card, CardContent } from "../ui/card"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
 import {
+  cleanFlavorsData,
+  cleanZeroSugar,
   CupFormField,
   NoteFormField,
   Price,
   ZeroSugarFormField,
-  cleanFlavorsData,
-  cleanZeroSugar,
 } from "../shared/ItemFormFields"
+import useMediaQuery from "@mui/material/useMediaQuery"
+import { Switch } from "../ui/switch"
+import MenuItemCustomOrder from "./MenuItemCustomOrder"
+import { useState } from "react"
+import { Button } from "../ui/button"
+import { createOrderItem } from "features/orders"
+import { cleanFormData, handleError } from "utils/FormUtils"
+import { toast } from "react-toastify"
 import { useDidMountEffect } from "utils/SharedUtils"
 
 interface Props {
@@ -31,8 +31,9 @@ interface Props {
 
 const OrderItemForm = ({ menuItem, setOpen }: Props) => {
   const { locationId } = useSelector((state: RootState) => state.location)
-  const dispatch = useDispatch<AppDispatch>()
+  const isDesktop = useMediaQuery("(min-width: 768px)")
   const [isCustomized, setIsCustomized] = useState(false)
+  const dispatch = useDispatch<AppDispatch>()
 
   const formSchema = z.object({
     menu_item: z.number(),
@@ -113,29 +114,49 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="flex gap-8 flex-col">
-        <CupFormField form={form} />
-        <ZeroSugarFormField form={form} />
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex flex-col gap-4">
-              <FormLabel>Customize?</FormLabel>
-              <Switch
-                checked={isCustomized}
-                onCheckedChange={(checked: boolean) => setIsCustomized(checked)}
-                disabled={!form.watch("cup")}
-              />
-              {isCustomized ? <MenuItemCustomOrder menuItem={menuItem} form={form} /> : ""}
-            </div>
-          </CardContent>
-        </Card>
-        <NoteFormField form={form} />
-        {form.watch("cup") ? <Price menuItem={menuItem} form={form} isCustomized={isCustomized} /> : ""}
-        <div>
-          <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-            Add to order
-          </Button>
-        </div>
+      <form>
+        <Carousel className="w-full max-w-xs m-auto">
+          <CarouselContent>
+            <CarouselItem className="flex justify-center">
+              <div>
+                <CupFormField form={form} />
+              </div>
+            </CarouselItem>
+            <CarouselItem className="flex justify-center">
+              <div>
+                <ZeroSugarFormField form={form} />
+              </div>
+            </CarouselItem>
+            <CarouselItem className="flex justify-center">
+              <div className="p-8">
+                <div className="flex flex-col gap-4">
+                  <FormLabel>Customize?</FormLabel>
+                  <Switch
+                    checked={isCustomized}
+                    onCheckedChange={(checked: boolean) => setIsCustomized(checked)}
+                    disabled={!form.watch("cup")}
+                  />
+                  {isCustomized ? <MenuItemCustomOrder menuItem={menuItem} form={form} /> : ""}
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="flex justify-center">
+              <NoteFormField form={form} />
+            </CarouselItem>
+            <CarouselItem className="flex justify-center">
+              <div className="flex gap-4 flex-col">
+                {form.watch("cup") ? <Price menuItem={menuItem} form={form} isCustomized={isCustomized} /> : ""}
+                <div>
+                  <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                    Add to order
+                  </Button>
+                </div>
+              </div>
+            </CarouselItem>
+          </CarouselContent>
+          <CarouselPrevious className={!isDesktop ? "-left-4" : ""} />
+          <CarouselNext className={!isDesktop ? "-right-4" : ""} />
+        </Carousel>
       </form>
     </Form>
   )

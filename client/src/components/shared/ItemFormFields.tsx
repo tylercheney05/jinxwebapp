@@ -12,6 +12,7 @@ import { CupListItem } from "types/CupTypes"
 import { cupsApi, useGetCupsListQuery } from "services/cups"
 import { MenuItemListItem } from "types/MenuItemTypes"
 import { Textarea } from "../ui/textarea"
+import { Separator } from "../ui/separator"
 
 interface FlavorFormFieldProps {
   field: any
@@ -70,14 +71,15 @@ const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProp
       control={form.control}
       name={fieldName}
       render={({ field }) => (
-        <div className={`grid ${uom ? "grid-cols-5" : "grid-cols-4"} gap-4`}>
-          <div className="col-span-2">
+        <div className="flex flex-wrap gap-2">
+          <div>
             <FlavorFormField field={field} index={index} form={form} />
           </div>
-          <div className="col-span-2">
+          <div>
             <QuantityFormField field={field} index={index} />
           </div>
           <div className="text-sm flex items-center">{uom}</div>
+          <Separator className="mt-2" />
         </div>
       )}
     />

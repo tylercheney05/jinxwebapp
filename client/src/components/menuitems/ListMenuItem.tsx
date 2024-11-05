@@ -4,7 +4,7 @@ import MenuItemCard from "./MenuItemCard"
 import OrderItemForm from "../orders/OrderItemForm"
 import { MenuItemListItem } from "/types/MenuItemTypes"
 import { ScrollArea } from "../ui/scroll-area"
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer"
 
 interface Props {
@@ -37,8 +37,8 @@ const ListMenuItem = ({ isClickable = false, menuItem }: Props) => {
       <DrawerTrigger>
         <MenuItemCard menuItem={menuItem} isClickable={isClickable} />
       </DrawerTrigger>
-      <DrawerContent>
-        <ScrollArea className="max-h-[800px]">
+      <DrawerContent className="min-h-[400px]">
+        <ScrollArea className="max-h-[600px] overflow-auto">
           <DrawerHeader>
             <DrawerTitle className="mb-4">{menuItem.name}</DrawerTitle>
           </DrawerHeader>

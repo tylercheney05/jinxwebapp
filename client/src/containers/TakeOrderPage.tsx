@@ -10,7 +10,7 @@ import { Button } from "components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "components/ui/dialog"
 import CustomOrderForm from "components/orders/CustomOrderForm"
 import { useState } from "react"
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "components/ui/drawer"
 import { useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
 import { LimitedTimePromoListItem } from "/types/LimitedTimePromoTypes"

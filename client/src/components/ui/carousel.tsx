@@ -177,6 +177,7 @@ const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProp
     const { orientation, scrollPrev, canScrollPrev, api } = useCarousel()
 
     const handleClick = (e: any) => {
+      e.preventDefault()
       if (onClickWithIndex) {
         onClickWithIndex(api?.selectedScrollSnap())
         scrollPrev()
@@ -217,6 +218,7 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
     const { orientation, scrollNext, canScrollNext, api } = useCarousel()
 
     const handleClick = (e: any) => {
+      e.preventDefault()
       if (onClickWithIndex) {
         onClickWithIndex(api?.selectedScrollSnap())
         scrollNext()
