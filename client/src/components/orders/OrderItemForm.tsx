@@ -23,6 +23,7 @@ import { createOrderItem } from "features/orders"
 import { cleanFormData, handleError } from "utils/FormUtils"
 import { toast } from "react-toastify"
 import { useDidMountEffect } from "utils/SharedUtils"
+import { ScrollArea } from "../ui/scroll-area"
 
 interface Props {
   menuItem: MenuItemListItem
@@ -43,10 +44,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
       required_error: "You need to select a soda type",
     }),
     note: z.string().optional(),
-    custom_order__soda: z.object({
-      value: z.number().int().optional(),
-      label: z.string(),
-    }),
+    custom_order__soda: z.string(),
     custom_order_flavors: z.array(
       z.object({
         flavor: z.object({
@@ -64,10 +62,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
       menu_item: menuItem.id,
       order__location: Number(locationId),
       note: "",
-      custom_order__soda: {
-        value: 0,
-        label: "Select a soda",
-      },
+      custom_order__soda: "",
       custom_order_flavors: [
         {
           flavor: {
@@ -108,7 +103,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
         },
       ])
       // Assuming 'custom_order__soda' has a similar default value you want to reset to
-      form.setValue("custom_order__soda", { value: 0, label: "Select a soda" })
+      form.setValue("custom_order__soda", "")
     }
   }, [isCustomized])
 
@@ -116,44 +111,46 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     <Form {...form}>
       <form>
         <Carousel className="w-full max-w-xs m-auto">
-          <CarouselContent>
-            <CarouselItem className="flex justify-center">
-              <div>
-                <CupFormField form={form} />
-              </div>
-            </CarouselItem>
-            <CarouselItem className="flex justify-center">
-              <div>
-                <ZeroSugarFormField form={form} />
-              </div>
-            </CarouselItem>
-            <CarouselItem className="flex justify-center">
-              <div className="p-8">
-                <div className="flex flex-col gap-4">
-                  <FormLabel>Customize?</FormLabel>
-                  <Switch
-                    checked={isCustomized}
-                    onCheckedChange={(checked: boolean) => setIsCustomized(checked)}
-                    disabled={!form.watch("cup")}
-                  />
-                  {isCustomized ? <MenuItemCustomOrder menuItem={menuItem} form={form} /> : ""}
-                </div>
-              </div>
-            </CarouselItem>
-            <CarouselItem className="flex justify-center">
-              <NoteFormField form={form} />
-            </CarouselItem>
-            <CarouselItem className="flex justify-center">
-              <div className="flex gap-4 flex-col">
-                {form.watch("cup") ? <Price menuItem={menuItem} form={form} isCustomized={isCustomized} /> : ""}
+          <ScrollArea className="max-h-[600px] overflow-auto">
+            <CarouselContent>
+              <CarouselItem className="flex justify-center">
                 <div>
-                  <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                    Add to order
-                  </Button>
+                  <CupFormField form={form} />
                 </div>
-              </div>
-            </CarouselItem>
-          </CarouselContent>
+              </CarouselItem>
+              <CarouselItem className="flex justify-center">
+                <div>
+                  <ZeroSugarFormField form={form} />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="flex justify-center">
+                <div className="p-8">
+                  <div className="flex flex-col gap-4">
+                    <FormLabel>Customize?</FormLabel>
+                    <Switch
+                      checked={isCustomized}
+                      onCheckedChange={(checked: boolean) => setIsCustomized(checked)}
+                      disabled={!form.watch("cup")}
+                    />
+                    {isCustomized ? <MenuItemCustomOrder menuItem={menuItem} form={form} /> : ""}
+                  </div>
+                </div>
+              </CarouselItem>
+              <CarouselItem className="flex justify-center">
+                <NoteFormField form={form} />
+              </CarouselItem>
+              <CarouselItem className="flex justify-center">
+                <div className="flex gap-4 flex-col">
+                  {form.watch("cup") ? <Price menuItem={menuItem} form={form} isCustomized={isCustomized} /> : ""}
+                  <div>
+                    <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                      Add to order
+                    </Button>
+                  </div>
+                </div>
+              </CarouselItem>
+            </CarouselContent>
+          </ScrollArea>
           <CarouselPrevious className={!isDesktop ? "-left-4" : ""} />
           <CarouselNext className={!isDesktop ? "-right-4" : ""} />
         </Carousel>

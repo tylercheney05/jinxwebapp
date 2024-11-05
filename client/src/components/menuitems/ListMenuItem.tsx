@@ -38,12 +38,10 @@ const ListMenuItem = ({ isClickable = false, menuItem }: Props) => {
         <MenuItemCard menuItem={menuItem} isClickable={isClickable} />
       </DrawerTrigger>
       <DrawerContent className="min-h-[400px]">
-        <ScrollArea className="max-h-[600px] overflow-auto">
-          <DrawerHeader>
-            <DrawerTitle className="mb-4">{menuItem.name}</DrawerTitle>
-          </DrawerHeader>
-          {menuItem && <OrderItemForm menuItem={menuItem} setOpen={setOpen} />}
-        </ScrollArea>
+        <DrawerHeader>
+          <DrawerTitle className="mb-4">{menuItem.name}</DrawerTitle>
+        </DrawerHeader>
+        {menuItem && <OrderItemForm menuItem={menuItem} setOpen={setOpen} />}
       </DrawerContent>
     </Drawer>
   )

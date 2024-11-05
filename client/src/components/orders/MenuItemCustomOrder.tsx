@@ -4,6 +4,7 @@ import { UseFormReturn } from "react-hook-form"
 import { useEffect } from "react"
 import { useDidMountEffect } from "utils/SharedUtils"
 import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
+import { useGetSodasListQuery } from "services/sodas"
 
 interface Props {
   menuItem: MenuItemListItem
@@ -15,13 +16,16 @@ const MenuItemCustomOrder = ({ menuItem, form }: Props) => {
     { id: menuItem.id },
     { refetchOnMountOrArgChange: true }
   )
+  const { data: sodaData, isSuccess: sodaIsSuccess } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
+
+  useEffect(() => {
+    if (isSuccess && sodaIsSuccess) {
+      form.setValue("custom_order__soda", String(data.soda))
+    }
+  }, [isSuccess, sodaIsSuccess, form.watch("cup")])
 
   useEffect(() => {
     if (isSuccess) {
-      form.setValue("custom_order__soda", {
-        value: data.soda,
-        label: data.soda__name,
-      })
       const newData = [
         {
           flavor: {
@@ -55,7 +59,7 @@ const MenuItemCustomOrder = ({ menuItem, form }: Props) => {
     refetch()
   }, [form.watch("cup")])
 
-  return <CustomOrderFlavorForm form={form} />
+  return <CustomOrderFlavorForm form={form} data={sodaData} />
 }
 
 export default MenuItemCustomOrder

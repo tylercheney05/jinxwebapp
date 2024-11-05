@@ -1,24 +1,46 @@
-import { UseFormReturn } from "react-hook-form"
-import { SelectFromApiFormField } from "../forminputs/Select"
-import { sodasApi } from "services/sodas"
-import { FormField, FormLabel, FormMessage } from "../ui/form"
+import { Controller, UseFormReturn } from "react-hook-form"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { ItemFlavorFormField } from "../shared/ItemFormFields"
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
+import { SodaListItem, SodaListItems } from "types/SodaTypes"
 
 interface Props {
   form: UseFormReturn<any>
+  data: SodaListItems | undefined
 }
 
-const CustomOrderFlavorForm = ({ form }: Props) => {
+const CustomOrderFlavorForm = ({ form, data }: Props) => {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <SelectFromApiFormField
-          form={form}
+        <FormField
+          control={form.control}
           name="custom_order__soda"
-          label="Soda"
-          placeholder="Select a Soda"
-          loadOptionsApi={sodasApi.endpoints.getSodasDropdown.initiate}
-          fieldsForDropdownLabel={["name"]}
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Soda</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  {...field}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex flex-col space-y-1"
+                >
+                  {data?.length &&
+                    data?.length > 0 &&
+                    data.map((soda: SodaListItem) => (
+                      <FormItem key={soda.id} className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value={String(soda.id)} />
+                        </FormControl>
+                        <FormLabel className="font-normal">{soda.name}</FormLabel>
+                      </FormItem>
+                    ))}
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
       </div>
       <div>

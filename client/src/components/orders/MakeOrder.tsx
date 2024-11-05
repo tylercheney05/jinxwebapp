@@ -27,7 +27,6 @@ const MakeOrder = () => {
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (client.readyState === W3CWebSocket.OPEN) {
-        console.log("NUMBER 1")
         client.send(
           JSON.stringify({
             order_in_progress: false,
@@ -43,7 +42,6 @@ const MakeOrder = () => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload)
       if (isMounted.current && client.readyState === W3CWebSocket.OPEN) {
-        console.log("NUMBER 2")
         client.send(
           JSON.stringify({
             order_in_progress: false,

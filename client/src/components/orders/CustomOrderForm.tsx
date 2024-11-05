@@ -19,6 +19,7 @@ import { cleanFormData, handleError } from "utils/FormUtils"
 import { toast } from "react-toastify"
 import { useEffect } from "react"
 import { cupsApi } from "services/cups"
+import { useGetSodasListQuery } from "services/sodas"
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -27,6 +28,7 @@ interface Props {
 const CustomOrderForm = ({ setOpen }: Props) => {
   const { locationId } = useSelector((state: RootState) => state.location)
   const dispatch = useDispatch<AppDispatch>()
+  const { data: sodaData, isSuccess: sodaIsSuccess } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
 
   const formSchema = z.object({
     order__location: z.number(),
@@ -108,7 +110,7 @@ const CustomOrderForm = ({ setOpen }: Props) => {
       <form className="flex gap-8 flex-col">
         <CupFormField form={form} />
         <ZeroSugarFormField form={form} />
-        <CustomOrderFlavorForm form={form} />
+        <CustomOrderFlavorForm form={form} data={sodaData} />
         <NoteFormField form={form} />
         {form.watch("cup") ? <Price form={form} isCustomized={true} /> : ""}
         <div>
