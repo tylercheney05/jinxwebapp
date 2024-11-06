@@ -62,7 +62,7 @@ const StaffNavigationMenuItems = () => {
                   <SodaIcon size="20px" className="text-jinxBlue" />
                 </DrawerTrigger>
                 <DrawerContent>
-                  <ScrollArea className="max-h-[800px] overflow-auto">
+                  <ScrollArea className="max-h-[500px] overflow-auto">
                     {locationId ? <OrderContent order={orders[0]} /> : <LocationContent />}
                   </ScrollArea>
                 </DrawerContent>
@@ -95,7 +95,7 @@ const StaffNavigationMenuItems = () => {
               )}
             </DrawerTrigger>
             <DrawerContent>
-              <ScrollArea className="max-h-[800px] overflow-auto">
+              <ScrollArea className="max-h-[500px] overflow-auto">
                 <LocationContent />
               </ScrollArea>
             </DrawerContent>

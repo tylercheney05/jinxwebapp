@@ -2,14 +2,7 @@ import { z } from "zod"
 import { Form } from "../ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  CupFormField,
-  NoteFormField,
-  Price,
-  ZeroSugarFormField,
-  cleanFlavorsData,
-  cleanZeroSugar,
-} from "../shared/ItemFormFields"
+import { CupFormField, NoteFormField, Price, ZeroSugarFormField, cleanZeroSugar } from "../shared/ItemFormFields"
 import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
 import { Button } from "../ui/button"
 import { useDispatch, useSelector } from "react-redux"
@@ -82,7 +75,6 @@ const CustomOrderForm = ({ setOpen }: Props) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanZeroSugar(updatedValues)
-    updatedValues = cleanFlavorsData(updatedValues, "custom_order_flavors")
     dispatch(createOrderItem(cleanFormData(updatedValues))).then((data) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()

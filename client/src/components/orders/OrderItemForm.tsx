@@ -5,16 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { MenuItemListItem } from "types/MenuItemTypes"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
-import {
-  cleanFlavorsData,
-  cleanZeroSugar,
-  CupFormField,
-  NoteFormField,
-  Price,
-  ZeroSugarFormField,
-} from "../shared/ItemFormFields"
-import useMediaQuery from "@mui/material/useMediaQuery"
+import { cleanZeroSugar, CupFormField, NoteFormField, Price, ZeroSugarFormField } from "../shared/ItemFormFields"
 import { Switch } from "../ui/switch"
 import MenuItemCustomOrder from "./MenuItemCustomOrder"
 import { useState } from "react"
@@ -33,7 +24,6 @@ interface Props {
 
 const OrderItemForm = ({ menuItem, setOpen }: Props) => {
   const { locationId } = useSelector((state: RootState) => state.location)
-  const isDesktop = useMediaQuery("(min-width: 768px)")
   const [isCustomized, setIsCustomized] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
 
