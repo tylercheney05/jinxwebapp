@@ -36,18 +36,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     }),
     note: z.string().optional(),
     custom_order__soda: z.string(),
-    custom_order_flavors: z.array(z.number()).refine((value) => value.some((item) => item), {
-      message: "You have to select at least one flavor",
-    }),
-    // custom_order_flavors: z.array(
-    //   z.object({
-    //     flavor: z.object({
-    //       value: z.number().int(),
-    //       label: z.string(),
-    //     }),
-    //     quantity: z.string(),
-    //   })
-    // ),
+    custom_order_flavors: z.array(z.number()),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({

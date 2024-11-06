@@ -1,11 +1,11 @@
 import { completeOrderPayment } from "features/orders"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
-import { OrderListItem } from "types/OrderTypes"
+import { OrderListItem, OrderNameItem } from "types/OrderTypes"
 import { LoadingIcon } from "../Icons"
 import DoubleClickButton from "../ui/button/doubleclickbutton"
 import { toast } from "react-toastify"
-import { orderNamesApi, useGetOrderItemListQuery } from "services/orders"
+import { useGetOrderItemListQuery, useGetOrderNameListQuery } from "services/orders"
 import { w3cwebsocket as W3CWebSocket } from "websocket"
 import { Form } from "../ui/form"
 import { z } from "zod"
@@ -18,37 +18,29 @@ import { Switch } from "../ui/switch"
 import { Label } from "../ui/label"
 import { useState } from "react"
 import { cleanFormData } from "utils/FormUtils"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 
 interface Props {
   order: OrderListItem
 }
 
 const OrderContent = ({ order }: Props) => {
+  const { data: orderNamesData } = useGetOrderNameListQuery({}, { refetchOnMountOrArgChange: true })
   const [showDiscount, setShowDiscount] = useState<boolean>(false)
   const dispatch = useDispatch<AppDispatch>()
-  const formSchema = z
-    .object({
-      order_name: z.object({
-        value: z.number().int(),
-        label: z.string(),
-      }),
-      discount: z.object({
-        value: z.number().int(),
-        label: z.string(),
-      }),
-    })
-    .refine((data) => data.order_name.value !== 0, {
-      path: ["order_name"],
-      message: "Please select an order name",
-    })
+  const formSchema = z.object({
+    order_name: z.string().min(1, { message: "Order name is required" }),
+    discount: z.object({
+      value: z.number().int(),
+      label: z.string(),
+    }),
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      order_name: {
-        value: 0,
-        label: "Select an order name",
-      },
+      order_name: "",
       discount: {
         value: 0,
         label: "Select a discount",
@@ -128,13 +120,34 @@ const OrderContent = ({ order }: Props) => {
                 </div>
               </div>
               <div className="mt-8">
-                <SelectFromApiFormField
-                  form={form}
+                <FormField
+                  control={form.control}
                   name="order_name"
-                  placeholder="Select an order name"
-                  loadOptionsApi={orderNamesApi.endpoints.getOrderNameDropdown.initiate}
-                  fieldsForDropdownLabel={["name"]}
-                  label="Assign an order name"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>Order Name</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          {...field}
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          className="flex flex-col space-y-1"
+                        >
+                          {orderNamesData?.length &&
+                            orderNamesData?.length > 0 &&
+                            orderNamesData.map((orderName: OrderNameItem) => (
+                              <FormItem key={orderName.id} className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value={String(orderName.id)} />
+                                </FormControl>
+                                <FormLabel className="font-normal">{orderName.name}</FormLabel>
+                              </FormItem>
+                            ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
               <div className="mt-8">
