@@ -5,9 +5,10 @@ const router = express.Router()
 
 router.get("/api/flavors", async (req, res) => {
   const { access } = req.cookies
+  const queryParams = new URLSearchParams(req.query).toString()
 
   try {
-    const apiRes = await fetch(`${process.env.API_URL}/api/flavors`, {
+    const apiRes = await fetch(`${process.env.API_URL}/api/flavors?${queryParams}`, {
       method: "GET",
       headers: {
         Accept: "application/json",

@@ -1,15 +1,17 @@
-import { Controller, UseFormReturn } from "react-hook-form"
+import { UseFormReturn } from "react-hook-form"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { ItemFlavorFormField } from "../shared/ItemFormFields"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { SodaListItem, SodaListItems } from "types/SodaTypes"
+import { FlavorListItems } from "/types/FlavorTypes"
+import { Checkbox } from "../ui/checkbox"
 
 interface Props {
   form: UseFormReturn<any>
-  data: SodaListItems | undefined
+  sodaData: SodaListItems | undefined
+  flavorData: FlavorListItems | undefined
 }
 
-const CustomOrderFlavorForm = ({ form, data }: Props) => {
+const CustomOrderFlavorForm = ({ form, sodaData, flavorData }: Props) => {
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -26,9 +28,9 @@ const CustomOrderFlavorForm = ({ form, data }: Props) => {
                   value={field.value}
                   className="flex flex-col space-y-1"
                 >
-                  {data?.length &&
-                    data?.length > 0 &&
-                    data.map((soda: SodaListItem) => (
+                  {sodaData?.length &&
+                    sodaData?.length > 0 &&
+                    sodaData.map((soda: SodaListItem) => (
                       <FormItem key={soda.id} className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value={String(soda.id)} />
@@ -43,23 +45,43 @@ const CustomOrderFlavorForm = ({ form, data }: Props) => {
           )}
         />
       </div>
-      <div>
-        <FormField
-          control={form.control}
-          name="custom_order_flavors"
-          render={() => (
-            <>
+      <FormField
+        control={form.control}
+        name="items"
+        render={() => (
+          <FormItem>
+            <div className="mb-4">
               <FormLabel>Flavors</FormLabel>
-              <div className="flex flex-col gap-4 mt-2">
-                {form.watch("custom_order_flavors").map((flavor: object, index: number) => {
-                  return <ItemFlavorFormField key={index} form={form} index={index} fieldName="custom_order_flavors" />
-                })}
-              </div>
-              <FormMessage />
-            </>
-          )}
-        />
-      </div>
+            </div>
+            {flavorData &&
+              flavorData.map((flavor) => (
+                <FormField
+                  key={flavor.id}
+                  control={form.control}
+                  name="custom_order_flavors"
+                  render={({ field }) => {
+                    return (
+                      <FormItem key={flavor.id} className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(flavor.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, flavor.id])
+                                : field.onChange(field.value?.filter((value: any) => value !== flavor.id))
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">{flavor.name}</FormLabel>
+                      </FormItem>
+                    )
+                  }}
+                />
+              ))}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   )
 }

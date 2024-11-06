@@ -42,7 +42,10 @@ export const flavorsApi = createApi({
       })
     }),
     getFlavorsList: builder.query({
-      query: () => "/api/flavors"
+      query: (params: Record<string, string>) => {
+        const queryParams = new URLSearchParams(params).toString();
+         return `/api/flavors?${queryParams}`
+      }
     }),
     getFlavorsDropdown: builder.query({
       query: () => "/api/flavors/autocomplete"

@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import { useDidMountEffect } from "utils/SharedUtils"
 import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
 import { useGetSodasListQuery } from "services/sodas"
+import { useGetFlavorsListQuery } from "services/flavors"
 
 interface Props {
   menuItem: MenuItemListItem
@@ -17,6 +18,12 @@ const MenuItemCustomOrder = ({ menuItem, form }: Props) => {
     { refetchOnMountOrArgChange: true }
   )
   const { data: sodaData, isSuccess: sodaIsSuccess } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data: flavorData } = useGetFlavorsListQuery(
+    {
+      ordering: "name",
+    },
+    { refetchOnMountOrArgChange: true }
+  )
 
   useEffect(() => {
     if (isSuccess && sodaIsSuccess) {
@@ -26,25 +33,11 @@ const MenuItemCustomOrder = ({ menuItem, form }: Props) => {
 
   useEffect(() => {
     if (isSuccess) {
-      const newData = [
-        {
-          flavor: {
-            value: 0,
-            label: "Select a flavor",
-          },
-          quantity: "",
-        },
-      ]
+      const newData: any[] = []
       // Wrap the loop in an async function
       const updateFlavorsAsync = async () => {
         for (const flavor of data.flavors) {
-          newData.unshift({
-            flavor: {
-              value: flavor.flavor,
-              label: flavor.flavor__name,
-            },
-            quantity: String(flavor.cup_quantities[form.watch("cup")]),
-          })
+          newData.unshift(flavor.flavor)
           form.setValue("custom_order_flavors", newData)
           await new Promise((resolve) => setTimeout(resolve, 250)) // Wait for half a second after setting the value
         }
@@ -59,7 +52,7 @@ const MenuItemCustomOrder = ({ menuItem, form }: Props) => {
     refetch()
   }, [form.watch("cup")])
 
-  return <CustomOrderFlavorForm form={form} data={sodaData} />
+  return <CustomOrderFlavorForm form={form} sodaData={sodaData} flavorData={flavorData} />
 }
 
 export default MenuItemCustomOrder

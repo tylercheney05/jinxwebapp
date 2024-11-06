@@ -24,6 +24,7 @@ import { cleanFormData, handleError } from "utils/FormUtils"
 import { toast } from "react-toastify"
 import { useDidMountEffect } from "utils/SharedUtils"
 import { ScrollArea } from "../ui/scroll-area"
+import { Card, CardContent } from "../ui/card"
 
 interface Props {
   menuItem: MenuItemListItem
@@ -45,15 +46,18 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     }),
     note: z.string().optional(),
     custom_order__soda: z.string(),
-    custom_order_flavors: z.array(
-      z.object({
-        flavor: z.object({
-          value: z.number().int(),
-          label: z.string(),
-        }),
-        quantity: z.string(),
-      })
-    ),
+    custom_order_flavors: z.array(z.number()).refine((value) => value.some((item) => item), {
+      message: "You have to select at least one flavor",
+    }),
+    // custom_order_flavors: z.array(
+    //   z.object({
+    //     flavor: z.object({
+    //       value: z.number().int(),
+    //       label: z.string(),
+    //     }),
+    //     quantity: z.string(),
+    //   })
+    // ),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,22 +67,14 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
       order__location: Number(locationId),
       note: "",
       custom_order__soda: "",
-      custom_order_flavors: [
-        {
-          flavor: {
-            value: 0,
-            label: "Select a flavor",
-          },
-          quantity: "",
-        },
-      ],
+      custom_order_flavors: [],
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanZeroSugar(updatedValues)
-    updatedValues = cleanFlavorsData(updatedValues, "custom_order_flavors")
+    // updatedValues = cleanFlavorsData(updatedValues, "custom_order_flavors")
     dispatch(createOrderItem(cleanFormData(updatedValues))).then((data) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()
@@ -93,38 +89,25 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
 
   useDidMountEffect(() => {
     if (!isCustomized) {
-      form.setValue("custom_order_flavors", [
-        {
-          flavor: {
-            value: 0,
-            label: "Select a flavor",
-          },
-          quantity: "",
-        },
-      ])
+      form.setValue("custom_order_flavors", [])
       // Assuming 'custom_order__soda' has a similar default value you want to reset to
       form.setValue("custom_order__soda", "")
     }
   }, [isCustomized])
 
+  console.log("flavors", form.watch("custom_order_flavors"))
+  console.log("form", form.formState.errors)
+
   return (
     <Form {...form}>
       <form>
-        <Carousel className="w-full max-w-xs m-auto">
-          <ScrollArea className="max-h-[600px] overflow-auto">
-            <CarouselContent>
-              <CarouselItem className="flex justify-center">
-                <div>
-                  <CupFormField form={form} />
-                </div>
-              </CarouselItem>
-              <CarouselItem className="flex justify-center">
-                <div>
-                  <ZeroSugarFormField form={form} />
-                </div>
-              </CarouselItem>
-              <CarouselItem className="flex justify-center">
-                <div className="p-8">
+        <ScrollArea className="max-h-[600px] overflow-auto">
+          <div className="flex flex-col gap-4">
+            <CupFormField form={form} />
+            <ZeroSugarFormField form={form} />
+            <div className="p-8">
+              <Card>
+                <CardContent className="pt-4">
                   <div className="flex flex-col gap-4">
                     <FormLabel>Customize?</FormLabel>
                     <Switch
@@ -134,26 +117,20 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
                     />
                     {isCustomized ? <MenuItemCustomOrder menuItem={menuItem} form={form} /> : ""}
                   </div>
-                </div>
-              </CarouselItem>
-              <CarouselItem className="flex justify-center">
-                <NoteFormField form={form} />
-              </CarouselItem>
-              <CarouselItem className="flex justify-center">
-                <div className="flex gap-4 flex-col">
-                  {form.watch("cup") ? <Price menuItem={menuItem} form={form} isCustomized={isCustomized} /> : ""}
-                  <div>
-                    <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                      Add to order
-                    </Button>
-                  </div>
-                </div>
-              </CarouselItem>
-            </CarouselContent>
-          </ScrollArea>
-          <CarouselPrevious className={!isDesktop ? "-left-4" : ""} />
-          <CarouselNext className={!isDesktop ? "-right-4" : ""} />
-        </Carousel>
+                </CardContent>
+              </Card>
+            </div>
+            <NoteFormField form={form} />
+            <div className="flex gap-4 flex-col">
+              {/* {form.watch("cup") ? <Price menuItem={menuItem} form={form} isCustomized={isCustomized} /> : ""} */}
+              <div>
+                <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                  Add to order
+                </Button>
+              </div>
+            </div>
+          </div>
+        </ScrollArea>
       </form>
     </Form>
   )

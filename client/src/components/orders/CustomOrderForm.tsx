@@ -20,6 +20,8 @@ import { toast } from "react-toastify"
 import { useEffect } from "react"
 import { cupsApi } from "services/cups"
 import { useGetSodasListQuery } from "services/sodas"
+import { useGetFlavorsListQuery } from "services/flavors"
+import { ScrollArea } from "../ui/scroll-area"
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -28,7 +30,13 @@ interface Props {
 const CustomOrderForm = ({ setOpen }: Props) => {
   const { locationId } = useSelector((state: RootState) => state.location)
   const dispatch = useDispatch<AppDispatch>()
-  const { data: sodaData, isSuccess: sodaIsSuccess } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data: sodaData } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data: flavorData } = useGetFlavorsListQuery(
+    {
+      ordering: "name",
+    },
+    { refetchOnMountOrArgChange: true }
+  )
 
   const formSchema = z.object({
     order__location: z.number(),
@@ -107,17 +115,21 @@ const CustomOrderForm = ({ setOpen }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="flex gap-8 flex-col">
-        <CupFormField form={form} />
-        <ZeroSugarFormField form={form} />
-        <CustomOrderFlavorForm form={form} data={sodaData} />
-        <NoteFormField form={form} />
-        {form.watch("cup") ? <Price form={form} isCustomized={true} /> : ""}
-        <div>
-          <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-            Add to order
-          </Button>
-        </div>
+      <form>
+        <ScrollArea className="max-h-[600px] overflow-auto">
+          <div className="flex gap-8 flex-col">
+            <CupFormField form={form} />
+            <ZeroSugarFormField form={form} />
+            <CustomOrderFlavorForm form={form} sodaData={sodaData} flavorData={flavorData} />
+            <NoteFormField form={form} />
+            {/* {form.watch("cup") ? <Price form={form} isCustomized={true} /> : ""} */}
+            <div>
+              <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                Add to order
+              </Button>
+            </div>
+          </div>
+        </ScrollArea>
       </form>
     </Form>
   )
