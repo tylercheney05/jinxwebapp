@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { useGetOrderDetailQuery, usePrepareOrderItemMutation } from "services/orders"
+import { useGetOrderDetailQuery, useUpdateOrderProgressMutation } from "services/orders"
 import { OrderItemDetailItem } from "types/OrderTypes"
 import { useNavigate, useParams } from "react-router-dom"
 import { Progress } from "../ui/progress"
@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
 
 const MakeOrder = () => {
-  const [prepareOrderItem, { isSuccess }] = usePrepareOrderItemMutation()
+  const [updateOrderProgress, { isSuccess }] = useUpdateOrderProgressMutation()
   const { id } = useParams<{ id: string }>()
   const { data, refetch } = useGetOrderDetailQuery({ id: id }, { refetchOnMountOrArgChange: true })
   const { locationId } = useSelector((state: RootState) => state.location)
@@ -19,6 +19,7 @@ const MakeOrder = () => {
   const navigate = useNavigate()
   const isMounted = useRef(true)
   const [complete, setComplete] = useState(false)
+  const [index, setIndex] = useState(1)
 
   const client = new W3CWebSocket(`${process.env.REACT_APP_WEBSOCKET_URL}/ws/orders/${locationId}/?user_id=${user?.id}`)
 
@@ -63,18 +64,8 @@ const MakeOrder = () => {
     }
   }, [isSuccess])
 
-  const handleNext = (index: any) => {
-    prepareOrderItem({ id: data?.order_items[index].id, is_prepared: true })
-    refetch()
-  }
-
-  const handlePrev = (index: any) => {
-    prepareOrderItem({ id: data?.order_items[index - 1].id, is_prepared: false })
-    refetch()
-  }
-
-  const handleClickOnLastItem = (index: any) => {
-    prepareOrderItem({ id: data?.order_items[index].id, is_prepared: true })
+  const handleClickOnLastItem = () => {
+    updateOrderProgress({ id: id, is_in_progress: false, is_complete: true })
     setComplete(true)
     refetch()
   }
@@ -83,14 +74,7 @@ const MakeOrder = () => {
     <div>
       <div>
         {data?.order_items && data.order_items.length > 0 && (
-          <Progress
-            value={
-              (data.order_items.filter((item: OrderItemDetailItem) => item.is_prepared).length /
-                data.order_items.length) *
-              100
-            }
-            className="mb-4"
-          />
+          <Progress value={(index / data.order_items.length) * 100} className="mb-4" />
         )}
       </div>
       <Carousel className="w-full max-w-xs m-auto">
@@ -133,10 +117,10 @@ const MakeOrder = () => {
             )
           })}
         </CarouselContent>
-        <CarouselPrevious onClickWithIndex={(index) => handlePrev(index)} />
+        <CarouselPrevious onClickWithIndex={(index) => setIndex(index)} />
         <CarouselNext
-          onClickWithIndex={(index) => handleNext(index)}
-          allowClickOnLastItem={(index) => handleClickOnLastItem(index)}
+          onClickWithIndex={(index) => setIndex(index + 2)}
+          allowClickOnLastItem={(index) => handleClickOnLastItem()}
         />
       </Carousel>
     </div>

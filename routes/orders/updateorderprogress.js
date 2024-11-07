@@ -3,14 +3,14 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.patch("/api/orders/items/:id/prepare-order-item", async (req, res) => {
-  const { is_prepared } = req.body
+router.patch("/api/orders/:id/update-in-progress", async (req, res) => {
+  const { is_in_progress, is_complete } = req.body
   const { access } = req.cookies
   const { id } = req.params
 
-  const body = JSON.stringify({ is_prepared })
+  const body = JSON.stringify({ is_in_progress, is_complete })
   try {
-    const apiRes = await fetch(`${process.env.API_URL}/api/orders/items/${id}/prepare-order-item/`, {
+    const apiRes = await fetch(`${process.env.API_URL}/api/orders/${id}/update-in-progress/`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

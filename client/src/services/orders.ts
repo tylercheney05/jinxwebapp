@@ -9,7 +9,18 @@ export const ordersApi = createApi({
     getOrderDetail: builder.query<OrderDetailItem, object>({
       query: ({ id }: {id: number}) => `/api/orders/${id}`
     }),
-  })
+    updateOrderProgress: builder.mutation({
+      query: ({ id, is_in_progress, is_complete = false }) => ({
+        url: `/api/orders/${id}/update-in-progress`,
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ is_in_progress, is_complete })
+      }), 
+    })
+  }),
 })
 
 export const orderItemsApi = createApi({
@@ -23,17 +34,6 @@ export const orderItemsApi = createApi({
         return `/api/orders/items?${queryParams}`
       },
     }),
-    prepareOrderItem: builder.mutation({
-      query: ({ id, is_prepared }) => ({
-        url: `/api/orders/items/${id}/prepare-order-item`,
-        method: 'PATCH',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ is_prepared })
-      }), 
-    })
 })
 })
 
@@ -61,6 +61,6 @@ export const orderNamesApi = createApi({
   }),
 })
 
-export const { useGetOrderDetailQuery } = ordersApi
-export const { useGetOrderItemListQuery, usePrepareOrderItemMutation } = orderItemsApi
+export const { useGetOrderDetailQuery, useUpdateOrderProgressMutation } = ordersApi
+export const { useGetOrderItemListQuery } = orderItemsApi
 export const { useCreateOrderNameMutation, useGetOrderNameListQuery } = orderNamesApi

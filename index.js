@@ -42,20 +42,20 @@ const detailCupRoute = require("./routes/cups/detail")
 // import order item routes
 const createOrderItemRoute = require("./routes/orderitems/create")
 const listOrderItemsRoute = require("./routes/orderitems/list")
-const prepareOrderItemRoute = require("./routes/orderitems/prepareOrderItem")
 
 // import order routes
 const listUserOrdersRoute = require("./routes/orders/userorderslist")
 const completeOrderPaymentRoute = require("./routes/orders/completeorder")
 const listOrdersQueueRoute = require("./routes/orders/ordersqueuelist")
 const detailOrderRoute = require("./routes/orders/detail")
+const updateOrderProgressRoute = require("./routes/orders/updateorderprogress")
 
 // import locations routes
 const createLocationRoute = require("./routes/locations/create")
 const listLocationsRoute = require("./routes/locations/list")
 const dropdownLocationsRoute = require("./routes/locations/dropdown")
 const setCookieLocationRoute = require("./routes/locations/setCookie")
-const getCookieLocationRoute = require("./routes/locations/getCookie")
+const getCookieLocationRoute = require("./routes/locations/getcookie")
 const detailLocationRoute = require("./routes/locations/detail")
 
 // import order name routes
@@ -117,12 +117,12 @@ app.use(detailCupRoute)
 app.use(createOrderItemRoute)
 app.use(listOrderItemsRoute)
 app.use(listOrdersQueueRoute)
-app.use(prepareOrderItemRoute)
 
 // Order Routes
 app.use(listUserOrdersRoute)
 app.use(completeOrderPaymentRoute)
 app.use(detailOrderRoute)
+app.use(updateOrderProgressRoute)
 
 // Locations Routes
 app.use(createLocationRoute)
