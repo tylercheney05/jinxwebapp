@@ -26,7 +26,6 @@ export interface OrderItemListItem {
     order_item_flavors: {
         [key: string]: string;
     };
-    is_prepared: boolean
 }
 
 export interface OrderItemListItems extends Array<OrderItemListItem> {}
@@ -42,7 +41,6 @@ export interface OrderItemDetailItem {
     order_item_flavors: {
         [key: string]: string;
     };
-    is_prepared: boolean;
 }
 
 export interface OrderNameItem {
