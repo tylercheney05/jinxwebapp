@@ -74,13 +74,10 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     }
   }, [isCustomized])
 
-  console.log("flavors", form.watch("custom_order_flavors"))
-  console.log("form", form.formState.errors)
-
   return (
     <Form {...form}>
       <form>
-        <ScrollArea className="max-h-[600px] overflow-auto">
+        <ScrollArea className="max-h-[500px] overflow-auto">
           <div className="flex flex-col gap-4">
             <CupFormField form={form} />
             <ZeroSugarFormField form={form} />
@@ -108,6 +105,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
                 </Button>
               </div>
             </div>
+            <div className="h-[300px]"></div>
           </div>
         </ScrollArea>
       </form>

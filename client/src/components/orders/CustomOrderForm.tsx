@@ -108,7 +108,7 @@ const CustomOrderForm = ({ setOpen }: Props) => {
   return (
     <Form {...form}>
       <form>
-        <ScrollArea className="max-h-[600px] overflow-auto">
+        <ScrollArea className="max-h-[500px] overflow-auto">
           <div className="flex gap-8 flex-col">
             <CupFormField form={form} />
             <ZeroSugarFormField form={form} />
@@ -120,6 +120,7 @@ const CustomOrderForm = ({ setOpen }: Props) => {
                 Add to order
               </Button>
             </div>
+            <div className="h-[300px]"></div>
           </div>
         </ScrollArea>
       </form>
