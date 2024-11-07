@@ -37,38 +37,16 @@ const CustomOrderForm = ({ setOpen }: Props) => {
     low_sugar: z.enum(["normal", "low_sugar"], {
       required_error: "You need to select a soda type",
     }),
-    custom_order__soda: z.object({
-      value: z.number().int(),
-      label: z.string(),
-    }),
-    custom_order_flavors: z.array(
-      z.object({
-        flavor: z.object({
-          value: z.number().int(),
-          label: z.string(),
-        }),
-        quantity: z.string(),
-      })
-    ),
+    custom_order__soda: z.string(),
+    custom_order_flavors: z.array(z.number()),
     note: z.string().optional(),
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       order__location: Number(locationId),
-      custom_order__soda: {
-        value: 0,
-        label: "Select a Soda",
-      },
-      custom_order_flavors: [
-        {
-          flavor: {
-            value: 0,
-            label: "Select a flavor",
-          },
-          quantity: "",
-        },
-      ],
+      custom_order__soda: "",
+      custom_order_flavors: [],
     },
   })
 
@@ -86,24 +64,6 @@ const CustomOrderForm = ({ setOpen }: Props) => {
       }
     })
   }
-
-  useEffect(() => {
-    var conversionFactor: string
-    if (form.watch("cup")) {
-      dispatch(cupsApi.endpoints.getCupDetail.initiate({ id: form.watch("cup") })).then((data: any) => {
-        if (data.status === "fulfilled") {
-          conversionFactor = Math.round(data.data.conversion_factor).toString()
-          form.watch("custom_order_flavors").map((flavor, index) => {
-            let updatedValues = form.getValues()
-            if (flavor.flavor.value) {
-              updatedValues.custom_order_flavors[index].quantity = conversionFactor
-              form.setValue("custom_order_flavors", updatedValues.custom_order_flavors)
-            }
-          })
-        }
-      })
-    }
-  }, [form.watch("cup")])
 
   return (
     <Form {...form}>
