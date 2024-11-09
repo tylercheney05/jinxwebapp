@@ -76,6 +76,7 @@ const MakeOrder = () => {
         {data?.order_items && data.order_items.length > 0 && (
           <Progress value={(index / data.order_items.length) * 100} className="mb-4" />
         )}
+        <h1 className="text-center my-8 text-2xl">{data?.order_name__name}</h1>
       </div>
       <Carousel className="w-full max-w-xs m-auto">
         <CarouselContent>
