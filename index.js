@@ -42,6 +42,7 @@ const detailCupRoute = require("./routes/cups/detail")
 // import order item routes
 const createOrderItemRoute = require("./routes/orderitems/create")
 const listOrderItemsRoute = require("./routes/orderitems/list")
+const deleteOrderItemRoute = require("./routes/orderitems/delete")
 
 // import order routes
 const listUserOrdersRoute = require("./routes/orders/userorderslist")
@@ -116,13 +117,14 @@ app.use(detailCupRoute)
 // Order Item Routes
 app.use(createOrderItemRoute)
 app.use(listOrderItemsRoute)
-app.use(listOrdersQueueRoute)
+app.use(deleteOrderItemRoute)
 
 // Order Routes
 app.use(listUserOrdersRoute)
 app.use(completeOrderPaymentRoute)
 app.use(detailOrderRoute)
 app.use(updateOrderProgressRoute)
+app.use(listOrdersQueueRoute)
 
 // Locations Routes
 app.use(createLocationRoute)

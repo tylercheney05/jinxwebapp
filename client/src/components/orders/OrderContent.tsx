@@ -48,7 +48,7 @@ const OrderContent = ({ order }: Props) => {
     },
   })
   const { user } = useSelector((state: RootState) => state.user)
-  const { data, isLoading } = useGetOrderItemListQuery(
+  const { data, isLoading, refetch } = useGetOrderItemListQuery(
     {
       order__collected_by: String(user?.id),
       order__is_paid: "false",
@@ -99,7 +99,7 @@ const OrderContent = ({ order }: Props) => {
           ) : (
             <>
               <div>
-                <OrderContentItems data={data} />
+                <OrderContentItems data={data} refetch={refetch} readOnly={false} />
                 <div className="flex items-center space-x-2">
                   <Switch checked={showDiscount} onCheckedChange={setShowDiscount} />
                   <Label>Apply Discount</Label>

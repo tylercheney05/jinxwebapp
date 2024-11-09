@@ -9,6 +9,8 @@ import {
   MapPinOff,
   MapPin,
   ClipboardPlus,
+  Trash2,
+  CheckCheck,
 } from "lucide-react"
 
 interface Props {
@@ -46,6 +48,12 @@ NoLocationIcon.displayName = "LocationIcon"
 const AddCustomOrderIcon = ({ className, size }: Props) => <ClipboardPlus className={className} size={size} />
 AddCustomOrderIcon.displayName = "AddCustomOrder"
 
+const DeleteIcon = ({ className, size }: Props) => <Trash2 className={className} size={size} />
+DeleteIcon.displayName = "DeleteIcon"
+
+const DoubleCheckIcon = ({ className, size }: Props) => <CheckCheck className={className} size={size} />
+DoubleCheckIcon.displayName = "DoubleCheckIcon"
+
 export {
   LoadingIcon,
   MenuIcon,
@@ -57,4 +65,6 @@ export {
   NoLocationIcon,
   LocationIcon,
   AddCustomOrderIcon,
+  DeleteIcon,
+  DoubleCheckIcon,
 }

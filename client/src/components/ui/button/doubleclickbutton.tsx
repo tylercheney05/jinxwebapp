@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect, MutableRefObject } from "react"
 import { Button } from "../button"
-import { WarningIcon } from "components/Icons"
+import { DoubleCheckIcon, WarningIcon } from "components/Icons"
 import { ButtonProps } from "../button"
 import { Alert, AlertTitle, AlertDescription } from "../alert"
 import { cn } from "lib/utils"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../tooltip"
 
 interface Props extends ButtonProps {
   alertMsg?: string
   confirmButtonClassName?: string
+  smallConfirm?: boolean
 }
 
 function useOutsideAlerter(
@@ -45,6 +47,7 @@ const DoubleClickButton = ({
   variant = "default",
   alertMsg = "",
   confirmButtonClassName,
+  smallConfirm = false,
   ...props
 }: Props) => {
   const [firstClick, setFirstClick] = useState(true)
@@ -69,19 +72,40 @@ const DoubleClickButton = ({
         <div>
           <Button
             ref={buttonRef}
-            className={cn("flex gap-2 mb-1", confirmButtonClassName)}
+            className={cn("mb-1", confirmButtonClassName)}
             onClick={(e) => handleClick(e)}
             variant={variant}
             {...props}
           >
-            <WarningIcon /> Click to confirm
+            <div className="flex gap-2">
+              <WarningIcon />
+              {smallConfirm ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <DoubleCheckIcon />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Click button again to confirm your action.</p>
+                      <p>Click anywhere else to cancel.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                "Click to confirm"
+              )}
+            </div>
           </Button>
-          <Alert ref={alertRef} variant={variant}>
-            <AlertTitle className="font-bold">Heads up!</AlertTitle>
-            <AlertDescription>
-              {alertMsg ? alertMsg : "Click button again to confirm your action. Click anywhere else to cancel."}
-            </AlertDescription>
-          </Alert>
+          {!smallConfirm ? (
+            <Alert ref={alertRef} variant={variant}>
+              <AlertTitle className="font-bold">Heads up!</AlertTitle>
+              <AlertDescription>
+                {alertMsg ? alertMsg : "Click button again to confirm your action. Click anywhere else to cancel."}
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <div ref={alertRef}></div>
+          )}
         </div>
       )}
     </>

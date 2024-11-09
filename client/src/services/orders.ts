@@ -34,6 +34,16 @@ export const orderItemsApi = createApi({
         return `/api/orders/items?${queryParams}`
       },
     }),
+    deleteOrderItem: builder.mutation({
+      query: ({ id }) => ({
+        url: `/api/orders/items/${id}`,
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      })
+    })
 })
 })
 
@@ -62,5 +72,5 @@ export const orderNamesApi = createApi({
 })
 
 export const { useGetOrderDetailQuery, useUpdateOrderProgressMutation } = ordersApi
-export const { useGetOrderItemListQuery } = orderItemsApi
+export const { useGetOrderItemListQuery, useDeleteOrderItemMutation } = orderItemsApi
 export const { useCreateOrderNameMutation, useGetOrderNameListQuery } = orderNamesApi
