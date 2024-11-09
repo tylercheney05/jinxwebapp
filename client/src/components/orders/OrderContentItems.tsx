@@ -13,8 +13,8 @@ const OrderContentItems = ({ data }: Props) => {
       {data?.map((item, index) => (
         <div key={item.id} className="flex flex-col mb-4">
           <Label className="underline mb-2">Item #{index + 1}</Label>
-          <div className="flex gap-2 items-center">
-            {item.low_sugar ? <ZeroSugarIcon size="16px" /> : <SugarIcon size="16px" />}
+          <div className="flex gap-2 items-top">
+            {item.low_sugar ? <ZeroSugarIcon size="24px" /> : <SugarIcon size="24px" />}
             {item.order_item_name}
           </div>
           <div className="pl-4">
