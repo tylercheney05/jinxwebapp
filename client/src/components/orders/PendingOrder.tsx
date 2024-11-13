@@ -20,12 +20,22 @@ interface Props {
 
 const PendingOrder = ({ order, client }: Props) => {
   const [open, setOpen] = useState<boolean>(false)
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
-  const handleClick = () => {
+  const handleRemoveProgressClick = () => {
     client.send(
       JSON.stringify({
         order_in_progress: false,
+        order_id: order.id,
+      })
+    )
+  }
+
+  const handleRemoveCompletedClick = () => {
+    client.send(
+      JSON.stringify({
+        order_complete: false,
         order_id: order.id,
       })
     )
@@ -41,9 +51,9 @@ const PendingOrder = ({ order, client }: Props) => {
     >
       <CardHeader className="relative">
         <CardTitle>{order.order_name__name}</CardTitle>
-        {order.is_in_progress && (
+        {(order.is_in_progress || order.is_complete) && (
           <div className="absolute top-1 right-2">
-            <DropdownMenu>
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <span className="sr-only">More</span>
@@ -52,15 +62,28 @@ const PendingOrder = ({ order, client }: Props) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DoubleClickButton
-                  variant="ghost"
-                  onClick={handleClick}
-                  confirmButtonClassName="w-[214px]"
-                  alertClassName="w-[214px]"
-                  alertMsg="Please ensure another user is not working on this order before confirming"
-                >
-                  Remove from in progress
-                </DoubleClickButton>
+                {order.is_in_progress && (
+                  <DoubleClickButton
+                    variant="ghost"
+                    onClick={handleRemoveProgressClick}
+                    confirmButtonClassName="w-[214px]"
+                    alertClassName="w-[214px]"
+                    alertMsg="Please ensure another user is not working on this order before confirming"
+                  >
+                    Remove from "In Progress"
+                  </DoubleClickButton>
+                )}
+                {order.is_complete && (
+                  <DoubleClickButton
+                    variant="ghost"
+                    onClick={handleRemoveCompletedClick}
+                    confirmButtonClassName="w-[214px]"
+                    alertClassName="w-[214px]"
+                    alertMsg="Please confirm you'd like to remove this order from the completed list"
+                  >
+                    Remove from "Completed"
+                  </DoubleClickButton>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -75,7 +98,7 @@ const PendingOrder = ({ order, client }: Props) => {
     <div className="w-[400px]">
       {isDesktop ? (
         <Dialog open={open} modal onOpenChange={setOpen}>
-          <DialogTrigger className="w-full" disabled={order.is_in_progress}>
+          <DialogTrigger className="w-full" disabled={order.is_in_progress || dropdownOpen}>
             {card}
           </DialogTrigger>
           <DialogContent>
@@ -84,7 +107,7 @@ const PendingOrder = ({ order, client }: Props) => {
         </Dialog>
       ) : (
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerTrigger className="w-full" disabled={order.is_in_progress}>
+          <DrawerTrigger className="w-full" disabled={order.is_in_progress || dropdownOpen}>
             {card}
           </DrawerTrigger>
           <DrawerContent>
