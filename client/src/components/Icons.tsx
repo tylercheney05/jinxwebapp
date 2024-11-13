@@ -10,6 +10,7 @@ import {
   MapPin,
   ClipboardPlus,
   Trash2,
+  MoreVertical,
   CheckCheck,
 } from "lucide-react"
 
@@ -54,6 +55,9 @@ DeleteIcon.displayName = "DeleteIcon"
 const DoubleCheckIcon = ({ className, size }: Props) => <CheckCheck className={className} size={size} />
 DoubleCheckIcon.displayName = "DoubleCheckIcon"
 
+const MoreVerticalIcon = ({ className, size }: Props) => <MoreVertical className={className} size={size} />
+MoreVerticalIcon.displayName = "MoreVerticalIcon"
+
 export {
   LoadingIcon,
   MenuIcon,
@@ -67,4 +71,5 @@ export {
   AddCustomOrderIcon,
   DeleteIcon,
   DoubleCheckIcon,
+  MoreVerticalIcon,
 }

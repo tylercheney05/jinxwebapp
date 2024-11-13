@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../too
 interface Props extends ButtonProps {
   alertMsg?: string
   confirmButtonClassName?: string
+  alertClassName?: string
   smallConfirm?: boolean
 }
 
@@ -47,6 +48,7 @@ const DoubleClickButton = ({
   variant = "default",
   alertMsg = "",
   confirmButtonClassName,
+  alertClassName,
   smallConfirm = false,
   ...props
 }: Props) => {
@@ -97,7 +99,7 @@ const DoubleClickButton = ({
             </div>
           </Button>
           {!smallConfirm ? (
-            <Alert ref={alertRef} variant={variant}>
+            <Alert ref={alertRef} variant={variant} className={alertClassName}>
               <AlertTitle className="font-bold">Heads up!</AlertTitle>
               <AlertDescription>
                 {alertMsg ? alertMsg : "Click button again to confirm your action. Click anywhere else to cancel."}
