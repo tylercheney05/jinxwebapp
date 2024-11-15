@@ -76,9 +76,9 @@ const MakeOrder = () => {
         {data?.order_items && data.order_items.length > 0 && (
           <Progress value={(index / data.order_items.length) * 100} className="mb-4" />
         )}
-        <h1 className="text-center my-8 text-2xl">{data?.order_name__name}</h1>
+        <h1 className="text-center my-8 text-3xl">{data?.order_name__name}</h1>
       </div>
-      <Carousel className="w-full max-w-xs m-auto">
+      <Carousel className="w-full max-w-xs sm:max-w-md  m-auto">
         <CarouselContent>
           {data?.order_items.map((order_item: OrderItemDetailItem, index: number) => {
             return (
@@ -86,9 +86,9 @@ const MakeOrder = () => {
                 <div className="p-1">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-lg">{order_item.order_item_name}</CardTitle>
+                      <CardTitle className="text-lg sm:text-xl">{order_item.order_item_name}</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="text-base sm:text-lg">
                       <div>
                         <strong>Cup: </strong>
                         {order_item.cup__size__display}

@@ -6,7 +6,7 @@ import {
   navigationMenuTriggerStyle,
   NavigationMenuContent,
 } from "components/ui/navigation-menu"
-import { Link, useLocation, useParams } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { logout } from "features/user"
