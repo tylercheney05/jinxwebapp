@@ -26,6 +26,7 @@ export interface OrderItemListItem {
     order_item_flavors: {
         [key: string]: string;
     };
+    order__id: number;
 }
 
 export interface OrderItemListItems extends Array<OrderItemListItem> {}

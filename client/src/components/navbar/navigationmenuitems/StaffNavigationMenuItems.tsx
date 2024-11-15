@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { listUserOrders } from "features/orders"
 import { NavigationMenuContent, NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
-import OrderContent from "components/orders/OrderContent"
 import LocationContent from "components/locations/LocationContent"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import { Drawer, DrawerContent, DrawerTrigger } from "components/ui/drawer"
 import { ScrollArea } from "components/ui/scroll-area"
+import OrderCart from "components/orders/OrderCart"
 
 const StaffNavigationMenuItems = () => {
   const pathname = window.location.pathname
@@ -51,9 +51,7 @@ const StaffNavigationMenuItems = () => {
               <NavigationMenuTrigger>
                 <SodaIcon size="20px" className="text-jinxBlue" />
               </NavigationMenuTrigger>
-              <NavigationMenuContent asChild>
-                {locationId ? <OrderContent order={orders[0]} /> : <LocationContent />}
-              </NavigationMenuContent>
+              <NavigationMenuContent asChild>{locationId ? <OrderCart /> : <LocationContent />}</NavigationMenuContent>
             </NavigationMenuItem>
           ) : (
             <NavigationMenuItem className="flex pb-[5px] pr-[15px]">
@@ -63,7 +61,7 @@ const StaffNavigationMenuItems = () => {
                 </DrawerTrigger>
                 <DrawerContent>
                   <ScrollArea className="max-h-[500px] overflow-auto">
-                    {locationId ? <OrderContent order={orders[0]} /> : <LocationContent />}
+                    {locationId ? <OrderCart /> : <LocationContent />}
                   </ScrollArea>
                 </DrawerContent>
               </Drawer>

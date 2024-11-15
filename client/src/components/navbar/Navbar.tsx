@@ -6,7 +6,7 @@ import {
   navigationMenuTriggerStyle,
   NavigationMenuContent,
 } from "components/ui/navigation-menu"
-import { Link } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { logout } from "features/user"
@@ -15,12 +15,13 @@ import { JinxSodaLogoSingleLine } from "../logos/JinxSodaLogoSingleLine"
 import { NavigationMenuTrigger } from "@radix-ui/react-navigation-menu"
 import { MenuIcon } from "../Icons"
 import StaffNavigationMenuItems from "./navigationmenuitems/StaffNavigationMenuItems"
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery"
 
 const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>()
   const { isAuthenticated, user } = useSelector((state: RootState) => state.user)
-  const pathname = window.location.pathname
+  const location = useLocation()
+  const pathname = location.pathname
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const authLinks = (
@@ -98,7 +99,7 @@ const Navbar = () => {
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link to="/">
-              <NavigationMenuLink active={pathname === "/"} className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 <JinxSodaLogoSingleLine />
               </NavigationMenuLink>
             </Link>

@@ -34,7 +34,7 @@ const OrderContentItems = ({ data, readOnly = true, refetch }: Props) => {
           <Label className="underline mb-2">Item #{index + 1}</Label>
           <div className="flex gap-4 items-center">
             <div>{item.low_sugar ? <ZeroSugarIcon /> : <SugarIcon />}</div>
-            <div className="flex-grow">{item.order_item_name}</div>
+            <div>{item.order_item_name}</div>
             {!readOnly && (
               <DoubleClickButton
                 variant="outline"

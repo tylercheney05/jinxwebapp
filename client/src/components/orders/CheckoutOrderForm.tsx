@@ -1,7 +1,7 @@
 import { completeOrderPayment } from "features/orders"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
-import { OrderListItem, OrderNameItem } from "types/OrderTypes"
+import { OrderDetailItem, OrderListItem, OrderNameItem } from "types/OrderTypes"
 import { LoadingIcon } from "../Icons"
 import DoubleClickButton from "../ui/button/doubleclickbutton"
 import { toast } from "react-toastify"
@@ -20,12 +20,13 @@ import { useState } from "react"
 import { cleanFormData } from "utils/FormUtils"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
+import { useNavigate } from "react-router-dom"
 
 interface Props {
-  order: OrderListItem
+  order: OrderListItem | OrderDetailItem
 }
 
-const OrderContent = ({ order }: Props) => {
+const CheckoutOrderForm = ({ order }: Props) => {
   const { data: orderNamesData } = useGetOrderNameListQuery({}, { refetchOnMountOrArgChange: true })
   const [showDiscount, setShowDiscount] = useState<boolean>(false)
   const dispatch = useDispatch<AppDispatch>()
@@ -58,6 +59,7 @@ const OrderContent = ({ order }: Props) => {
   )
   const { locationId } = useSelector((state: RootState) => state.location)
   const totalPrice = data?.reduce((acc, item) => acc + item.price, 0) || 0
+  const navigate = useNavigate()
 
   const client = new W3CWebSocket(`${process.env.REACT_APP_WEBSOCKET_URL}/ws/orders/${locationId}/?user_id=${user?.id}`)
 
@@ -81,6 +83,7 @@ const OrderContent = ({ order }: Props) => {
             message: "Order completed",
           })
         )
+        navigate("/take-order")
       }
     })
   }
@@ -92,7 +95,7 @@ const OrderContent = ({ order }: Props) => {
   return (
     <Form {...form}>
       <form>
-        <div className="xs:w-[200px] sm:w-[500px] p-8 h-[800px] overflow-auto">
+        <div className="p-8">
           <h1 className="text-xl font-bold mb-8">Order</h1>
           {isLoading ? (
             <LoadingIcon />
@@ -167,4 +170,4 @@ const OrderContent = ({ order }: Props) => {
   )
 }
 
-export default OrderContent
+export default CheckoutOrderForm
