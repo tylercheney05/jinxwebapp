@@ -21,6 +21,7 @@ import { cleanFormData } from "utils/FormUtils"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useNavigate } from "react-router-dom"
+import { useDidMountEffect } from "utils/SharedUtils"
 
 interface Props {
   order: OrderListItem | OrderDetailItem
@@ -92,6 +93,12 @@ const CheckoutOrderForm = ({ order }: Props) => {
     handleClick()
   }
 
+  useDidMountEffect(() => {
+    if (!showDiscount) {
+      form.setValue("discount", { value: 0, label: "Select a discount" })
+    }
+  }, [showDiscount])
+
   return (
     <Form {...form}>
       <form>
@@ -108,7 +115,7 @@ const CheckoutOrderForm = ({ order }: Props) => {
                   <Label>Apply Discount</Label>
                 </div>
                 {showDiscount && (
-                  <div className="mt-4">
+                  <div className="mt-4 max-w-64">
                     <SelectFromApiFormField
                       form={form}
                       name="discount"
