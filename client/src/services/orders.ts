@@ -43,6 +43,12 @@ export const orderItemsApi = createApi({
           "Content-Type": "application/json"
         }
       })
+    }),
+    getPrice: builder.query({
+      query: (params: Record<string, string>) => {
+        const queryParams = new URLSearchParams(params).toString();
+        return `/api/orders/items/price?${queryParams}`
+      }
     })
 })
 })
@@ -72,5 +78,5 @@ export const orderNamesApi = createApi({
 })
 
 export const { useGetOrderDetailQuery, useUpdateOrderProgressMutation } = ordersApi
-export const { useGetOrderItemListQuery, useDeleteOrderItemMutation } = orderItemsApi
+export const { useGetOrderItemListQuery, useDeleteOrderItemMutation, useGetPriceQuery } = orderItemsApi
 export const { useCreateOrderNameMutation, useGetOrderNameListQuery } = orderNamesApi

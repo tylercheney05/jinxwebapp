@@ -2,7 +2,7 @@ import { z } from "zod"
 import { Form } from "../ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CupFormField, NoteFormField, Price, ZeroSugarFormField, cleanZeroSugar } from "../shared/ItemFormFields"
+import { CupFormField, NoteFormField, ZeroSugarFormField, cleanZeroSugar } from "../shared/ItemFormFields"
 import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
 import { Button } from "../ui/button"
 import { useDispatch, useSelector } from "react-redux"
@@ -10,11 +10,10 @@ import { AppDispatch, RootState } from "store"
 import { createOrderItem } from "features/orders"
 import { cleanFormData, handleError } from "utils/FormUtils"
 import { toast } from "react-toastify"
-import { useEffect } from "react"
-import { cupsApi } from "services/cups"
 import { useGetSodasListQuery } from "services/sodas"
 import { useGetFlavorsListQuery } from "services/flavors"
 import { ScrollArea } from "../ui/scroll-area"
+import { useGetPriceQuery } from "services/orders"
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -50,6 +49,18 @@ const CustomOrderForm = ({ setOpen }: Props) => {
     },
   })
 
+  const { data, isSuccess } = useGetPriceQuery(
+    {
+      cup: form.watch("cup"),
+      custom_order__soda: form.watch("custom_order__soda"),
+      custom_order_flavors: JSON.stringify(form.watch("custom_order_flavors")),
+    },
+    {
+      skip: !form.watch("cup"),
+      refetchOnMountOrArgChange: true,
+    }
+  )
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanZeroSugar(updatedValues)
@@ -73,8 +84,12 @@ const CustomOrderForm = ({ setOpen }: Props) => {
             <CupFormField form={form} />
             <ZeroSugarFormField form={form} />
             <CustomOrderFlavorForm form={form} sodaData={sodaData} flavorData={flavorData} />
+            {isSuccess && (
+              <div className="text-sm">
+                <strong>Price: </strong>${data.price.toFixed(2)}
+              </div>
+            )}
             <NoteFormField form={form} />
-            {/* {form.watch("cup") ? <Price form={form} isCustomized={true} /> : ""} */}
             <div>
               <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
                 Add to order

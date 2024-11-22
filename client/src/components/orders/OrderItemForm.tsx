@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { MenuItemListItem } from "types/MenuItemTypes"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
-import { cleanZeroSugar, CupFormField, NoteFormField, Price, ZeroSugarFormField } from "../shared/ItemFormFields"
+import { cleanZeroSugar, CupFormField, NoteFormField, ZeroSugarFormField } from "../shared/ItemFormFields"
 import { Switch } from "../ui/switch"
 import MenuItemCustomOrder from "./MenuItemCustomOrder"
 import { useState } from "react"
@@ -16,6 +16,7 @@ import { toast } from "react-toastify"
 import { useDidMountEffect } from "utils/SharedUtils"
 import { ScrollArea } from "../ui/scroll-area"
 import { Card, CardContent } from "../ui/card"
+import { useGetPriceQuery } from "services/orders"
 
 interface Props {
   menuItem: MenuItemListItem
@@ -49,6 +50,19 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
       custom_order_flavors: [],
     },
   })
+
+  const { data, isSuccess } = useGetPriceQuery(
+    {
+      cup: form.watch("cup"),
+      menu_item: String(menuItem.id),
+      custom_order__soda: form.watch("custom_order__soda"),
+      custom_order_flavors: JSON.stringify(form.watch("custom_order_flavors")),
+    },
+    {
+      skip: !form.watch("cup"),
+      refetchOnMountOrArgChange: true,
+    }
+  )
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
@@ -96,9 +110,13 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
                 </CardContent>
               </Card>
             </div>
+            {isSuccess && (
+              <div className="text-sm">
+                <strong>Price: </strong>${data.price.toFixed(2)}
+              </div>
+            )}
             <NoteFormField form={form} />
             <div className="flex gap-4 flex-col">
-              {/* {form.watch("cup") ? <Price menuItem={menuItem} form={form} isCustomized={isCustomized} /> : ""} */}
               <div>
                 <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
                   Add to order

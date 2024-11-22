@@ -43,6 +43,7 @@ const detailCupRoute = require("./routes/cups/detail")
 const createOrderItemRoute = require("./routes/orderitems/create")
 const listOrderItemsRoute = require("./routes/orderitems/list")
 const deleteOrderItemRoute = require("./routes/orderitems/delete")
+const getPriceOrderItemRoute = require("./routes/orderitems/getprice")
 
 // import order routes
 const listUserOrdersRoute = require("./routes/orders/userorderslist")
@@ -118,6 +119,7 @@ app.use(detailCupRoute)
 app.use(createOrderItemRoute)
 app.use(listOrderItemsRoute)
 app.use(deleteOrderItemRoute)
+app.use(getPriceOrderItemRoute)
 
 // Order Routes
 app.use(listUserOrdersRoute)
