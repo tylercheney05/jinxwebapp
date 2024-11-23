@@ -61,7 +61,7 @@ const CustomOrderFlavorForm = ({ form, sodaData, flavorData }: Props) => {
                   name="custom_order_flavors"
                   render={({ field }) => {
                     return (
-                      <FormItem key={flavor.id} className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormItem key={flavor.id} className="flex flex-row items-center space-x-3 space-y-0">
                         <FormControl>
                           <Checkbox
                             checked={field.value?.includes(flavor.id)}
