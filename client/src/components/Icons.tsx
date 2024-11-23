@@ -1,5 +1,4 @@
 import {
-  LoaderCircle,
   Menu,
   Plus,
   CandyOff,
@@ -13,13 +12,18 @@ import {
   MoreVertical,
   CheckCheck,
 } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { SizeProp } from "@fortawesome/fontawesome-svg-core"
 
 interface Props {
   className?: string
   size?: string
 }
 
-const LoadingIcon = ({ className, size }: Props) => <LoaderCircle className={className} size={size} />
+const LoadingIcon = ({ className, size }: { className?: string; size?: SizeProp }) => (
+  <FontAwesomeIcon className={className} size={size} icon={faSpinner} spinPulse />
+)
 LoadingIcon.displayName = "LoadingIcon"
 
 const MenuIcon = ({ className, size }: Props) => <Menu className={className} size={size} />
