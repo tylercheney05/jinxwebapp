@@ -72,7 +72,10 @@ export const orderNamesApi = createApi({
       query: () => '/api/orders/order-names',
     }),
     getOrderNameDropdown: builder.query({
-      query: () => '/api/orders/order-names/autocomplete',
+      query: (params: Record<string, string>) => {
+        const queryParams = new URLSearchParams(params).toString();
+        return `/api/orders/order-names/autocomplete?${queryParams}`
+      },
     }),
   }),
 })

@@ -15,7 +15,7 @@ const Layout = ({ title, content, children }: Props) => {
         <meta name="description" content={content} />
       </Helmet>
       <Navbar />
-      <div className="p-5">{children}</div>
+      <div className="pt-11 pb-5 px-5">{children}</div>
     </>
   )
 }

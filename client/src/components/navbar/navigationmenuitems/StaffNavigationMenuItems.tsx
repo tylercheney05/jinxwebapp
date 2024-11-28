@@ -1,7 +1,7 @@
 import { NavigationMenuItem, NavigationMenuLink, navigationMenuTriggerStyle } from "components/ui/navigation-menu"
 import { Link } from "react-router-dom"
 import { LocationIcon, NoLocationIcon, SodaIcon } from "components/Icons"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { listUserOrders } from "features/orders"
@@ -19,6 +19,7 @@ const StaffNavigationMenuItems = () => {
   const { orders } = useSelector((state: RootState) => state.orders)
   const { locationId } = useSelector((state: RootState) => state.location)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     dispatch(listUserOrders({ collected_by: String(user?.id), is_paid: "false" }))
@@ -51,17 +52,19 @@ const StaffNavigationMenuItems = () => {
               <NavigationMenuTrigger>
                 <SodaIcon size="20px" className="text-jinxBlue" />
               </NavigationMenuTrigger>
-              <NavigationMenuContent asChild>{locationId ? <OrderCart /> : <LocationContent />}</NavigationMenuContent>
+              <NavigationMenuContent asChild>
+                {locationId ? <OrderCart setOpen={setOpen} /> : <LocationContent />}
+              </NavigationMenuContent>
             </NavigationMenuItem>
           ) : (
             <NavigationMenuItem className="flex pb-[5px] pr-[15px]">
-              <Drawer>
+              <Drawer open={open} onOpenChange={setOpen}>
                 <DrawerTrigger>
                   <SodaIcon size="20px" className="text-jinxBlue" />
                 </DrawerTrigger>
                 <DrawerContent>
                   <ScrollArea className="max-h-[500px] overflow-auto">
-                    {locationId ? <OrderCart /> : <LocationContent />}
+                    {locationId ? <OrderCart setOpen={setOpen} /> : <LocationContent />}
                   </ScrollArea>
                 </DrawerContent>
               </Drawer>

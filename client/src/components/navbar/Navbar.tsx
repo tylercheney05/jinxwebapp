@@ -94,7 +94,7 @@ const Navbar = () => {
   )
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between fixed top-0 left-0 w-full bg-white shadow-md z-50">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

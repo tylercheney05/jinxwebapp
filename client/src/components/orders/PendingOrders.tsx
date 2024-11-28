@@ -24,7 +24,7 @@ const PendingOrders = () => {
   }
 
   return (
-    <div>
+    <div className="mt-4">
       <div className="flex flex-col gap-4 items-center">
         {ordersQueued.map((order: OrderListItem) => (
           <PendingOrder order={order} client={client} />

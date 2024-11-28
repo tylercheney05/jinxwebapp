@@ -3,9 +3,14 @@ import { RootState } from "store"
 import { useSelector } from "react-redux"
 import OrderContentItems from "./OrderContentItems"
 import { Button } from "../ui/button"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
-const OrderCart = () => {
+interface Props {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const OrderCart = ({ setOpen }: Props) => {
+  const navigate = useNavigate()
   const { user } = useSelector((state: RootState) => state.user)
   const { data } = useGetOrderItemListQuery(
     {
@@ -17,6 +22,16 @@ const OrderCart = () => {
 
   const totalPrice = data?.reduce((acc, item) => acc + item.price, 0) || 0
 
+  const handleClick = () => {
+    if (data && data.length > 0) {
+      const orderId = data[0].order__id
+      setOpen(false)
+      setTimeout(() => {
+        navigate(`/checkout-order/${orderId}`)
+      }, 250)
+    }
+  }
+
   return (
     <div className="xs:w-[200px] sm:w-[500px] p-8 max-h-[800px] overflow-auto">
       <OrderContentItems data={data} />
@@ -25,9 +40,9 @@ const OrderCart = () => {
       </div>
       {data && data?.length > 0 && (
         <div className="mt-8">
-          <Link to={`/checkout-order/${data[0].order__id}`}>
-            <Button variant="default">Checkout</Button>
-          </Link>
+          <Button variant="default" onClick={handleClick}>
+            Checkout
+          </Button>
         </div>
       )}
     </div>

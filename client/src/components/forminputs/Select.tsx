@@ -1,10 +1,14 @@
 import { useState } from "react"
 import { UseFormReturn, ControllerRenderProps } from "react-hook-form"
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "../ui/form"
+import { FormField } from "../ui/form"
 import { convertToOptions } from "utils/FormUtils"
 import Select from "react-select"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
+import { LabelType } from "types/SharedTypes"
+import debounce from "debounce-promise"
+import { FieldGroup } from "./FieldGroup"
+import AsyncSelect from "react-select/async"
 
 interface SelectInputProps {
   value?: string
@@ -38,6 +42,30 @@ interface SelectFromApiFormFieldProps {
   placeholder: string
   loadOptionsApi: any
   fieldsForDropdownLabel: Array<string>
+}
+
+interface AsyncSelectInputProps {
+  value: string | number
+  placeholder: string
+  loadOptions: any
+  hidden?: boolean
+  errorMsg?: string
+  field: ControllerRenderProps<any, string>
+  disabled?: boolean
+}
+
+interface AsyncSelectGroupProps {
+  form: UseFormReturn<any>
+  name: string
+  label: LabelType
+  placeholder: string
+  loadOptionsApi: any
+  minInputVal?: number
+  additionalApiParams?: object
+  disabled?: boolean
+  loading?: boolean
+  fieldsForDropdownLabel?: Array<string>
+  sheet?: boolean
 }
 
 export const SelectInputStyles = (hidden = false, errorMsg = "") => {
@@ -125,26 +153,19 @@ const SelectFormField = ({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="mt-2">
-          {
-            // If a label is provided, display it
-            label && <FormLabel>{label}</FormLabel>
-          }
-          <FormControl>
-            <SelectInput
-              value={field.value}
-              placeholder={placeholder}
-              options={options}
-              field={field}
-              onFocus={onFocus}
-              onChange={(val) => field.onChange(val)}
-              isLoading={isLoading}
-              disabled={disabled}
-              {...props}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
+        <FieldGroup label={label}>
+          <SelectInput
+            value={field.value}
+            placeholder={placeholder}
+            options={options}
+            field={field}
+            onFocus={onFocus}
+            onChange={(val) => field.onChange(val)}
+            isLoading={isLoading}
+            disabled={disabled}
+            {...props}
+          />
+        </FieldGroup>
       )}
     />
   )
@@ -197,4 +218,108 @@ const SelectFromApiFormField = ({
 }
 SelectFromApiFormField.displayName = "SelectFromApiFormField"
 
-export { SelectFromApiFormField, SelectFormField, SelectInput }
+const AsyncSelectInput = ({
+  value,
+  placeholder,
+  loadOptions,
+  field,
+  disabled = false,
+  ...props
+}: AsyncSelectInputProps) => {
+  // This input type is used when the
+  // options are defined from an API call
+  const handleOnChange = (val: any) => {
+    if (val) {
+      field.onChange(val)
+    } else {
+      field.onChange({ value: "", label: placeholder })
+    }
+  }
+
+  return (
+    <>
+      <AsyncSelect
+        value={value}
+        placeholder={placeholder}
+        onChange={(val) => {
+          handleOnChange(val)
+        }}
+        loadOptions={loadOptions}
+        styles={SelectInputStyles()}
+        classNames={{
+          control: () => SelectInputClassNames,
+        }}
+        isClearable={true}
+        isDisabled={disabled}
+        {...props}
+      />
+    </>
+  )
+}
+AsyncSelectInput.displayName = "AsyncSelectInput"
+
+const AsyncSelectFormField = ({
+  form,
+  name,
+  label,
+  placeholder,
+  loadOptionsApi,
+  minInputVal,
+  additionalApiParams = {}, // If additional params for API are passed then define them here
+  disabled = false,
+  loading = false,
+  fieldsForDropdownLabel = ["name"],
+  sheet = false,
+  ...props
+}: AsyncSelectGroupProps) => {
+  // Use this if you'd like the <select> <options> to only be
+  // generated when typing into the search bar
+  const dispatch = useDispatch<AppDispatch>()
+
+  // Adding the debounce will ensure that the API isn't called
+  // until the user stops typing
+  const loadOptions = debounce(async (inputValue: any, callback: any) => {
+    // If min input value is set then the user must type at least
+    // the min input value or the API will not be called
+    if (minInputVal && inputValue.length < minInputVal) {
+      return callback([])
+    } else {
+      return dispatch(
+        loadOptionsApi({
+          ...additionalApiParams,
+          search: inputValue,
+        })
+      ).then((response: any) => {
+        console.log("response", response)
+        if (response.status === "fulfilled") {
+          let options = convertToOptions(response.data.results, fieldsForDropdownLabel)
+          return options
+        } else {
+          return []
+        }
+      })
+    }
+  }, 1000)
+
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FieldGroup label={label}>
+          <AsyncSelectInput
+            value={field.value}
+            placeholder={placeholder}
+            loadOptions={loadOptions}
+            field={field}
+            disabled={disabled}
+            {...props}
+          />
+        </FieldGroup>
+      )}
+    />
+  )
+}
+AsyncSelectFormField.displayName = "AsyncSelectFormField"
+
+export { SelectFromApiFormField, SelectFormField, SelectInput, AsyncSelectFormField }
