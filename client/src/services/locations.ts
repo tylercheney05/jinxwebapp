@@ -6,14 +6,14 @@ export const locationsApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     createLocation: builder.mutation({
-      query: ({ name, address, city, state, zip_code, is_event }) => ({
+      query: ({ name }) => ({
         url: "/api/locations",
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, address, city, state, zip_code, is_event }),
+        body: JSON.stringify({ name }),
       }),
     }),
     getLocationsList: builder.query({
