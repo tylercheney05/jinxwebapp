@@ -36,7 +36,7 @@ const AddCupForm = () => {
   })
 
   useEffect(() => {
-    handleFormSubmitResponse(result, form, "Cup added successfully", refetch)
+    handleFormSubmitResponse(result, form, "Cup added successfully", "post", refetch)
   }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {

@@ -31,9 +31,17 @@ export const cleanFormData = (values: object) => {
   return data
 }
 
-export const handleFormSubmitResponse = (result: any, form: any, successMsg: string, refetch?: any) => {
+export const handleFormSubmitResponse = (
+  result: any,
+  form: any,
+  successMsg: string,
+  httpRequest: "post" | "put",
+  refetch?: any
+) => {
   if (result.isSuccess) {
-    form.reset()
+    if (httpRequest === "post") {
+      form.reset()
+    }
     if (refetch) {
       refetch()
     }

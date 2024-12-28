@@ -24,7 +24,7 @@ const AddOrderNameForm = () => {
   })
 
   useEffect(() => {
-    handleFormSubmitResponse(result, form, "Order Name added successfully", refetch)
+    handleFormSubmitResponse(result, form, "Order Name added successfully", "post", refetch)
   }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {

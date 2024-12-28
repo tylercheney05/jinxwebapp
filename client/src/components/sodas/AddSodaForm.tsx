@@ -24,7 +24,7 @@ const AddSodaForm = () => {
   })
 
   useEffect(() => {
-    handleFormSubmitResponse(result, form, "Soda added successfully", refetch)
+    handleFormSubmitResponse(result, form, "Soda added successfully", "post", refetch)
   }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {

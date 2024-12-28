@@ -59,7 +59,7 @@ const AddDiscountForm = () => {
   })
 
   useEffect(() => {
-    handleFormSubmitResponse(result, form, "Discount added successfully", refetch)
+    handleFormSubmitResponse(result, form, "Discount added successfully", "post", refetch)
   }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {

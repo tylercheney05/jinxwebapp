@@ -35,7 +35,7 @@ const AddFlavorForm = () => {
   })
 
   useEffect(() => {
-    handleFormSubmitResponse(result, form, "Flavor added successfully", refetch)
+    handleFormSubmitResponse(result, form, "Flavor added successfully", "post", refetch)
   }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {

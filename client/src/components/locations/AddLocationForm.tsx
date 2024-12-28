@@ -26,7 +26,7 @@ const AddLocationForm = () => {
   })
 
   useEffect(() => {
-    handleFormSubmitResponse(result, form, "Location added successfully", refetch)
+    handleFormSubmitResponse(result, form, "Location added successfully", "post", refetch)
   }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
