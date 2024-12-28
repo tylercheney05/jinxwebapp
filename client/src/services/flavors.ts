@@ -8,7 +8,7 @@ export const flavorGroupsApi = createApi({
   endpoints: (builder) => ({
     createFlavorGroup: builder.mutation({
       query: ({ name, uom, price }) => ({
-        url: "/api/flavors/groups",
+        url: "/api/flavor-groups",
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -18,10 +18,10 @@ export const flavorGroupsApi = createApi({
       })
     }),
     getFlavorGroupsList: builder.query<FlavorGroupListItems, object>({
-      query: () => "/api/flavors/groups"
+      query: () => "/api/flavor-groups"
     }),
     getFlavorGroupsDropdown: builder.query({
-      query: () => "/api/flavors/groups/autocomplete"
+      query: () => "/api/flavor-groups/autocomplete"
     })
   })
 })

@@ -31,12 +31,12 @@ export const orderItemsApi = createApi({
     getOrderItemList: builder.query<OrderItemListItems, object>({
       query: (params: Record<string, string>) => {
         const queryParams = new URLSearchParams(params).toString();
-        return `/api/orders/items?${queryParams}`
+        return `/api/order-items?${queryParams}`
       },
     }),
     deleteOrderItem: builder.mutation({
       query: ({ id }) => ({
-        url: `/api/orders/items/${id}`,
+        url: `/api/order-items/${id}`,
         method: "DELETE",
         headers: {
           Accept: "application/json",
@@ -47,7 +47,7 @@ export const orderItemsApi = createApi({
     getPrice: builder.query({
       query: (params: Record<string, string>) => {
         const queryParams = new URLSearchParams(params).toString();
-        return `/api/orders/items/price?${queryParams}`
+        return `/api/order-items/price?${queryParams}`
       }
     })
 })
@@ -59,7 +59,7 @@ export const orderNamesApi = createApi({
   endpoints: (builder) => ({
     createOrderName: builder.mutation({
       query: ({ name }) => ({
-        url: '/api/orders/order-names',
+        url: '/api/order-names',
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -69,12 +69,12 @@ export const orderNamesApi = createApi({
       }),
     }),
     getOrderNameList: builder.query<OrderNameItems, object>({
-      query: () => '/api/orders/order-names',
+      query: () => '/api/order-names',
     }),
     getOrderNameDropdown: builder.query({
       query: (params: Record<string, string>) => {
         const queryParams = new URLSearchParams(params).toString();
-        return `/api/orders/order-names/autocomplete?${queryParams}`
+        return `/api/order-names/autocomplete?${queryParams}`
       },
     }),
   }),

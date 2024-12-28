@@ -99,7 +99,7 @@ export const createOrderItem = createAsyncThunk(
 	async ({ menu_item, cup, low_sugar, order__location, note, custom_order__soda, custom_order_flavors }: OrderItemProps, thunkAPI) => {
 		const body = JSON.stringify({ menu_item, cup, low_sugar, order__location, note, custom_order__soda, custom_order_flavors });
     function callApi() {
-      return fetch("/api/orders/items", {
+      return fetch("/api/order-items", {
           method: "POST",
           headers: {
                   Accept: 'application/json',

@@ -8,7 +8,7 @@ export const discountsApi = createApi({
   endpoints: (builder) => ({
     createDiscount: builder.mutation({
       query: ({ name, code, percent_or_price, percent, price, is_cup_specific, cup }) => ({
-        url: "/api/orders/discounts",
+        url: "/api/discounts",
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -18,10 +18,10 @@ export const discountsApi = createApi({
       }),
     }),
     getDiscountsList: builder.query<DiscountListItems, object>({
-      query: () => "/api/orders/discounts",
+      query: () => "/api/discounts",
     }),
     getDiscountsDropdown: builder.query({
-      query: () => "/api/orders/discounts/autocomplete",
+      query: () => "/api/discounts/autocomplete",
     }),
   }),
 })
