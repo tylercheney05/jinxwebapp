@@ -69,6 +69,7 @@ const dropdownOrderNamesRoute = require("./routes/ordernames/dropdown")
 const createLimitedTimePromoRoute = require("./routes/limitedtimepromos/create")
 const listLimitedTimePromosRoute = require("./routes/limitedtimepromos/list")
 const dropdownLimitedTimePromosRoute = require("./routes/limitedtimepromos/dropdown")
+const updateLimitedTimePromoRoute = require("./routes/limitedtimepromos/update")
 
 // import discount routes
 const listDiscountsRoute = require("./routes/discounts/list")
@@ -145,6 +146,7 @@ app.use(dropdownOrderNamesRoute)
 app.use(createLimitedTimePromoRoute)
 app.use(listLimitedTimePromosRoute)
 app.use(dropdownLimitedTimePromosRoute)
+app.use(updateLimitedTimePromoRoute)
 
 // Discount Routes
 app.use(listDiscountsRoute)

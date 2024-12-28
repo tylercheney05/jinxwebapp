@@ -4,17 +4,22 @@ import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { PlusIcon } from "../Icons"
+import { CircleCheckIcon, CircleXIcon, PlusIcon } from "../Icons"
 import { useEffect } from "react"
 import { handleFormSubmitResponse } from "utils/FormUtils"
 import { useCreateLimitedTimePromoMutation, useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
 import { LimitedTimePromoListItem } from "types/LimitedTimePromoTypes"
+import { EditIcon } from "lucide-react"
+import { Separator } from "../ui/separator"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet"
+import { limitedTimePromoFormSchema } from "constants/LimitedTimePromoConstants"
+import EditLimitedTimePromoForm from "./EditLimitedTimePromoForm"
 
 const AddLimitedTimePromoForm = () => {
   const [createLimitedTimePromo, result] = useCreateLimitedTimePromoMutation()
-  const { data, refetch } = useGetLimitedTimePromosListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data, refetch, error } = useGetLimitedTimePromosListQuery({}, { refetchOnMountOrArgChange: true })
   const formSchema = z.object({
-    name: z.string().min(1, { message: "Name is required" }),
+    name: limitedTimePromoFormSchema.name,
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -24,7 +29,7 @@ const AddLimitedTimePromoForm = () => {
   })
 
   useEffect(() => {
-    handleFormSubmitResponse(result, form, "Limited time promo added successfully", refetch)
+    handleFormSubmitResponse(result, form, "Limited time promo added successfully", "post", refetch)
   }, [result])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -35,9 +40,37 @@ const AddLimitedTimePromoForm = () => {
     <Form {...form}>
       {data?.length && data?.length > 0 ? <FormLabel>Existing Limited Time Promos</FormLabel> : null}
       {data?.map((limitedTimePromo: LimitedTimePromoListItem) => (
-        <div key={limitedTimePromo.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {limitedTimePromo.name}
-        </div>
+        <>
+          <div key={limitedTimePromo.id} className="h-10 pl-2 flex items-center text-sm gap-1 justify-between">
+            <div className="flex gap-4 items-center">
+              {limitedTimePromo.is_archived ? (
+                <div title={`${limitedTimePromo.name} promo is archived`}>
+                  <CircleXIcon />
+                </div>
+              ) : (
+                <div title={`${limitedTimePromo.name} promo is active`}>
+                  <CircleCheckIcon />
+                </div>
+              )}
+              {limitedTimePromo.name}
+            </div>
+            <Sheet>
+              <SheetTrigger>
+                <EditIcon className="cursor-pointer" size="18px" />
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Edit Limited Time Promo</SheetTitle>
+                  <SheetDescription>
+                    Make changes to the {limitedTimePromo.name} promo. Click save when you're done.
+                  </SheetDescription>
+                </SheetHeader>
+                <EditLimitedTimePromoForm limitedTimePromo={limitedTimePromo} refetch={refetch} />
+              </SheetContent>
+            </Sheet>
+          </div>
+          <Separator className="mt-2" />
+        </>
       ))}
       <form className="items-center gap-4 grid grid-cols-10">
         <div className="col-span-9">

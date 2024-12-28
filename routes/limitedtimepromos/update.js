@@ -3,17 +3,21 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.get("/api/limited-time-promotions", async (req, res) => {
+router.put("/api/limited-time-promotions/:id", async (req, res) => {
+  const { name, is_archived } = req.body
   const { access } = req.cookies
-  const queryParams = new URLSearchParams(req.query).toString()
+  const { id } = req.params
 
+  const body = JSON.stringify({ name, is_archived })
   try {
-    const apiRes = await fetch(`${process.env.API_URL}/api/menu-items/limited-time-promotions?${queryParams}`, {
-      method: "GET",
+    const apiRes = await fetch(`${process.env.API_URL}/api/menu-items/limited-time-promotions/${id}/`, {
+      method: "PUT",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${access}`,
       },
+      body,
     })
 
     const data = await apiRes.json()

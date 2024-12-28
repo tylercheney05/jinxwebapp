@@ -11,3 +11,14 @@ export const useDidMountEffect = (func: any, deps: any) => {
     }
   }, deps)
 }
+
+export const convertBooleanToString = (params: object) => {
+  return new URLSearchParams(
+    Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = String(value)
+      }
+      return acc
+    }, {} as Record<string, string>)
+  ).toString()
+}

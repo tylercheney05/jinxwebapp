@@ -22,7 +22,10 @@ const AddMenuItemForm = () => {
   const [isLimitedTime, setIsLimitedTime] = useState<boolean>(false)
   const [createMenuItem, result] = useCreateMenuItemMutation()
   const { data: sodaData } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
-  const { data: limitedTimePromosData } = useGetLimitedTimePromosListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data: limitedTimePromosData } = useGetLimitedTimePromosListQuery(
+    { is_archived: false },
+    { refetchOnMountOrArgChange: true }
+  )
   const [resetSodas, setResetSodas] = useState<boolean>(false)
   const formSchema = z
     .object({

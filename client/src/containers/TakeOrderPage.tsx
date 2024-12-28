@@ -13,12 +13,15 @@ import { useState } from "react"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "components/ui/drawer"
 import { useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
-import { LimitedTimePromoListItem } from "/types/LimitedTimePromoTypes"
+import { LimitedTimePromoListItem } from "types/LimitedTimePromoTypes"
 
 const TakeOrderPage = () => {
   const { user, loading } = useSelector((state: RootState) => state.user)
   const { data: sodaData } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
-  const { data: limitedTimePromosData } = useGetLimitedTimePromosListQuery({}, { refetchOnMountOrArgChange: true })
+  const { data: limitedTimePromosData } = useGetLimitedTimePromosListQuery(
+    { is_archived: false },
+    { refetchOnMountOrArgChange: true }
+  )
   const [open, setOpen] = useState<boolean>(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -70,20 +73,20 @@ const TakeOrderPage = () => {
                 </div>
               </div>
             ))}
-            {limitedTimePromosData?.length &&
-              limitedTimePromosData?.length > 0 &&
-              limitedTimePromosData?.map((promo: LimitedTimePromoListItem) => (
-                <div key={promo.id}>
-                  <div className="grid md:grid-cols-11 items-center">
-                    <div className="sm:bg-transparent md:bg-black h-1 md:col-span-5 rounded-sm"></div>
-                    <div className="text-center text-lg-2">{promo.name}</div>
-                    <div className="sm:bg-transparent md:bg-black h-1 md:col-span-5 rounded-sm"></div>
+            {limitedTimePromosData?.length && limitedTimePromosData?.length > 0
+              ? limitedTimePromosData?.map((promo: LimitedTimePromoListItem) => (
+                  <div key={promo.id}>
+                    <div className="grid md:grid-cols-11 items-center">
+                      <div className="sm:bg-transparent md:bg-black h-1 md:col-span-5 rounded-sm"></div>
+                      <div className="text-center text-lg-2">{promo.name}</div>
+                      <div className="sm:bg-transparent md:bg-black h-1 md:col-span-5 rounded-sm"></div>
+                    </div>
+                    <div className="my-2">
+                      <ListMenuItems promo={promo} isClickable={true} />
+                    </div>
                   </div>
-                  <div className="my-2">
-                    <ListMenuItems promo={promo} isClickable={true} />
-                  </div>
-                </div>
-              ))}
+                ))
+              : null}
           </div>
         )}
       </LocationNeededRoute>

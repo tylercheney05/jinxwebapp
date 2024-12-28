@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
+import { convertBooleanToString } from "utils/SharedUtils";
 
 export const limitedTimePromosApi = createApi({
   reducerPath: "limitedTimePromosApi",
@@ -7,7 +8,7 @@ export const limitedTimePromosApi = createApi({
   endpoints: (builder) => ({
     createLimitedTimePromo: builder.mutation({
       query: ({ name }) => ({
-        url: "/api/menu-items/limited-time-promotions/",
+        url: "/api/limited-time-promotions/",
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -17,12 +18,32 @@ export const limitedTimePromosApi = createApi({
       })
     }),
     getLimitedTimePromosList: builder.query({
-      query: () => "/api/menu-items/limited-time-promotions/"
+      query: (params: {
+        is_archived?: boolean
+      } = {}) => {
+        const queryParams = convertBooleanToString(params);
+        return `/api/limited-time-promotions?${queryParams}`
+      }
     }),
     getLimitedTimePromosDropdown: builder.query({
-      query: () => "/api/menu-items/limited-time-promotions/autocomplete",
+      query: () => "/api/limited-time-promotions/autocomplete",
+    }),
+    updateLimitedTimePromo: builder.mutation({
+      query: ({ id, name, is_archived }) => ({
+        url: `/api/limited-time-promotions/${id}`,
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, is_archived }),
+      })
     }),
   }),
 })
 
-export const { useCreateLimitedTimePromoMutation, useGetLimitedTimePromosListQuery } = limitedTimePromosApi
+export const { 
+  useCreateLimitedTimePromoMutation, 
+  useGetLimitedTimePromosListQuery, 
+  useUpdateLimitedTimePromoMutation
+} = limitedTimePromosApi

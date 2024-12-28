@@ -11,6 +11,9 @@ import {
   Trash2,
   MoreVertical,
   CheckCheck,
+  SquarePen,
+  CircleCheck,
+  CircleX,
 } from "lucide-react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSpinner } from "@fortawesome/free-solid-svg-icons"
@@ -62,6 +65,15 @@ DoubleCheckIcon.displayName = "DoubleCheckIcon"
 const MoreVerticalIcon = ({ className, size }: Props) => <MoreVertical className={className} size={size} />
 MoreVerticalIcon.displayName = "MoreVerticalIcon"
 
+const EditIcon = ({ className, size }: Props) => <SquarePen className={className} size={size} />
+EditIcon.displayName = "EditIcon"
+
+const CircleCheckIcon = ({ className, size }: Props) => <CircleCheck className={className} size={size} />
+CircleCheckIcon.displayName = "CircleCheckIcon"
+
+const CircleXIcon = ({ className, size }: Props) => <CircleX className={className} size={size} />
+CircleXIcon.displayName = "CircleXIcon"
+
 export {
   LoadingIcon,
   MenuIcon,
@@ -76,4 +88,7 @@ export {
   DeleteIcon,
   DoubleCheckIcon,
   MoreVerticalIcon,
+  EditIcon,
+  CircleCheckIcon,
+  CircleXIcon,
 }

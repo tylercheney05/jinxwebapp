@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
+import { convertBooleanToString } from "utils/SharedUtils";
 
 export const menuItemsApi = createApi({
   reducerPath: "menuItemsApi",
@@ -17,16 +18,13 @@ export const menuItemsApi = createApi({
       }),
     }),
     getMenuItemsList: builder.query({
-      query: (params: { soda?: string, limited_time_promotions__limited_time_promo?: string, limited_time_promotions__isnull?: boolean } = {}) => {
-        // Convert boolean to string
-        const queryParams = new URLSearchParams(
-          Object.entries(params).reduce((acc, [key, value]) => {
-            if (value !== undefined) {
-              acc[key] = String(value);
-            }
-            return acc;
-          }, {} as Record<string, string>)
-        ).toString();
+      query: (params: { 
+        soda?: string, 
+        limited_time_promotions__limited_time_promo?: string, 
+        limited_time_promotions__isnull?: boolean, 
+        limited_time_promotions__limited_time_promo__is_archived?: boolean 
+      } = {}) => {
+        const queryParams = convertBooleanToString(params);
         return `/api/menu-items?${queryParams}`;
       },
     }),
