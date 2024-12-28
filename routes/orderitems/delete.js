@@ -3,7 +3,7 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.delete("/api/orders/items/:id", async (req, res) => {
+router.delete("/api/order-items/:id", async (req, res) => {
   const { access } = req.cookies
   const { id } = req.params
 

@@ -3,7 +3,7 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.post("/api/orders/order-names", async (req, res) => {
+router.post("/api/order-names", async (req, res) => {
   const { name } = req.body
   const { access } = req.cookies
 

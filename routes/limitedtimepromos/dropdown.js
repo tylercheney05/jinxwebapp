@@ -3,7 +3,7 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.get("/api/menu-items/limited-time-promotions/autocomplete", async (req, res) => {
+router.get("/api/limited-time-promotions/autocomplete", async (req, res) => {
   const { access } = req.cookies
 
   try {

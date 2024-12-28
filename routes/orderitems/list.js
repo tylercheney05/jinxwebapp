@@ -3,7 +3,7 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.get("/api/orders/items", async (req, res) => {
+router.get("/api/order-items", async (req, res) => {
   const { access } = req.cookies
   const queryParams = new URLSearchParams(req.query).toString()
 

@@ -3,7 +3,7 @@ const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fet
 
 const router = express.Router()
 
-router.get("/api/flavors/groups/autocomplete", async (req, res) => {
+router.get("/api/flavor-groups/autocomplete", async (req, res) => {
   const { access } = req.cookies
 
   try {
