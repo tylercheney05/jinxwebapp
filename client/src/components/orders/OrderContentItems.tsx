@@ -5,7 +5,6 @@ import { SugarIcon } from "../Icons"
 import DoubleClickButton from "../ui/button/doubleclickbutton"
 import { useDeleteOrderItemMutation } from "services/orders"
 import { useEffect } from "react"
-import { handleError } from "/utils/FormUtils"
 import { toast } from "react-toastify"
 
 interface Props {
@@ -32,9 +31,11 @@ const OrderContentItems = ({ data, readOnly = true, refetch }: Props) => {
       {data?.map((item, index) => (
         <div key={item.id} className="flex flex-col mb-4">
           <Label className="underline mb-2">Item #{index + 1}</Label>
-          <div className="flex gap-4 items-center">
-            <div>{item.low_sugar ? <ZeroSugarIcon /> : <SugarIcon />}</div>
-            <div>{item.order_item_name}</div>
+          <div className="flex gap-4 items-center sm:justify-start justify-between">
+            <div className="flex gap-4">
+              <div>{item.low_sugar ? <ZeroSugarIcon /> : <SugarIcon />}</div>
+              <div>{item.order_item_name}</div>
+            </div>
             {!readOnly && (
               <DoubleClickButton
                 variant="outline"

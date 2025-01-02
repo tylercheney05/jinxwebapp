@@ -51,6 +51,7 @@ const completeOrderPaymentRoute = require("./routes/orders/completeorder")
 const listOrdersQueueRoute = require("./routes/orders/ordersqueuelist")
 const detailOrderRoute = require("./routes/orders/detail")
 const updateOrderProgressRoute = require("./routes/orders/updateorderprogress")
+const deleteOrderRoute = require("./routes/orders/delete")
 
 // import locations routes
 const createLocationRoute = require("./routes/locations/create")
@@ -128,6 +129,7 @@ app.use(completeOrderPaymentRoute)
 app.use(detailOrderRoute)
 app.use(updateOrderProgressRoute)
 app.use(listOrdersQueueRoute)
+app.use(deleteOrderRoute)
 
 // Locations Routes
 app.use(createLocationRoute)

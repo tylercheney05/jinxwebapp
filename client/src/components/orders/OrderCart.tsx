@@ -41,7 +41,7 @@ const OrderCart = ({ setOpen }: Props) => {
       {data && data?.length > 0 && (
         <div className="mt-8">
           <Button variant="default" onClick={handleClick}>
-            Checkout
+            Go to cart
           </Button>
         </div>
       )}

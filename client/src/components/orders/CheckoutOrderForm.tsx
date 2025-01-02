@@ -5,7 +5,7 @@ import { OrderDetailItem, OrderListItem, OrderNameItem } from "types/OrderTypes"
 import { LoadingIcon } from "../Icons"
 import DoubleClickButton from "../ui/button/doubleclickbutton"
 import { toast } from "react-toastify"
-import { useGetOrderItemListQuery, useGetOrderNameListQuery } from "services/orders"
+import { useDeleteOrderMutation, useGetOrderItemListQuery, useGetOrderNameListQuery } from "services/orders"
 import { w3cwebsocket as W3CWebSocket } from "websocket"
 import { Form } from "../ui/form"
 import { z } from "zod"
@@ -16,18 +16,20 @@ import OrderContentItems from "./OrderContentItems"
 import { discountsApi } from "services/discounts"
 import { Switch } from "../ui/switch"
 import { Label } from "../ui/label"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { cleanFormData } from "utils/FormUtils"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useNavigate } from "react-router-dom"
 import { useDidMountEffect } from "utils/SharedUtils"
+import { Separator } from "../ui/separator"
 
 interface Props {
   order: OrderListItem | OrderDetailItem
 }
 
 const CheckoutOrderForm = ({ order }: Props) => {
+  const [deleteOrder, result] = useDeleteOrderMutation()
   const { data: orderNamesData } = useGetOrderNameListQuery({}, { refetchOnMountOrArgChange: true })
   const [showDiscount, setShowDiscount] = useState<boolean>(false)
   const dispatch = useDispatch<AppDispatch>()
@@ -99,6 +101,14 @@ const CheckoutOrderForm = ({ order }: Props) => {
     }
   }, [showDiscount])
 
+  useEffect(() => {
+    if (result.isSuccess) {
+      navigate("/take-order")
+      const notify = () => toast.success("Order deleted successfully")
+      notify()
+    }
+  }, [result])
+
   return (
     <Form {...form}>
       <form>
@@ -125,7 +135,7 @@ const CheckoutOrderForm = ({ order }: Props) => {
                     />
                   </div>
                 )}
-                <div className="mt-4">
+                <div className="mt-8 text-xl">
                   <strong>Total Price:</strong> ${totalPrice.toFixed(2)}
                 </div>
               </div>
@@ -146,12 +156,18 @@ const CheckoutOrderForm = ({ order }: Props) => {
                           {orderNamesData?.length &&
                             orderNamesData?.length > 0 &&
                             orderNamesData.map((orderName: OrderNameItem) => (
-                              <FormItem key={orderName.id} className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value={String(orderName.id)} />
-                                </FormControl>
-                                <FormLabel className="font-normal">{orderName.name}</FormLabel>
-                              </FormItem>
+                              <>
+                                <FormItem
+                                  key={orderName.id}
+                                  className="flex items-center space-x-3 space-y-0 sm:justify-start justify-between"
+                                >
+                                  <FormControl>
+                                    <RadioGroupItem value={String(orderName.id)} />
+                                  </FormControl>
+                                  <FormLabel className="font-normal">{orderName.name}</FormLabel>
+                                </FormItem>
+                                <Separator className="mt-2" />
+                              </>
                             ))}
                         </RadioGroup>
                       </FormControl>
@@ -165,8 +181,19 @@ const CheckoutOrderForm = ({ order }: Props) => {
                   variant="default"
                   onClick={form.handleSubmit(onSubmit)}
                   alertMsg="Please ensure the order is paid for and then click button again to confirm."
+                  className="sm:w-[142px] w-full"
                 >
                   Complete Order
+                </DoubleClickButton>
+              </div>
+              <div className="mt-4">
+                <DoubleClickButton
+                  variant="destructive"
+                  onClick={() => deleteOrder({ id: order.id })}
+                  alertMsg="Are you sure you want to cancel this order? Click again to confirm."
+                  className="sm:w-[142px] w-full"
+                >
+                  Cancel Order
                 </DoubleClickButton>
               </div>
             </>
