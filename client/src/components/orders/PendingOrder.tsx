@@ -12,6 +12,8 @@ import { MoreVerticalIcon } from "../Icons"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import DoubleClickButton from "../ui/button/doubleclickbutton"
+import { useSelector } from "react-redux"
+import { RootState } from "store"
 
 interface Props {
   order: OrderListItem
@@ -22,6 +24,7 @@ const PendingOrder = ({ order, client }: Props) => {
   const [open, setOpen] = useState<boolean>(false)
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+  const { user } = useSelector((state: RootState) => state.user)
 
   const handleRemoveProgressClick = () => {
     client.send(
@@ -41,6 +44,15 @@ const PendingOrder = ({ order, client }: Props) => {
     )
   }
 
+  const handleRemoveOrderClick = () => {
+    client.send(
+      JSON.stringify({
+        delete_order: true,
+        order_id: order.id,
+      })
+    )
+  }
+
   const card = (
     <Card
       key={order.id}
@@ -51,7 +63,7 @@ const PendingOrder = ({ order, client }: Props) => {
     >
       <CardHeader className="relative">
         <CardTitle>{order.order_name__name}</CardTitle>
-        {(order.is_in_progress || order.is_complete) && (
+        {user?.is_admin && (
           <div className="absolute top-1 right-2">
             <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
@@ -62,28 +74,44 @@ const PendingOrder = ({ order, client }: Props) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                {order.is_in_progress && (
-                  <DoubleClickButton
-                    variant="ghost"
-                    onClick={handleRemoveProgressClick}
-                    confirmButtonClassName="w-[214px]"
-                    alertClassName="w-[214px]"
-                    alertMsg="Please ensure another user is not working on this order before confirming"
-                  >
-                    Remove from "In Progress"
-                  </DoubleClickButton>
-                )}
-                {order.is_complete && (
-                  <DoubleClickButton
-                    variant="ghost"
-                    onClick={handleRemoveCompletedClick}
-                    confirmButtonClassName="w-[214px]"
-                    alertClassName="w-[214px]"
-                    alertMsg="Please confirm you'd like to remove this order from the completed list"
-                  >
-                    Remove from "Completed"
-                  </DoubleClickButton>
-                )}
+                <div className="flex flex-col gap-1 justify-start">
+                  {user?.is_admin && (
+                    <DoubleClickButton
+                      variant="ghost"
+                      onClick={handleRemoveOrderClick}
+                      confirmButtonClassName="w-[214px]"
+                      alertClassName="w-[214px]"
+                      alertMsg="Please confirm you'd like to delete this order"
+                      className="justify-start"
+                    >
+                      Remove Order
+                    </DoubleClickButton>
+                  )}
+                  {order.is_in_progress && (
+                    <DoubleClickButton
+                      variant="ghost"
+                      onClick={handleRemoveProgressClick}
+                      confirmButtonClassName="w-[214px]"
+                      alertClassName="w-[214px]"
+                      alertMsg="Please ensure another user is not working on this order before confirming"
+                      className="justify-start"
+                    >
+                      Remove from "In Progress"
+                    </DoubleClickButton>
+                  )}
+                  {order.is_complete && (
+                    <DoubleClickButton
+                      variant="ghost"
+                      onClick={handleRemoveCompletedClick}
+                      confirmButtonClassName="w-[214px]"
+                      alertClassName="w-[214px]"
+                      alertMsg="Please confirm you'd like to remove this order from the completed list"
+                      className="justify-start"
+                    >
+                      Remove from "Completed"
+                    </DoubleClickButton>
+                  )}
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

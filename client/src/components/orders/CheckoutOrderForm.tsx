@@ -181,7 +181,7 @@ const CheckoutOrderForm = ({ order }: Props) => {
                   variant="default"
                   onClick={form.handleSubmit(onSubmit)}
                   alertMsg="Please ensure the order is paid for and then click button again to confirm."
-                  className="sm:w-[142px] w-full"
+                  className="sm:w-[175px] w-full"
                 >
                   Complete Order
                 </DoubleClickButton>
@@ -191,7 +191,7 @@ const CheckoutOrderForm = ({ order }: Props) => {
                   variant="destructive"
                   onClick={() => deleteOrder({ id: order.id })}
                   alertMsg="Are you sure you want to cancel this order? Click again to confirm."
-                  className="sm:w-[142px] w-full"
+                  className="sm:w-[175px] w-full"
                 >
                   Cancel Order
                 </DoubleClickButton>
