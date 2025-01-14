@@ -38,7 +38,7 @@ const OrderContentItems = ({ data, readOnly = true, refetch }: Props) => {
             </div>
             {!readOnly && (
               <DoubleClickButton
-                variant="outline"
+                variant="ghost"
                 className="border-0"
                 onClick={() => deleteOrderItem({ id: item.id })}
                 smallConfirm={true}

@@ -23,12 +23,14 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useNavigate } from "react-router-dom"
 import { useDidMountEffect } from "utils/SharedUtils"
 import { Separator } from "../ui/separator"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
 
 interface Props {
   order: OrderListItem | OrderDetailItem
 }
 
 const CheckoutOrderForm = ({ order }: Props) => {
+  const [value, setValue] = useState<string>("1")
   const [deleteOrder, result] = useDeleteOrderMutation()
   const { data: orderNamesData } = useGetOrderNameListQuery({}, { refetchOnMountOrArgChange: true })
   const [showDiscount, setShowDiscount] = useState<boolean>(false)
@@ -109,6 +111,16 @@ const CheckoutOrderForm = ({ order }: Props) => {
     }
   }, [result])
 
+  useEffect(() => {
+    if (form.watch("order_name")) {
+      setValue("")
+    }
+  }, [form.watch("order_name")])
+
+  const selectedOrderName = orderNamesData
+    ? orderNamesData?.filter((orderName: OrderNameItem) => orderName.id === Number(form.watch("order_name")))[0]?.name
+    : ""
+
   return (
     <Form {...form}>
       <form>
@@ -140,41 +152,52 @@ const CheckoutOrderForm = ({ order }: Props) => {
                 </div>
               </div>
               <div className="mt-8">
-                <FormField
-                  control={form.control}
-                  name="order_name"
-                  render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel>Order Name</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          {...field}
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          className="flex flex-col space-y-1"
-                        >
-                          {orderNamesData?.length &&
-                            orderNamesData?.length > 0 &&
-                            orderNamesData.map((orderName: OrderNameItem) => (
-                              <>
-                                <FormItem
-                                  key={orderName.id}
-                                  className="flex items-center space-x-3 space-y-0 sm:justify-start justify-between"
-                                >
-                                  <FormControl>
-                                    <RadioGroupItem value={String(orderName.id)} />
-                                  </FormControl>
-                                  <FormLabel className="font-normal">{orderName.name}</FormLabel>
-                                </FormItem>
-                                <Separator className="mt-2" />
-                              </>
-                            ))}
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <Accordion type="single" collapsible value={value} onValueChange={setValue}>
+                  <FormField
+                    control={form.control}
+                    name="order_name"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <AccordionItem value="1">
+                          <AccordionTrigger>
+                            <div className="text-left">
+                              <FormLabel>Order Name</FormLabel>
+                              <div className="text-sm">{selectedOrderName && `(Selected: ${selectedOrderName})`}</div>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <FormControl>
+                              <RadioGroup
+                                {...field}
+                                onValueChange={field.onChange}
+                                value={field.value}
+                                className="flex flex-col space-y-1"
+                              >
+                                {orderNamesData?.length &&
+                                  orderNamesData?.length > 0 &&
+                                  orderNamesData.map((orderName: OrderNameItem) => (
+                                    <>
+                                      <FormItem
+                                        key={orderName.id}
+                                        className="flex items-center space-x-3 space-y-0 sm:justify-start justify-between"
+                                      >
+                                        <FormControl>
+                                          <RadioGroupItem value={String(orderName.id)} />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">{orderName.name}</FormLabel>
+                                      </FormItem>
+                                      <Separator className="mt-2" />
+                                    </>
+                                  ))}
+                              </RadioGroup>
+                            </FormControl>
+                          </AccordionContent>
+                        </AccordionItem>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </Accordion>
               </div>
               <div className="mt-8">
                 <DoubleClickButton

@@ -57,6 +57,7 @@ const PendingOrder = ({ order, client }: Props) => {
     <Card
       key={order.id}
       className={cn(
+        "shadow-md rounded-2xl",
         order.is_in_progress ? "opacity-50" : "",
         order.is_complete ? "bg-jinxGreen/10 border-jinxGreen text-jinxGreen" : ""
       )}

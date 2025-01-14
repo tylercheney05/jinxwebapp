@@ -15,13 +15,19 @@ module.exports = {
     },
     extend: {
       colors: {
-        jinxYellow: "#FCD638",
-        jinxBlue: "#2A70E9",
+        jinxYellow: {
+          DEFAULT: "#FCD638",
+          background: "#fffae6",
+          foreground: "#FCD638",
+        },
+        jinxBlue: {
+          DEFAULT: "#2A70E9",
+          background: "#e8effd",
+          foreground: "#2A70E9",
+        },
         jinxRed: "#DF4B44",
         jinxGreen: "#10905D",
         jinxLime: "#B4D819",
-
-        // ShadCN color pallete
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -63,15 +69,41 @@ module.exports = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
         },
       },
       animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },

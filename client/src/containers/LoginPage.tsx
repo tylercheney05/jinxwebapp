@@ -48,7 +48,7 @@ const LoginPage = () => {
   return (
     <Layout title="Jinx | Login" content="Login Page">
       <div className="flex items-center justify-center mt-[150px]">
-        <Card className="sm-w-[400px] md:w-[600px]">
+        <Card className="sm-w-[400px] md:w-[600px] shadow-2xl rounded-2xl">
           <CardHeader>
             <img src={LimeBoi} alt="Lime Boi" className="w-40 mx-auto" />
             <CardTitle className="text-center">Welcome Back!</CardTitle>

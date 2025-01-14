@@ -13,7 +13,7 @@ const CheckoutPage = () => {
   const { data } = useGetOrderDetailQuery({ id: id }, { refetchOnMountOrArgChange: true })
 
   return (
-    <Layout title="Jinx | Make Orders" content="Make Orders Page">
+    <Layout title="Jinx | Make Orders" content="Make Orders Page" backgroundColor="white">
       <LocationNeededRoute>
         {loading || user == null || data === undefined ? <LoadingIcon /> : <CheckoutOrderForm order={data} />}
       </LocationNeededRoute>

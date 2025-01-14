@@ -72,7 +72,7 @@ const MakeOrder = () => {
 
   return (
     <div>
-      <div>
+      <div className="pt-4">
         {data?.order_items && data.order_items.length > 0 && (
           <Progress value={(index / data.order_items.length) * 100} className="mb-4" />
         )}

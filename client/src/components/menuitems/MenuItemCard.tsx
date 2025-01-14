@@ -24,7 +24,12 @@ const MenuItemCard = ({ menuItem, isClickable = false }: Props) => {
     }, "")
 
   return (
-    <Card className={cn("h-[115px] sm:min-h-[225px] w-[325px]", isClickable && "hover:bg-accent hover:cursor-pointer")}>
+    <Card
+      className={cn(
+        "h-[115px] sm:min-h-[225px] w-[325px] shadow-lg",
+        isClickable && "hover:bg-accent hover:cursor-pointer"
+      )}
+    >
       <CardHeader className="px-6 pt-4 pb-2 text-left">
         <CardTitle className="text-sm">{menuItem.name}</CardTitle>
       </CardHeader>

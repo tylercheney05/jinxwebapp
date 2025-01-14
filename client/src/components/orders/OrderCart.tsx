@@ -34,17 +34,17 @@ const OrderCart = ({ setOpen }: Props) => {
 
   return (
     <div className="xs:w-[200px] sm:w-[500px] p-8 max-h-[800px] overflow-auto">
-      <OrderContentItems data={data} />
-      <div className="mt-4">
-        <strong>Total Price:</strong> ${totalPrice.toFixed(2)}
-      </div>
       {data && data?.length > 0 && (
-        <div className="mt-8">
+        <div className="mb-8">
           <Button variant="default" onClick={handleClick}>
             Go to cart
           </Button>
         </div>
       )}
+      <OrderContentItems data={data} />
+      <div className="mt-4">
+        <strong>Total Price:</strong> ${totalPrice.toFixed(2)}
+      </div>
     </div>
   )
 }
