@@ -51,6 +51,7 @@ const PendingOrder = ({ order, client }: Props) => {
         order_id: order.id,
       })
     )
+    setDropdownOpen(false)
   }
 
   const card = (

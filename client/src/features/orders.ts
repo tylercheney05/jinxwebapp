@@ -20,6 +20,11 @@ interface CompleteOrderProps {
     discount: number;
 }
 
+interface DeleteOrderProps {
+  id: number;
+  collected_by: number;
+}
+
 interface CounterState {
   orders: OrderListItems;
 	loading: boolean;
@@ -165,6 +170,39 @@ export const completeOrderPayment = createAsyncThunk(
         return thunkAPI.rejectWithValue(err.response.data);
     }
 })
+
+export const deleteOrder = createAsyncThunk(
+  "orders/delete",
+  async ({ id, collected_by }: DeleteOrderProps, thunkAPI) => {
+    function callApi() {
+      return fetch(`api/orders/${id}/`, {
+        method: "DELETE",
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+    try {
+      const res = await callApi();
+
+      if (res.status === 401) {
+        const { dispatch } = thunkAPI;
+					await dispatch(refreshAuth());
+          const res = await callApi();
+          const data = await res.json();
+          return data;
+      } else if (res.status === 204) {
+        const { dispatch } = thunkAPI;
+        dispatch(listUserOrders({ collected_by: String(collected_by), is_paid: "false" }));
+        return {};
+      } else {
+        return thunkAPI.rejectWithValue({});
+      }
+    } catch(err: any) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  })
 
 const initialState = { orders: [], loading: false, ordersQueued: [] } satisfies CounterState as CounterState;
 

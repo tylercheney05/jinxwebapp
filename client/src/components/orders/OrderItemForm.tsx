@@ -67,7 +67,6 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanZeroSugar(updatedValues)
-    // updatedValues = cleanFlavorsData(updatedValues, "custom_order_flavors")
     dispatch(createOrderItem(cleanFormData(updatedValues))).then((data) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()
