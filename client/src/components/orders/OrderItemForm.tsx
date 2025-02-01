@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form"
 import { Form, FormLabel } from "../ui/form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { MenuItemListItem } from "types/MenuItemTypes"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { cleanZeroSugar, CupFormField, NoteFormField, ZeroSugarFormField } from "../shared/ItemFormFields"
@@ -17,6 +16,7 @@ import { useDidMountEffect } from "utils/SharedUtils"
 import { ScrollArea } from "../ui/scroll-area"
 import { Card, CardContent } from "../ui/card"
 import { useGetPriceQuery } from "services/orders"
+import { MenuItemListItem } from "/types/menuItem"
 
 interface Props {
   menuItem: MenuItemListItem

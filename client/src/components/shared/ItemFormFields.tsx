@@ -8,11 +8,11 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/
 import { UseFormReturn } from "react-hook-form"
 import { flavorsApi, useGetFlavorsListQuery } from "services/flavors"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
-import { CupListItem } from "types/CupTypes"
 import { cupsApi, useGetCupsListQuery } from "services/cups"
-import { MenuItemListItem } from "types/MenuItemTypes"
 import { Textarea } from "../ui/textarea"
 import { Separator } from "../ui/separator"
+import { MenuItemListItem } from "/types/menuItem"
+import { CupSummary } from "/types/cup"
 
 interface FlavorFormFieldProps {
   field: any
@@ -205,7 +205,7 @@ const CupFormField = ({ form }: FormProps) => {
             <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
               {data?.length &&
                 data?.length > 0 &&
-                data.map((cup: CupListItem) => (
+                data.map((cup: CupSummary) => (
                   <FormItem key={cup.id} className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem value={String(cup.id)} />

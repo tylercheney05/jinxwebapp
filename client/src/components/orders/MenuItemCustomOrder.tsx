@@ -1,11 +1,11 @@
 import { useGetMenuItemDetailQuery } from "services/menuitems"
-import { MenuItemListItem } from "types/MenuItemTypes"
 import { UseFormReturn } from "react-hook-form"
 import { useEffect } from "react"
 import { useDidMountEffect } from "utils/SharedUtils"
 import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
 import { useGetSodasListQuery } from "services/sodas"
 import { useGetFlavorsListQuery } from "services/flavors"
+import { MenuItemListItem } from "/types/menuItem"
 
 interface Props {
   menuItem: MenuItemListItem

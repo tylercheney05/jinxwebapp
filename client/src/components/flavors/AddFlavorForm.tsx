@@ -8,8 +8,8 @@ import { useEffect } from "react"
 import { SelectFromApiFormField } from "../forminputs/Select"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
 import { flavorGroupsApi, useCreateFlavorMutation, useGetFlavorsListQuery } from "services/flavors"
-import { FlavorListItem } from "/types/FlavorTypes"
 import { Switch } from "../ui/switch"
+import { FlavorListItem } from "/types/flavor"
 
 const AddFlavorForm = () => {
   const [createFlavor, result] = useCreateFlavorMutation()

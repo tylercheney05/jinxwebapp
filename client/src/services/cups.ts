@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
-import { CupListItems } from "types/CupTypes";
+import { CupSummary } from "/types/cup";
+
 
 export const cupsApi = createApi({
   reducerPath: "cupsApi",
@@ -17,7 +18,7 @@ export const cupsApi = createApi({
         body: JSON.stringify({ size, price, conversion_factor }),
       })
     }),
-    getCupsList: builder.query<CupListItems, object>({
+    getCupsList: builder.query<CupSummary[], object>({
       query: (params: Record<string, string>) => {
         const queryParams = new URLSearchParams(params).toString();
         return `/api/cups?${queryParams}`

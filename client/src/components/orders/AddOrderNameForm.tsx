@@ -6,9 +6,9 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { PlusIcon } from "../Icons"
 import { useCreateOrderNameMutation, useGetOrderNameListQuery } from "services/orders"
-import { OrderNameItem } from "types/OrderTypes"
 import { handleFormSubmitResponse } from "utils/FormUtils"
 import { useEffect } from "react"
+import { OrderNameItem } from "/types/orderName"
 
 const AddOrderNameForm = () => {
   const [createOrderName, result] = useCreateOrderNameMutation()

@@ -1,14 +1,14 @@
 import { UseFormReturn } from "react-hook-form"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
-import { SodaListItem, SodaListItems } from "types/SodaTypes"
-import { FlavorListItems } from "/types/FlavorTypes"
 import { Checkbox } from "../ui/checkbox"
+import { Soda } from "/types/soda"
+import { FlavorListItem } from "/types/flavor"
 
 interface Props {
   form: UseFormReturn<any>
-  sodaData: SodaListItems | undefined
-  flavorData: FlavorListItems | undefined
+  sodaData: Soda[] | undefined
+  flavorData: FlavorListItem[] | undefined
 }
 
 const CustomOrderFlavorForm = ({ form, sodaData, flavorData }: Props) => {
@@ -30,7 +30,7 @@ const CustomOrderFlavorForm = ({ form, sodaData, flavorData }: Props) => {
                 >
                   {sodaData?.length &&
                     sodaData?.length > 0 &&
-                    sodaData.map((soda: SodaListItem) => (
+                    sodaData.map((soda: Soda) => (
                       <FormItem key={soda.id} className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value={String(soda.id)} />

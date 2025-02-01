@@ -8,9 +8,9 @@ import { SelectFormField } from "../forminputs/Select"
 import { Button } from "../ui/button"
 import { PlusIcon } from "../Icons"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
-import { CupListItem } from "types/CupTypes"
 import { useEffect } from "react"
 import { useCreateCupMutation, useGetCupsListQuery } from "services/cups"
+import { CupSummary } from "/types/cup"
 
 const AddCupForm = () => {
   const [createCup, result] = useCreateCupMutation()
@@ -46,7 +46,7 @@ const AddCupForm = () => {
   return (
     <Form {...form}>
       {data?.length && data?.length > 0 ? <FormLabel>Existing Cups</FormLabel> : null}
-      {data?.map((cup: CupListItem) => (
+      {data?.map((cup: CupSummary) => (
         <div key={cup.id} className="h-10 pl-2 flex items-center text-sm gap-1">
           {cup.size__display} - ${cup.price}
         </div>

@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { OrderDetailItem, OrderItemListItems, OrderNameItems } from 'types/OrderTypes'
+import { OrderDetailItem, OrderItemListItems } from 'types/OrderTypes'
+import { OrderNameItems } from 'types/orderName'
 import { baseQueryWithReauth } from './baseQuery';
 
 export const ordersApi = createApi({

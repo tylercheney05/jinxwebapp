@@ -9,7 +9,6 @@ import { cleanFormData } from "utils/FormUtils"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
 import { ItemFlavorFormField, cleanFlavorsData } from "../shared/ItemFormFields"
-import { SodaListItem } from "types/SodaTypes"
 import ListMenuItems from "./ListMenuItems"
 import { useCreateMenuItemMutation } from "services/menuitems"
 import { sodasApi, useGetSodasListQuery } from "services/sodas"
@@ -17,6 +16,7 @@ import { Switch } from "../ui/switch"
 import { Label } from "../ui/label"
 import { limitedTimePromosApi, useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
 import { LimitedTimePromoListItem } from "/types/LimitedTimePromoTypes"
+import { Soda } from "/types/soda"
 
 const AddMenuItemForm = () => {
   const [isLimitedTime, setIsLimitedTime] = useState<boolean>(false)
@@ -104,7 +104,7 @@ const AddMenuItemForm = () => {
     <Form {...form}>
       {sodaData?.length && sodaData?.length > 0 ? <FormLabel className="text-md">Existing Menu Items</FormLabel> : null}
       <div>
-        {sodaData?.map((soda: SodaListItem) => (
+        {sodaData?.map((soda: Soda) => (
           <div key={soda.id}>
             <div className="grid grid-cols-5 items-center">
               <div className="bg-black h-1 col-span-2 rounded-sm"></div>
