@@ -13,10 +13,8 @@ interface OrderItemProps {
 }
 
 interface CompleteOrderProps {
-    id: number;
-    is_paid: boolean;
+    order: number;
     order_name: number;
-    paid_amount: number;
     discount: number;
 }
 
@@ -136,11 +134,11 @@ export const createOrderItem = createAsyncThunk(
 
 export const completeOrderPayment = createAsyncThunk(
 	'order/complete', 
-	async ({ id, is_paid, order_name, paid_amount, discount }: CompleteOrderProps, thunkAPI) => {
-		const body = JSON.stringify({ is_paid, order_name, paid_amount, discount });
+	async ({ order, order_name, discount }: CompleteOrderProps, thunkAPI) => {
+		const body = JSON.stringify({ order, order_name, discount });
     function callApi() {
-      return fetch(`/api/orders/${id}/complete-order-payment`, {
-        method: "PATCH",
+      return fetch(`/api/order-paid-amounts`, {
+        method: "POST",
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
@@ -158,7 +156,7 @@ export const completeOrderPayment = createAsyncThunk(
 					const res = await callApi();
           const data = await res.json();
           return data;
-				} else if (res.status === 200) {
+				} else if (res.status === 201) {
 					const { dispatch } = thunkAPI;
 					dispatch(listUserOrders({ collected_by: String(data.collected_by), is_paid: "false" }));
 					dispatch(listOrdersQueue({ location: String(data.location), is_complete: "false", is_paid: "true" }));

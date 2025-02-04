@@ -31,37 +31,14 @@ export const ordersApi = createApi({
         }
       })
     }),
-  }),
-})
-
-export const orderItemsApi = createApi({
-  // Set the baseUrl for every endpoint below
-  reducerPath: 'orderItemsApi',
-  baseQuery: baseQueryWithReauth,
-  endpoints: (builder) => ({
-    getOrderItemList: builder.query<OrderItemListItems, object>({
-      query: (params: Record<string, string>) => {
-        const queryParams = new URLSearchParams(params).toString();
-        return `/api/order-items?${queryParams}`
-      },
-    }),
-    deleteOrderItem: builder.mutation({
-      query: ({ id }) => ({
-        url: `/api/order-items/${id}`,
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        }
-      })
-    }),
     getPrice: builder.query({
       query: (params: Record<string, string>) => {
-        const queryParams = new URLSearchParams(params).toString();
-        return `/api/order-items/price?${queryParams}`
+        const { id, ...queryParams } = params;
+        const queryString = new URLSearchParams(params).toString();
+        return `/api/orders/${id}/price?${queryString}`
       }
     })
-})
+  }),
 })
 
 export const orderNamesApi = createApi({
@@ -91,6 +68,5 @@ export const orderNamesApi = createApi({
   }),
 })
 
-export const { useGetOrderDetailQuery, useUpdateOrderProgressMutation, useDeleteOrderMutation } = ordersApi
-export const { useGetOrderItemListQuery, useDeleteOrderItemMutation, useGetPriceQuery } = orderItemsApi
+export const { useGetOrderDetailQuery, useUpdateOrderProgressMutation, useDeleteOrderMutation, useGetPriceQuery } = ordersApi
 export const { useCreateOrderNameMutation, useGetOrderNameListQuery } = orderNamesApi

@@ -13,7 +13,8 @@ export interface OrderListItems extends Array<OrderListItem> {}
 export interface OrderDetailItem {
     id: number;
     order_name: OrderNameItem;
-    order_items: OrderItem[]
+    order_items: OrderItem[];
+    pending_price: number;
 }
 
 export interface OrderItemListItem {

@@ -1,29 +1,36 @@
 import { completeOrderPayment } from "features/orders"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
-import { OrderDetailItem, OrderListItem, OrderNameItem } from "types/OrderTypes"
+import { OrderDetailItem, OrderListItem } from "types/OrderTypes"
 import { LoadingIcon } from "../Icons"
 import DoubleClickButton from "../ui/button/doubleclickbutton"
 import { toast } from "react-toastify"
-import { useDeleteOrderMutation, useGetOrderItemListQuery, useGetOrderNameListQuery } from "services/orders"
+import {
+  useDeleteOrderMutation,
+  useGetOrderDetailQuery,
+  useGetOrderNameListQuery,
+  useGetPriceQuery,
+} from "services/orders"
 import { w3cwebsocket as W3CWebSocket } from "websocket"
 import { Form } from "../ui/form"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SelectFromApiFormField } from "../forminputs/Select"
-import OrderContentItems from "./OrderContentItems"
 import { discountsApi } from "services/discounts"
 import { Switch } from "../ui/switch"
 import { Label } from "../ui/label"
 import { useEffect, useState } from "react"
-import { cleanFormData } from "utils/FormUtils"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { useNavigate } from "react-router-dom"
 import { useDidMountEffect } from "utils/SharedUtils"
 import { Separator } from "../ui/separator"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
+import { OrderNameItem } from "/types/orderName"
+import OrderContentItem from "./other/orderContentItem"
+import { getName, getPrice } from "utils/orders/orderItem"
+import { cleanFormData } from "utils/FormUtils"
 
 interface Props {
   order: OrderListItem | OrderDetailItem
@@ -53,17 +60,18 @@ const CheckoutOrderForm = ({ order }: Props) => {
       },
     },
   })
+  const { data: orderPrice } = useGetPriceQuery(
+    { id: String(order.id), discount: String(form.watch("discount")?.value || 0) },
+    { refetchOnMountOrArgChange: true }
+  )
   const { user } = useSelector((state: RootState) => state.user)
-  const { data, isLoading, refetch } = useGetOrderItemListQuery(
+  const { data, isLoading } = useGetOrderDetailQuery(
     {
-      order__collected_by: String(user?.id),
-      order__is_paid: "false",
-      discount: form.watch("discount") ? form.watch("discount").value : 0,
+      id: order.id,
     },
     { refetchOnMountOrArgChange: true }
   )
   const { locationId } = useSelector((state: RootState) => state.location)
-  const totalPrice = data?.reduce((acc, item) => acc + item.price, 0) || 0
   const navigate = useNavigate()
 
   const client = new W3CWebSocket(`${process.env.REACT_APP_WEBSOCKET_URL}/ws/orders/${locationId}/?user_id=${user?.id}`)
@@ -72,14 +80,12 @@ const CheckoutOrderForm = ({ order }: Props) => {
     dispatch(
       completeOrderPayment(
         cleanFormData({
-          id: order.id,
-          is_paid: true,
+          order: order.id,
           order_name: form.getValues("order_name"),
-          paid_amount: totalPrice,
-          discount: form.watch("discount") ? form.watch("discount").value : 0,
+          discount: form.watch("discount")?.value ? form.watch("discount").value : null,
         })
       )
-    ).then((data) => {
+    ).then((data: any) => {
       if (data.meta.requestStatus === "fulfilled") {
         const notify = () => toast.success("Order completed successfully")
         notify()
@@ -131,7 +137,17 @@ const CheckoutOrderForm = ({ order }: Props) => {
           ) : (
             <>
               <div>
-                <OrderContentItems data={data} refetch={refetch} readOnly={false} />
+                {data?.order_items?.map((order_item, index) => (
+                  <>
+                    <OrderContentItem
+                      index={index}
+                      order_item={order_item}
+                      name={getName(order_item)}
+                      price={getPrice(order_item)}
+                      readOnly={false}
+                    />
+                  </>
+                ))}
                 <div className="flex items-center space-x-2">
                   <Switch checked={showDiscount} onCheckedChange={setShowDiscount} />
                   <Label>Apply Discount</Label>
@@ -147,9 +163,11 @@ const CheckoutOrderForm = ({ order }: Props) => {
                     />
                   </div>
                 )}
-                <div className="mt-8 text-xl">
-                  <strong>Total Price:</strong> ${totalPrice.toFixed(2)}
-                </div>
+                {orderPrice && (
+                  <div className="mt-8 text-xl">
+                    <strong>Total Price:</strong> ${orderPrice.data.toFixed(2)}
+                  </div>
+                )}
               </div>
               <div className="mt-8">
                 <Accordion type="single" collapsible value={value} onValueChange={setValue}>

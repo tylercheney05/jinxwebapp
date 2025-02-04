@@ -15,7 +15,7 @@ import { toast } from "react-toastify"
 import { useDidMountEffect } from "utils/SharedUtils"
 import { ScrollArea } from "../ui/scroll-area"
 import { Card, CardContent } from "../ui/card"
-import { useGetPriceQuery } from "services/orders"
+import { useGetPriceQuery } from "services/orderitems"
 import { MenuItemListItem } from "/types/menuItem"
 
 interface Props {
@@ -67,7 +67,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanZeroSugar(updatedValues)
-    dispatch(createOrderItem(cleanFormData(updatedValues))).then((data) => {
+    dispatch(createOrderItem(cleanFormData(updatedValues))).then((data: any) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()
         const notify = () => toast.success("Order Item added successfully")

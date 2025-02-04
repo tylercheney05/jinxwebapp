@@ -53,7 +53,7 @@ const StaffNavigationMenuItems = () => {
                 <SodaIcon size="20px" className="text-jinxBlue" />
               </NavigationMenuTrigger>
               <NavigationMenuContent asChild>
-                {locationId ? <OrderCart setOpen={setOpen} /> : <LocationContent />}
+                {locationId ? <OrderCart order={orders[0]} setOpen={setOpen} /> : <LocationContent />}
               </NavigationMenuContent>
             </NavigationMenuItem>
           ) : (
@@ -64,7 +64,7 @@ const StaffNavigationMenuItems = () => {
                 </DrawerTrigger>
                 <DrawerContent>
                   <ScrollArea className="max-h-[500px] overflow-auto">
-                    {locationId ? <OrderCart setOpen={setOpen} /> : <LocationContent />}
+                    {locationId ? <OrderCart order={orders[0]} setOpen={setOpen} /> : <LocationContent />}
                   </ScrollArea>
                 </DrawerContent>
               </Drawer>

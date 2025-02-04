@@ -47,11 +47,11 @@ const getPriceOrderItemRoute = require("./routes/orderitems/getprice")
 
 // import order routes
 const listUserOrdersRoute = require("./routes/orders/userorderslist")
-const completeOrderPaymentRoute = require("./routes/orders/completeorder")
 const listOrdersQueueRoute = require("./routes/orders/ordersqueuelist")
 const detailOrderRoute = require("./routes/orders/detail")
 const updateOrderProgressRoute = require("./routes/orders/updateorderprogress")
 const deleteOrderRoute = require("./routes/orders/delete")
+const getPriceOrderRoute = require("./routes/orders/getprice")
 
 // import locations routes
 const createLocationRoute = require("./routes/locations/create")
@@ -76,6 +76,9 @@ const updateLimitedTimePromoRoute = require("./routes/limitedtimepromos/update")
 const listDiscountsRoute = require("./routes/discounts/list")
 const createDiscountRoute = require("./routes/discounts/create")
 const dropdownDiscountRoute = require("./routes/discounts/dropdown")
+
+// import order paid amounts routes
+const createOrderPaidAmountRoute = require("./routes/orderpaidamounts/create")
 
 const app = express()
 
@@ -125,11 +128,11 @@ app.use(getPriceOrderItemRoute)
 
 // Order Routes
 app.use(listUserOrdersRoute)
-app.use(completeOrderPaymentRoute)
 app.use(detailOrderRoute)
 app.use(updateOrderProgressRoute)
 app.use(listOrdersQueueRoute)
 app.use(deleteOrderRoute)
+app.use(getPriceOrderRoute)
 
 // Locations Routes
 app.use(createLocationRoute)
@@ -154,6 +157,9 @@ app.use(updateLimitedTimePromoRoute)
 app.use(listDiscountsRoute)
 app.use(createDiscountRoute)
 app.use(dropdownDiscountRoute)
+
+// Order Paid Amount Routes
+app.use(createOrderPaidAmountRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {

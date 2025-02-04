@@ -1,12 +1,13 @@
 import { DrawerHeader, DrawerTitle } from "../ui/drawer"
-import { useGetOrderItemListQuery } from "services/orders"
 import { OrderListItem } from "types/OrderTypes"
-import OrderContentItems from "./OrderContentItems"
 import { DialogHeader, DialogTitle } from "../ui/dialog"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import { Button } from "../ui/button"
 import { w3cwebsocket } from "websocket"
 import { useNavigate } from "react-router-dom"
+import OrderContentItem from "./other/orderContentItem"
+import { useGetOrderDetailQuery } from "services/orders"
+import { getName, getPrice } from "utils/orders/orderItem"
 
 interface Props {
   order: OrderListItem
@@ -14,7 +15,12 @@ interface Props {
 }
 
 const StartOrder = ({ order, client }: Props) => {
-  const { data } = useGetOrderItemListQuery({ order: order.id }, { refetchOnMountOrArgChange: true })
+  const { data } = useGetOrderDetailQuery(
+    {
+      id: order.id,
+    },
+    { refetchOnMountOrArgChange: true }
+  )
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const navigate = useNavigate()
 
@@ -40,7 +46,14 @@ const StartOrder = ({ order, client }: Props) => {
         </DrawerHeader>
       )}
       <div>
-        <OrderContentItems data={data} />
+        {data?.order_items?.map((order_item, index) => (
+          <OrderContentItem
+            index={index}
+            order_item={order_item}
+            name={getName(order_item)}
+            price={getPrice(order_item)}
+          />
+        ))}
         <div>
           <Button onClick={handleClick}>Start Order</Button>
         </div>

@@ -13,7 +13,7 @@ import { toast } from "react-toastify"
 import { useGetSodasListQuery } from "services/sodas"
 import { useGetFlavorsListQuery } from "services/flavors"
 import { ScrollArea } from "../ui/scroll-area"
-import { useGetPriceQuery } from "services/orders"
+import { useGetPriceQuery } from "services/orderitems"
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -64,7 +64,7 @@ const CustomOrderForm = ({ setOpen }: Props) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanZeroSugar(updatedValues)
-    dispatch(createOrderItem(cleanFormData(updatedValues))).then((data) => {
+    dispatch(createOrderItem(cleanFormData(updatedValues))).then((data: any) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()
         const notify = () => toast.success("Order Item added successfully")
