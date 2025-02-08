@@ -48,7 +48,7 @@ const AddCupForm = () => {
       {data?.length && data?.length > 0 ? <FormLabel>Existing Cups</FormLabel> : null}
       {data?.map((cup: CupSummary) => (
         <div key={cup.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {cup.size__display} - ${cup.price}
+          {cup.size.display} - ${cup.price}
         </div>
       ))}
       <form className="items-center gap-4 grid grid-cols-10">

@@ -9,7 +9,7 @@ import { SelectFromApiFormField } from "../forminputs/Select"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
 import { flavorGroupsApi, useCreateFlavorMutation, useGetFlavorsListQuery } from "services/flavors"
 import { Switch } from "../ui/switch"
-import { FlavorListItem } from "/types/flavor"
+import { FlavorSummary } from "/types/flavor"
 
 const AddFlavorForm = () => {
   const [createFlavor, result] = useCreateFlavorMutation()
@@ -45,9 +45,9 @@ const AddFlavorForm = () => {
   return (
     <Form {...form}>
       {data?.length && data?.length > 0 ? <FormLabel>Existing Flavors</FormLabel> : null}
-      {data?.map((flavor: FlavorListItem) => (
+      {data?.map((flavor: FlavorSummary) => (
         <div key={flavor.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {flavor.name} - {flavor.flavor_group__name}
+          {flavor.name} - {flavor.flavor_group.name}
         </div>
       ))}
       <form>

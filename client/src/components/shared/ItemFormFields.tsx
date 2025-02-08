@@ -55,9 +55,9 @@ const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProp
         form.watch(fieldName)[index].flavor.value
       ) {
         dispatch(flavorsApi.endpoints.getFlavorDetail.initiate({ id: form.watch(fieldName)[index].flavor.value })).then(
-          (data: any) => {
+          (data) => {
             if (data.status === "fulfilled") {
-              setUom(`${data.data.flavor_group__uom__display}(s)`)
+              setUom(`${data.data.flavor_group.uom.display}(s)`)
             }
           }
         )
@@ -210,7 +210,7 @@ const CupFormField = ({ form }: FormProps) => {
                     <FormControl>
                       <RadioGroupItem value={String(cup.id)} />
                     </FormControl>
-                    <FormLabel className="font-normal">{cup.size__display}</FormLabel>
+                    <FormLabel className="font-normal">{cup.size.display}</FormLabel>
                   </FormItem>
                 ))}
             </RadioGroup>
@@ -262,7 +262,7 @@ const Price = ({ menuItem, form, isCustomized }: PriceProps) => {
   const [cups, setCups] = useState<any>({})
 
   useEffect(() => {
-    if (flavorsData?.length > 0) {
+    if (flavorsData && flavorsData?.length > 0) {
       setFlavors(
         flavorsData.reduce((acc: any, { id, flavor_group__price }: any) => {
           acc[id] = flavor_group__price

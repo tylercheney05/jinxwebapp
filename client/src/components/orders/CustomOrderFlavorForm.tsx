@@ -3,12 +3,12 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { Checkbox } from "../ui/checkbox"
 import { Soda } from "/types/soda"
-import { FlavorListItem } from "/types/flavor"
+import { FlavorSummary } from "/types/flavor"
 
 interface Props {
   form: UseFormReturn<any>
   sodaData: Soda[] | undefined
-  flavorData: FlavorListItem[] | undefined
+  flavorData: FlavorSummary[] | undefined
 }
 
 const CustomOrderFlavorForm = ({ form, sodaData, flavorData }: Props) => {

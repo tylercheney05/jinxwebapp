@@ -3,10 +3,11 @@ interface UoM {
 	display: string;
 }
 
-export interface FlavorGroupListItem {
+export interface FlavorGroupSummary {
+  // Connects with the FlavorGroupSummarySerializer in the Django API
     id: number;
     name: string;
-    uom__display: string;
+    uom: UoM;
     price: number;
   }
   

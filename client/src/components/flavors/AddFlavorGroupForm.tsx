@@ -47,7 +47,7 @@ const AddFlavorGroupForm = () => {
       {data?.length && data?.length > 0 ? <FormLabel>Existing Flavor Groups</FormLabel> : null}
       {data?.map((flavorGroup) => (
         <div key={flavorGroup.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {flavorGroup.name} - ${flavorGroup.price} per {flavorGroup.uom__display}
+          {flavorGroup.name} - ${flavorGroup.price} per {flavorGroup.uom.display}
         </div>
       ))}
       <form className="items-center gap-4 grid grid-cols-10">

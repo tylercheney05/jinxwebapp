@@ -13,7 +13,6 @@ export interface Cup {
 export interface CupSummary {
     // Connects with the CupSerializer in the Django API
     id: number;
-    size: number;
-    size__display: string;
+    size: Size;
     price: number;
 }
