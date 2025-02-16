@@ -11,7 +11,7 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { cupsApi, useGetCupsListQuery } from "services/cups"
 import { Textarea } from "../ui/textarea"
 import { Separator } from "../ui/separator"
-import { MenuItemListItem } from "/types/menuItem"
+import { MenuItemSummary } from "/types/menuItem"
 import { CupSummary } from "/types/cup"
 
 interface FlavorFormFieldProps {
@@ -36,7 +36,7 @@ interface FormProps {
 }
 
 interface PriceProps {
-  menuItem?: MenuItemListItem
+  menuItem?: MenuItemSummary
   form: UseFormReturn<any>
   isCustomized: boolean
 }

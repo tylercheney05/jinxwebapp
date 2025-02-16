@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "components/ui/card"
 import { OrderItem } from "../../../../types/orderItem/orderItem"
-import { MenuItemFlavor } from "/types/menuItem"
+import { MenuItemFlavor } from "/types/menuItem/menuItemFlavor"
 import FlavorContent from "./MenuItem/FlavorContent"
 import { CustomOrderFlavorMenuItemCustomOrder } from "/types/customOrderFlavor/customOrderFlavorMenuItemCustomOrder"
 import { CustomOrderFlavorCustomOrder } from "/types/customOrderFlavor/customOrderFlavorCustomOrder"

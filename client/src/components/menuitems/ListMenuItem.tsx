@@ -5,11 +5,11 @@ import OrderItemForm from "../orders/OrderItemForm"
 import { ScrollArea } from "../ui/scroll-area"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer"
-import { MenuItemListItem } from "/types/menuItem"
+import { MenuItemSummary } from "/types/menuItem"
 
 interface Props {
   isClickable?: boolean
-  menuItem: MenuItemListItem
+  menuItem: MenuItemSummary
 }
 
 const ListMenuItem = ({ isClickable = false, menuItem }: Props) => {

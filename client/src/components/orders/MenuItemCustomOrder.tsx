@@ -5,16 +5,16 @@ import { useDidMountEffect } from "utils/SharedUtils"
 import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
 import { useGetSodasListQuery } from "services/sodas"
 import { useGetFlavorsListQuery } from "services/flavors"
-import { MenuItemListItem } from "/types/menuItem"
+import { MenuItemSummary } from "/types/menuItem"
 
 interface Props {
-  menuItem: MenuItemListItem
+  menuItem: MenuItemSummary
   form: UseFormReturn<any>
 }
 
 const MenuItemCustomOrder = ({ menuItem, form }: Props) => {
   const { data, isSuccess, refetch } = useGetMenuItemDetailQuery(
-    { id: menuItem.id },
+    { id: String(menuItem.id) },
     { refetchOnMountOrArgChange: true }
   )
   const { data: sodaData, isSuccess: sodaIsSuccess } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })

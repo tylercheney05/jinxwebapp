@@ -4,7 +4,7 @@ import { AppDispatch } from "store"
 import ListMenuItem from "./ListMenuItem"
 import { menuItemsApi } from "services/menuitems"
 import { LimitedTimePromoListItem } from "types/LimitedTimePromoTypes"
-import { MenuItemListItem } from "/types/menuItem"
+import { MenuItemSummary } from "/types/menuItem"
 import { Soda } from "/types/soda"
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const ListMenuItems = ({ soda, promo, resetSodas = false, setResetSodas = undefined, isClickable = false }: Props) => {
-  const [menuItems, setMenuItems] = useState<MenuItemListItem[]>([])
+  const [menuItems, setMenuItems] = useState<MenuItemSummary[]>([])
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
@@ -28,7 +28,9 @@ const ListMenuItems = ({ soda, promo, resetSodas = false, setResetSodas = undefi
             { forceRefetch: true }
           )
         ).then((data) => {
-          setMenuItems(data.data)
+          if (data?.data) {
+            setMenuItems(data.data)
+          }
           if (setResetSodas) {
             setResetSodas(false)
           }
@@ -48,7 +50,9 @@ const ListMenuItems = ({ soda, promo, resetSodas = false, setResetSodas = undefi
             { forceRefetch: true }
           )
         ).then((data) => {
-          setMenuItems(data.data)
+          if (data?.data) {
+            setMenuItems(data.data)
+          }
           if (setResetSodas) {
             setResetSodas(false)
           }
@@ -60,7 +64,7 @@ const ListMenuItems = ({ soda, promo, resetSodas = false, setResetSodas = undefi
     <div className="flex gap-4 flex-wrap justify-center">
       {soda &&
         soda.id &&
-        menuItems?.map((menuItem: MenuItemListItem) => (
+        menuItems?.map((menuItem: MenuItemSummary) => (
           <ListMenuItem key={menuItem.id} isClickable={isClickable} menuItem={menuItem} />
         ))}
       {promo &&

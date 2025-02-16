@@ -1,10 +1,10 @@
 import useMediaQuery from "@mui/material/useMediaQuery"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { MenuItemListItem } from "/types/menuItem"
+import { MenuItemSummary } from "/types/menuItem"
 import { cn } from "lib/utils"
 
 interface Props {
-  menuItem: MenuItemListItem
+  menuItem: MenuItemSummary
   isClickable?: boolean
 }
 
@@ -12,7 +12,7 @@ const MenuItemCard = ({ menuItem, isClickable = false }: Props) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const flavorsString = menuItem.flavors
-    .map((flavor) => flavor.flavor__name)
+    .map((flavor) => flavor.flavor.name)
     .reduce((acc, flavor, index, array) => {
       if (index === 0) {
         return flavor
@@ -37,8 +37,8 @@ const MenuItemCard = ({ menuItem, isClickable = false }: Props) => {
         {isDesktop && (
           <div className="text-muted-foreground text-left">
             {menuItem.flavors.map((flavor) => (
-              <div key={flavor.flavor__name}>
-                {flavor.quantity} {flavor.flavor__flavor_group__uom__display} of {flavor.flavor__name}
+              <div key={flavor.flavor.name}>
+                {flavor.quantity} {flavor.flavor.flavor_group.uom.display} of {flavor.flavor.name}
               </div>
             ))}
           </div>
@@ -48,7 +48,7 @@ const MenuItemCard = ({ menuItem, isClickable = false }: Props) => {
           <div className="text-jinxBlue flex gap-4 mt-2">
             {menuItem.cup_prices.map((cup_price) => (
               <div>
-                <div>{cup_price.size__display}</div>
+                <div>{cup_price.size.display}</div>
                 <strong>${cup_price.price.toFixed(2)}</strong>
               </div>
             ))}

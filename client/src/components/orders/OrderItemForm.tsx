@@ -16,10 +16,10 @@ import { useDidMountEffect } from "utils/SharedUtils"
 import { ScrollArea } from "../ui/scroll-area"
 import { Card, CardContent } from "../ui/card"
 import { useGetPriceQuery } from "services/orderitems"
-import { MenuItemListItem } from "/types/menuItem"
+import { MenuItemSummary } from "/types/menuItem"
 
 interface Props {
-  menuItem: MenuItemListItem
+  menuItem: MenuItemSummary
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 

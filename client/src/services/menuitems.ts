@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import { convertBooleanToString } from "utils/SharedUtils";
+import { MenuItem, MenuItemSummary } from "/types/menuItem";
 
 export const menuItemsApi = createApi({
   reducerPath: "menuItemsApi",
@@ -17,7 +18,7 @@ export const menuItemsApi = createApi({
         body: JSON.stringify({ name, soda, menu_item_flavors, limited_time_promo }),
       }),
     }),
-    getMenuItemsList: builder.query({
+    getMenuItemsList: builder.query<MenuItemSummary[], object>({
       query: (params: { 
         soda?: string, 
         limited_time_promotions__limited_time_promo?: string, 
@@ -28,7 +29,7 @@ export const menuItemsApi = createApi({
         return `/api/menu-items?${queryParams}`;
       },
     }),
-    getMenuItemDetail: builder.query({
+    getMenuItemDetail: builder.query<MenuItem, { id: string}>({
       query: ({ id }) => `/api/menu-items/${id}`
     })
   }),
