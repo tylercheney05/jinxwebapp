@@ -17,7 +17,7 @@ import { RootState } from "store"
 
 interface Props {
   order: OrderListItem
-  client: w3cwebsocket
+  client: w3cwebsocket | null
 }
 
 const PendingOrder = ({ order, client }: Props) => {
@@ -27,30 +27,36 @@ const PendingOrder = ({ order, client }: Props) => {
   const { user } = useSelector((state: RootState) => state.user)
 
   const handleRemoveProgressClick = () => {
-    client.send(
-      JSON.stringify({
-        order_in_progress: false,
-        order_id: order.id,
-      })
-    )
+    if (client) {
+      client.send(
+        JSON.stringify({
+          order_in_progress: false,
+          order_id: order.id,
+        })
+      )
+    }
   }
 
   const handleRemoveCompletedClick = () => {
-    client.send(
-      JSON.stringify({
-        order_complete: false,
-        order_id: order.id,
-      })
-    )
+    if (client) {
+      client.send(
+        JSON.stringify({
+          order_complete: false,
+          order_id: order.id,
+        })
+      )
+    }
   }
 
   const handleRemoveOrderClick = () => {
-    client.send(
-      JSON.stringify({
-        delete_order: true,
-        order_id: order.id,
-      })
-    )
+    if (client) {
+      client.send(
+        JSON.stringify({
+          delete_order: true,
+          order_id: order.id,
+        })
+      )
+    }
     setDropdownOpen(false)
   }
 
@@ -67,55 +73,57 @@ const PendingOrder = ({ order, client }: Props) => {
         <CardTitle>{order.order_name__name}</CardTitle>
         {user?.is_admin && (
           <div className="absolute top-1 right-2">
-            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">More</span>
-                  <MoreVerticalIcon />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <div className="flex flex-col gap-1 justify-start">
-                  {user?.is_admin && (
-                    <DoubleClickButton
-                      variant="ghost"
-                      onClick={handleRemoveOrderClick}
-                      confirmButtonClassName="w-[214px]"
-                      alertClassName="w-[214px]"
-                      alertMsg="Please confirm you'd like to delete this order"
-                      className="justify-start"
-                    >
-                      Remove Order
-                    </DoubleClickButton>
-                  )}
-                  {order.is_in_progress && (
-                    <DoubleClickButton
-                      variant="ghost"
-                      onClick={handleRemoveProgressClick}
-                      confirmButtonClassName="w-[214px]"
-                      alertClassName="w-[214px]"
-                      alertMsg="Please ensure another user is not working on this order before confirming"
-                      className="justify-start"
-                    >
-                      Remove from "In Progress"
-                    </DoubleClickButton>
-                  )}
-                  {order.is_complete && (
-                    <DoubleClickButton
-                      variant="ghost"
-                      onClick={handleRemoveCompletedClick}
-                      confirmButtonClassName="w-[214px]"
-                      alertClassName="w-[214px]"
-                      alertMsg="Please confirm you'd like to remove this order from the completed list"
-                      className="justify-start"
-                    >
-                      Remove from "Completed"
-                    </DoubleClickButton>
-                  )}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {client && (
+              <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">More</span>
+                    <MoreVerticalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <div className="flex flex-col gap-1 justify-start">
+                    {user?.is_admin && (
+                      <DoubleClickButton
+                        variant="ghost"
+                        onClick={handleRemoveOrderClick}
+                        confirmButtonClassName="w-[214px]"
+                        alertClassName="w-[214px]"
+                        alertMsg="Please confirm you'd like to delete this order"
+                        className="justify-start"
+                      >
+                        Remove Order
+                      </DoubleClickButton>
+                    )}
+                    {order.is_in_progress && (
+                      <DoubleClickButton
+                        variant="ghost"
+                        onClick={handleRemoveProgressClick}
+                        confirmButtonClassName="w-[214px]"
+                        alertClassName="w-[214px]"
+                        alertMsg="Please ensure another user is not working on this order before confirming"
+                        className="justify-start"
+                      >
+                        Remove from "In Progress"
+                      </DoubleClickButton>
+                    )}
+                    {order.is_complete && (
+                      <DoubleClickButton
+                        variant="ghost"
+                        onClick={handleRemoveCompletedClick}
+                        confirmButtonClassName="w-[214px]"
+                        alertClassName="w-[214px]"
+                        alertMsg="Please confirm you'd like to remove this order from the completed list"
+                        className="justify-start"
+                      >
+                        Remove from "Completed"
+                      </DoubleClickButton>
+                    )}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         )}
         {order.is_in_progress && <div className="absolute bottom-1 right-2">In Progress</div>}

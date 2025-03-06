@@ -42,6 +42,7 @@ interface SelectFromApiFormFieldProps {
   placeholder: string
   loadOptionsApi: any
   fieldsForDropdownLabel: Array<string>
+  disabled?: boolean
 }
 
 interface AsyncSelectInputProps {
@@ -179,6 +180,7 @@ const SelectFromApiFormField = ({
   placeholder,
   loadOptionsApi,
   fieldsForDropdownLabel,
+  disabled = false,
 }: SelectFromApiFormFieldProps) => {
   const dispatch = useDispatch<AppDispatch>()
 
@@ -213,6 +215,7 @@ const SelectFromApiFormField = ({
       options={options}
       onFocus={handleOnFocus}
       isLoading={loading}
+      disabled={disabled}
     />
   )
 }

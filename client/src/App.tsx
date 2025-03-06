@@ -17,6 +17,7 @@ import StaffRoute from "./components/routes/StaffRoute"
 import MakeOrdersPage from "./containers/MakeOrdersPage"
 import MakeOrderPage from "./containers/MakeOrderPage"
 import CheckoutPage from "./containers/CheckoutPage"
+import MakeOrdersBackupPage from "./containers/MakeOrdersBackupPage"
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -47,6 +48,16 @@ const App = () => {
             <ProtectedRoute>
               <StaffRoute>
                 <MakeOrdersPage />
+              </StaffRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/make-orders/backup"
+          element={
+            <ProtectedRoute>
+              <StaffRoute>
+                <MakeOrdersBackupPage />
               </StaffRoute>
             </ProtectedRoute>
           }

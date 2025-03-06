@@ -1,5 +1,5 @@
 import { DrawerHeader, DrawerTitle } from "../ui/drawer"
-import { useGetOrderItemListQuery } from "services/orders"
+import { useGetOrderItemListQuery, usePartialUpdateOrderMutation } from "services/orders"
 import { OrderListItem } from "types/OrderTypes"
 import OrderContentItems from "./OrderContentItems"
 import { DialogHeader, DialogTitle } from "../ui/dialog"
@@ -7,26 +7,39 @@ import useMediaQuery from "@mui/material/useMediaQuery"
 import { Button } from "../ui/button"
 import { w3cwebsocket } from "websocket"
 import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import { toast } from "react-toastify"
 
 interface Props {
   order: OrderListItem
-  client: w3cwebsocket
+  client: w3cwebsocket | null
 }
 
 const StartOrder = ({ order, client }: Props) => {
   const { data } = useGetOrderItemListQuery({ order: order.id }, { refetchOnMountOrArgChange: true })
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const navigate = useNavigate()
+  const [partialUpdate, { isSuccess }] = usePartialUpdateOrderMutation()
 
   const handleClick = () => {
-    client.send(
-      JSON.stringify({
-        order_in_progress: true,
-        order_id: order.id,
-      })
-    )
+    if (client) {
+      client.send(
+        JSON.stringify({
+          order_in_progress: true,
+          order_id: order.id,
+        })
+      )
+    }
     navigate(`/make-orders/${order.id}`)
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      const notify = () => toast.success("Order completed successfully")
+      notify()
+      navigate("/make-orders")
+    }
+  }, [isSuccess])
 
   return (
     <div>
@@ -42,7 +55,22 @@ const StartOrder = ({ order, client }: Props) => {
       <div>
         <OrderContentItems data={data} />
         <div>
-          <Button onClick={handleClick}>Start Order</Button>
+          {client ? (
+            <Button onClick={handleClick}>Start Order</Button>
+          ) : (
+            <Button
+              onClick={() =>
+                partialUpdate({
+                  id: order.id,
+                  data: {
+                    is_complete: true,
+                  },
+                })
+              }
+            >
+              Complete Order
+            </Button>
+          )}
         </div>
       </div>
     </div>

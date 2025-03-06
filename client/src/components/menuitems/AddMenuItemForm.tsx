@@ -20,6 +20,7 @@ import { LimitedTimePromoListItem } from "/types/LimitedTimePromoTypes"
 
 const AddMenuItemForm = () => {
   const [isLimitedTime, setIsLimitedTime] = useState<boolean>(false)
+  const [manualPrice, setManualPrice] = useState<boolean>(false)
   const [createMenuItem, result] = useCreateMenuItemMutation()
   const { data: sodaData } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
   const { data: limitedTimePromosData } = useGetLimitedTimePromosListQuery(
@@ -47,6 +48,11 @@ const AddMenuItemForm = () => {
         value: z.number().int(),
         label: z.string(),
       }),
+      price: z
+        .object({
+          price: z.string().min(1, { message: "Price is required" }),
+        })
+        .nullable(),
     })
     .superRefine((val, ctx) => {
       if (val.menu_item_flavors.length < 2) {
@@ -78,6 +84,7 @@ const AddMenuItemForm = () => {
         value: 0,
         label: "Select a limited time promo",
       },
+      price: null,
     },
   })
 
@@ -86,6 +93,7 @@ const AddMenuItemForm = () => {
       form.reset()
       setResetSodas(true)
       setIsLimitedTime(false)
+      setManualPrice(false)
       const notify = () => toast.success("Menu Item added successfully")
       notify()
     } else if (result.isError) {
@@ -94,9 +102,21 @@ const AddMenuItemForm = () => {
     }
   }, [result])
 
+  const cleanPriceData = (values: any) => {
+    if (!values.price) {
+      return values
+    }
+    let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
+    updatedValues["price"] = {
+      price: values.price.price,
+    }
+    return updatedValues
+  }
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanFlavorsData(updatedValues, "menu_item_flavors")
+    updatedValues = cleanPriceData(updatedValues)
     createMenuItem(cleanFormData(updatedValues))
   }
 
@@ -186,6 +206,30 @@ const AddMenuItemForm = () => {
               placeholder="Select a limited time promo"
               loadOptionsApi={limitedTimePromosApi.endpoints.getLimitedTimePromosDropdown.initiate}
               fieldsForDropdownLabel={["name"]}
+            />
+          </div>
+        )}
+        <div className="flex items-center space-x-2">
+          <Switch checked={manualPrice} onCheckedChange={() => setManualPrice(!manualPrice)} />
+          <Label>Does this menu item have manual pricing?</Label>
+        </div>
+        {manualPrice && (
+          <div className="mt-2">
+            <FormField
+              control={form.control}
+              name="price.price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="ml-4">Price of 16 oz (not including cup price)</FormLabel>
+                  <div className="flex items-center">
+                    <div className="mr-2">$</div>
+                    <FormControl>
+                      <Input type="number" {...field} placeholder="Enter price" />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           </div>
         )}
