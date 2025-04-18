@@ -1,6 +1,6 @@
-import { baseQueryWithReauth } from "./baseQuery";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { FlavorGroupListItems } from "/types/FlavorTypes";
+import { baseQueryWithReauth } from "./baseQuery"
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { FlavorGroupListItems } from "/types/FlavorTypes"
 
 export const flavorGroupsApi = createApi({
   reducerPath: "flavorGroupsApi",
@@ -15,15 +15,26 @@ export const flavorGroupsApi = createApi({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ name, uom, price }),
-      })
+      }),
+    }),
+    updateFlavorGroup: builder.mutation({
+      query: ({ id, name, uom, price }) => ({
+        url: `/api/flavor-groups/${id}`,
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, uom, price }),
+      }),
     }),
     getFlavorGroupsList: builder.query<FlavorGroupListItems, object>({
-      query: () => "/api/flavor-groups"
+      query: () => "/api/flavor-groups",
     }),
     getFlavorGroupsDropdown: builder.query({
-      query: () => "/api/flavor-groups/autocomplete"
-    })
-  })
+      query: () => "/api/flavor-groups/autocomplete",
+    }),
+  }),
 })
 
 export const flavorsApi = createApi({
@@ -39,22 +50,23 @@ export const flavorsApi = createApi({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ name, flavor_group, sugar_free_available }),
-      })
+      }),
     }),
     getFlavorsList: builder.query({
       query: (params: Record<string, string>) => {
-        const queryParams = new URLSearchParams(params).toString();
-         return `/api/flavors?${queryParams}`
-      }
+        const queryParams = new URLSearchParams(params).toString()
+        return `/api/flavors?${queryParams}`
+      },
     }),
     getFlavorsDropdown: builder.query({
-      query: () => "/api/flavors/autocomplete"
+      query: () => "/api/flavors/autocomplete",
     }),
     getFlavorDetail: builder.query({
-      query: ({ id }) => `/api/flavors/${id}`
-    })
-  })
+      query: ({ id }) => `/api/flavors/${id}`,
+    }),
+  }),
 })
 
-export const { useCreateFlavorGroupMutation, useGetFlavorGroupsListQuery } = flavorGroupsApi
+export const { useCreateFlavorGroupMutation, useGetFlavorGroupsListQuery, useUpdateFlavorGroupMutation } =
+  flavorGroupsApi
 export const { useCreateFlavorMutation, useGetFlavorsListQuery } = flavorsApi

@@ -4,12 +4,14 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { PlusIcon } from "../Icons"
+import { EditIcon, PlusIcon } from "../Icons"
 import { useEffect } from "react"
 import { SelectFormField } from "../forminputs/Select"
 import { UOM_OPTIONS } from "constants/FlavorConstants"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
 import { useCreateFlavorGroupMutation, useGetFlavorGroupsListQuery } from "services/flavors"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet"
+import EditFlavorGroupForm from "./EditFlavorGroupForm"
 
 const AddFlavorGroupForm = () => {
   const [createFlavorGroup, result] = useCreateFlavorGroupMutation()
@@ -46,8 +48,24 @@ const AddFlavorGroupForm = () => {
     <Form {...form}>
       {data?.length && data?.length > 0 ? <FormLabel>Existing Flavor Groups</FormLabel> : null}
       {data?.map((flavorGroup) => (
-        <div key={flavorGroup.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {flavorGroup.name} - ${flavorGroup.price} per {flavorGroup.uom__display}
+        <div key={flavorGroup.id} className="h-10 pl-2 flex items-center text-sm gap-1 justify-between">
+          <div>
+            {flavorGroup.name} - ${flavorGroup.price} per {flavorGroup.uom__display}
+          </div>
+          <Sheet>
+            <SheetTrigger>
+              <EditIcon className="cursor-pointer" size="18px" />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Edit Flavor Group</SheetTitle>
+                <SheetDescription>
+                  Make changes to the {flavorGroup.name} flavor group. Click save when you're done.
+                </SheetDescription>
+              </SheetHeader>
+              <EditFlavorGroupForm flavorGroup={flavorGroup} refetch={refetch} />
+            </SheetContent>
+          </Sheet>
         </div>
       ))}
       <form className="items-center gap-4 grid grid-cols-10">

@@ -21,6 +21,7 @@ const dropdownSodasRoute = require("./routes/sodas/dropdown")
 const createFlavorGroupRoute = require("./routes/flavorgroups/create")
 const listFlavorGroupsRoute = require("./routes/flavorgroups/list")
 const dropdownFlavorGroupsRoute = require("./routes/flavorgroups/dropdown")
+const updateFlavorGroupRoute = require("./routes/flavorgroups/update")
 
 // import flavor routes
 const createFlavorRoute = require("./routes/flavors/create")
@@ -38,6 +39,7 @@ const createCupRoute = require("./routes/cups/create")
 const listCupsRoute = require("./routes/cups/list")
 const dropdownCupsRoute = require("./routes/cups/dropdown")
 const detailCupRoute = require("./routes/cups/detail")
+const updateCupRoute = require("./routes/cups/update")
 
 // import order item routes
 const createOrderItemRoute = require("./routes/orderitems/create")
@@ -101,6 +103,7 @@ app.use(dropdownSodasRoute)
 app.use(createFlavorGroupRoute)
 app.use(listFlavorGroupsRoute)
 app.use(dropdownFlavorGroupsRoute)
+app.use(updateFlavorGroupRoute)
 
 // Flavor Routes
 app.use(createFlavorRoute)
@@ -118,6 +121,7 @@ app.use(createCupRoute)
 app.use(listCupsRoute)
 app.use(dropdownCupsRoute)
 app.use(detailCupRoute)
+app.use(updateCupRoute)
 
 // Order Item Routes
 app.use(createOrderItemRoute)

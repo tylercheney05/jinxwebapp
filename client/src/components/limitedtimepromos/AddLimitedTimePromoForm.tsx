@@ -4,7 +4,7 @@ import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { CircleCheckIcon, CircleXIcon, PlusIcon } from "../Icons"
+import { CircleCheckIcon, PlusIcon, ArchivedIcon } from "../Icons"
 import { useEffect } from "react"
 import { handleFormSubmitResponse } from "utils/FormUtils"
 import { useCreateLimitedTimePromoMutation, useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
@@ -45,11 +45,11 @@ const AddLimitedTimePromoForm = () => {
             <div className="flex gap-4 items-center">
               {limitedTimePromo.is_archived ? (
                 <div title={`${limitedTimePromo.name} promo is archived`}>
-                  <CircleXIcon />
+                  <ArchivedIcon size="18px" />
                 </div>
               ) : (
                 <div title={`${limitedTimePromo.name} promo is active`}>
-                  <CircleCheckIcon />
+                  <CircleCheckIcon size="18px" />
                 </div>
               )}
               {limitedTimePromo.name}

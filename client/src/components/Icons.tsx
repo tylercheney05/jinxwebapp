@@ -14,6 +14,7 @@ import {
   SquarePen,
   CircleCheck,
   CircleX,
+  Archive,
 } from "lucide-react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSpinner } from "@fortawesome/free-solid-svg-icons"
@@ -74,6 +75,9 @@ CircleCheckIcon.displayName = "CircleCheckIcon"
 const CircleXIcon = ({ className, size }: Props) => <CircleX className={className} size={size} />
 CircleXIcon.displayName = "CircleXIcon"
 
+const ArchivedIcon = ({ className, size }: Props) => <Archive className={className} size={size} />
+ArchivedIcon.displayName = "ArchivedIcon"
+
 export {
   LoadingIcon,
   MenuIcon,
@@ -91,4 +95,5 @@ export {
   EditIcon,
   CircleCheckIcon,
   CircleXIcon,
+  ArchivedIcon,
 }

@@ -1,6 +1,6 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQueryWithReauth } from "./baseQuery";
-import { CupListItems } from "types/CupTypes";
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { baseQueryWithReauth } from "./baseQuery"
+import { CupListItems } from "types/CupTypes"
 
 export const cupsApi = createApi({
   reducerPath: "cupsApi",
@@ -15,21 +15,32 @@ export const cupsApi = createApi({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ size, price, conversion_factor }),
-      })
+      }),
+    }),
+    updateCup: builder.mutation({
+      query: ({ id, size, price, conversion_factor }) => ({
+        url: `/api/cups/${id}`,
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ size, price, conversion_factor }),
+      }),
     }),
     getCupsList: builder.query<CupListItems, object>({
       query: (params: Record<string, string>) => {
-        const queryParams = new URLSearchParams(params).toString();
+        const queryParams = new URLSearchParams(params).toString()
         return `/api/cups?${queryParams}`
-      }
+      },
     }),
     getCupDetail: builder.query({
-      query: ({ id }) => `/api/cups/${id}`
+      query: ({ id }) => `/api/cups/${id}`,
     }),
     getCupDropdown: builder.query({
-      query: () => "/api/cups/autocomplete"
+      query: () => "/api/cups/autocomplete",
     }),
-  })
+  }),
 })
 
-export const { useCreateCupMutation, useGetCupsListQuery, useGetCupDetailQuery } = cupsApi
+export const { useCreateCupMutation, useGetCupsListQuery, useGetCupDetailQuery, useUpdateCupMutation } = cupsApi

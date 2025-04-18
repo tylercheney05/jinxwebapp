@@ -81,7 +81,10 @@ const MakeOrdersPage = () => {
             </div>
           </div>
         ) : (
-          <PendingOrders ordersQueued={ordersQueued} client={client} />
+          <div className="flex flex-col items-center">
+            <div className="mt-4 font-bold text-lg">Please make orders from top to bottom</div>
+            <PendingOrders ordersQueued={ordersQueued} client={client} />
+          </div>
         )}
       </LocationNeededRoute>
     </Layout>

@@ -7,7 +7,7 @@ import { cn } from "lib/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../tooltip"
 
 interface Props extends ButtonProps {
-  alertMsg?: string
+  alertMsg?: React.ReactNode
   confirmButtonClassName?: string
   alertClassName?: string
   smallConfirm?: boolean

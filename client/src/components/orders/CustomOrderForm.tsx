@@ -43,6 +43,7 @@ const CustomOrderForm = ({ setOpen }: Props) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      low_sugar: "normal",
       order__location: Number(locationId),
       custom_order__soda: "",
       custom_order_flavors: [],

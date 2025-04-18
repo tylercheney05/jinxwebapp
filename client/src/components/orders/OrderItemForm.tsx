@@ -45,6 +45,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     defaultValues: {
       menu_item: menuItem.id,
       order__location: Number(locationId),
+      low_sugar: "normal",
       note: "",
       custom_order__soda: "",
       custom_order_flavors: [],

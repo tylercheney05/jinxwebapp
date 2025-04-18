@@ -9,6 +9,7 @@ import { w3cwebsocket } from "websocket"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { toast } from "react-toastify"
+import DoubleClickButton from "../ui/button/doubleclickbutton"
 
 interface Props {
   order: OrderListItem
@@ -58,7 +59,7 @@ const StartOrder = ({ order, client }: Props) => {
           {client ? (
             <Button onClick={handleClick}>Start Order</Button>
           ) : (
-            <Button
+            <DoubleClickButton
               onClick={() =>
                 partialUpdate({
                   id: order.id,
@@ -67,9 +68,18 @@ const StartOrder = ({ order, client }: Props) => {
                   },
                 })
               }
+              alertMsg={
+                <>
+                  Are you sure you want to mark this order as complete?
+                  <br />
+                  Click again to confirm.
+                  <br />
+                  Click anywhere else to cancel.
+                </>
+              }
             >
               Complete Order
-            </Button>
+            </DoubleClickButton>
           )}
         </div>
       </div>
