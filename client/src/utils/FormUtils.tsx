@@ -35,7 +35,7 @@ export const handleFormSubmitResponse = (
   result: any,
   form: any,
   successMsg: string,
-  httpRequest: "post" | "put",
+  httpRequest: "post" | "put" | "delete",
   refetch?: any
 ) => {
   if (result.isSuccess) {

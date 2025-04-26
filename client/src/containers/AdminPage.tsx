@@ -8,7 +8,7 @@ import AddFlavorGroupForm from "components/flavors/AddFlavorGroupForm"
 import AddCupForm from "components/cups/AddCupForm"
 import AddLocationForm from "components/locations/AddLocationForm"
 import { useEffect, useState } from "react"
-import AddOrderNameForm from "components/orders/AddOrderNameForm"
+import AddOrderNameForm from "components/orders/ordername/AddOrderNameForm"
 import AddLimitedTimePromoForm from "components/limitedtimepromos/AddLimitedTimePromoForm"
 import AddDiscountForm from "components/discounts/AddDiscountForm"
 

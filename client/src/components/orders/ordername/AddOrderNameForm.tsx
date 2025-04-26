@@ -1,14 +1,17 @@
 import { z } from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
-import { PlusIcon } from "../Icons"
+import { Input } from "../../ui/input"
+import { Button } from "../../ui/button"
+import { EditIcon, PlusIcon } from "../../Icons"
 import { useCreateOrderNameMutation, useGetOrderNameListQuery } from "services/orders"
 import { OrderNameItem } from "types/OrderTypes"
 import { handleFormSubmitResponse } from "utils/FormUtils"
 import { useEffect } from "react"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "components/ui/sheet"
+import EditOrderNameForm from "./EditOrderNameForm"
+import DeleteOrderNameDialog from "./DeleteOrderNameDialog"
 
 const AddOrderNameForm = () => {
   const [createOrderName, result] = useCreateOrderNameMutation()
@@ -35,8 +38,25 @@ const AddOrderNameForm = () => {
     <Form {...form}>
       {data?.length && data?.length > 0 ? <FormLabel>Existing Order Names</FormLabel> : null}
       {data?.map((orderName: OrderNameItem) => (
-        <div key={orderName.id} className="h-10 pl-2 flex items-center text-sm gap-1">
-          {orderName.name}
+        <div key={orderName.id} className="h-10 pl-2 flex items-center text-sm gap-1 justify-between">
+          <div>{orderName.name}</div>
+          <div className="flex items-center gap-4">
+            <Sheet>
+              <SheetTrigger>
+                <EditIcon className="cursor-pointer" size="18px" />
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Edit Order Name</SheetTitle>
+                  <SheetDescription>
+                    Make changes to the {orderName.name} order name here. Click save when you're done.
+                  </SheetDescription>
+                </SheetHeader>
+                <EditOrderNameForm orderName={orderName} refetch={refetch} />
+              </SheetContent>
+            </Sheet>
+            <DeleteOrderNameDialog orderName={orderName} form={form} refetch={refetch} />
+          </div>
         </div>
       ))}
       <form className="items-center gap-4 grid grid-cols-10">

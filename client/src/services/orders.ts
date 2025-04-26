@@ -95,6 +95,17 @@ export const orderNamesApi = createApi({
         body: JSON.stringify({ name }),
       }),
     }),
+    updateOrderName: builder.mutation({
+      query: ({ id, name }) => ({
+        url: `/api/order-names/${id}`,
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      }),
+    }),
     getOrderNameList: builder.query<OrderNameItems, object>({
       query: () => "/api/order-names",
     }),
@@ -103,6 +114,16 @@ export const orderNamesApi = createApi({
         const queryParams = new URLSearchParams(params).toString()
         return `/api/order-names/autocomplete?${queryParams}`
       },
+    }),
+    deleteOrderName: builder.mutation({
+      query: ({ id }) => ({
+        url: `/api/order-names/${id}`,
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }),
     }),
   }),
 })
@@ -115,4 +136,9 @@ export const {
   usePartialUpdateOrderMutation,
 } = ordersApi
 export const { useGetOrderItemListQuery, useDeleteOrderItemMutation, useGetPriceQuery } = orderItemsApi
-export const { useCreateOrderNameMutation, useGetOrderNameListQuery } = orderNamesApi
+export const {
+  useCreateOrderNameMutation,
+  useGetOrderNameListQuery,
+  useUpdateOrderNameMutation,
+  useDeleteOrderNameMutation,
+} = orderNamesApi

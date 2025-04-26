@@ -69,6 +69,8 @@ const detailLocationRoute = require("./routes/locations/detail")
 const createOrderNameRoute = require("./routes/ordernames/create")
 const listOrderNamesRoute = require("./routes/ordernames/list")
 const dropdownOrderNamesRoute = require("./routes/ordernames/dropdown")
+const updateOrderNameRoute = require("./routes/ordernames/update")
+const deleteOrderNameRoute = require("./routes/ordernames/delete")
 
 // import limited time offer routes
 const createLimitedTimePromoRoute = require("./routes/limitedtimepromos/create")
@@ -151,6 +153,8 @@ app.use(detailLocationRoute)
 app.use(createOrderNameRoute)
 app.use(listOrderNamesRoute)
 app.use(dropdownOrderNamesRoute)
+app.use(updateOrderNameRoute)
+app.use(deleteOrderNameRoute)
 
 // Limited Time Offer Routes
 app.use(createLimitedTimePromoRoute)
