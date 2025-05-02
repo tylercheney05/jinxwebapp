@@ -2,7 +2,14 @@ import { z } from "zod"
 import { Form } from "../ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CupFormField, NoteFormField, ZeroSugarFormField, cleanZeroSugar } from "../shared/ItemFormFields"
+import {
+  CupFormField,
+  FlatOrSparklingFormField,
+  NoteFormField,
+  ZeroSugarFormField,
+  cleanFlatOrSparkling,
+  cleanZeroSugar,
+} from "../shared/ItemFormFields"
 import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
 import { Button } from "../ui/button"
 import { useDispatch, useSelector } from "react-redux"
@@ -30,16 +37,30 @@ const CustomOrderForm = ({ setOpen }: Props) => {
     { refetchOnMountOrArgChange: true }
   )
 
-  const formSchema = z.object({
-    order__location: z.number(),
-    cup: z.string().min(1, { message: "You need to select a size" }),
-    low_sugar: z.enum(["normal", "low_sugar"], {
-      required_error: "You need to select a soda type",
-    }),
-    custom_order__soda: z.string(),
-    custom_order_flavors: z.array(z.number()),
-    note: z.string().optional(),
-  })
+  const formSchema = z
+    .object({
+      order__location: z.number(),
+      cup: z.string().min(1, { message: "You need to select a size" }),
+      low_sugar: z.enum(["normal", "low_sugar"], {
+        required_error: "You need to select a soda type",
+      }),
+      custom_order__soda: z.string(),
+      custom_order_flavors: z.array(z.number()),
+      note: z.string().optional(),
+
+      // TODO: REMOVE LATER
+      flat_or_sparkling: z.enum(["", "flat", "sparkling"]),
+    })
+    .superRefine((val, ctx) => {
+      if (!val.flat_or_sparkling && val.custom_order__soda === "5") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["flat_or_sparkling"],
+          message: "You need to select flat or sparkling",
+        })
+      }
+    })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,6 +68,8 @@ const CustomOrderForm = ({ setOpen }: Props) => {
       order__location: Number(locationId),
       custom_order__soda: "",
       custom_order_flavors: [],
+
+      flat_or_sparkling: "",
     },
   })
 
@@ -65,6 +88,7 @@ const CustomOrderForm = ({ setOpen }: Props) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanZeroSugar(updatedValues)
+    updatedValues = cleanFlatOrSparkling(updatedValues)
     dispatch(createOrderItem(cleanFormData(updatedValues))).then((data) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()
@@ -84,6 +108,7 @@ const CustomOrderForm = ({ setOpen }: Props) => {
           <div className="flex gap-8 flex-col">
             <CupFormField form={form} />
             <ZeroSugarFormField form={form} />
+            {form.watch("custom_order__soda") === "5" ? <FlatOrSparklingFormField form={form} /> : null}
             <CustomOrderFlavorForm form={form} sodaData={sodaData} flavorData={flavorData} />
             {isSuccess && (
               <div className="text-sm">

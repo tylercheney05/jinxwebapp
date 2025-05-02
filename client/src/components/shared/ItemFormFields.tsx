@@ -345,6 +345,54 @@ const cleanZeroSugar = (values: any) => {
   return updatedValues
 }
 
+// TODO: REMOVE LATER
+const FlatOrSparklingFormField = ({ form }: FormProps) => {
+  return (
+    <FormField
+      control={form.control}
+      name="flat_or_sparkling"
+      render={({ field }) => (
+        <FormItem className="space-y-3">
+          <FormLabel>Flat or Sparkling?</FormLabel>
+          <FormControl>
+            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
+              <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormControl>
+                  <RadioGroupItem value="flat" />
+                </FormControl>
+                <FormLabel className="font-normal">Flat</FormLabel>
+              </FormItem>
+              <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormControl>
+                  <RadioGroupItem value="sparkling" />
+                </FormControl>
+                <FormLabel className="font-normal">Sparkling</FormLabel>
+              </FormItem>
+            </RadioGroup>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}
+FlatOrSparklingFormField.displayName = "FlatOrSparklingFormField"
+
+const cleanFlatOrSparkling = (values: any) => {
+  let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
+  if (["1", "2", "3", "4"].includes(values.custom_order__soda)) {
+    return updatedValues
+  }
+  if (values.flat_or_sparkling) {
+    if (values.flat_or_sparkling === "flat") {
+      updatedValues["note"] = `FLAT WATER${values.note ? " | " + values.note : ""}`
+    } else if (values.flat_or_sparkling === "sparkling") {
+      updatedValues["note"] = `SPARKLING WATER${values.note ? " | " + values.note : ""}`
+    }
+  }
+  return updatedValues
+}
+
 export {
   FlavorFormField,
   QuantityFormField,
@@ -355,4 +403,6 @@ export {
   Price,
   NoteFormField,
   cleanZeroSugar,
+  FlatOrSparklingFormField,
+  cleanFlatOrSparkling,
 }

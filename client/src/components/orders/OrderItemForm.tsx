@@ -5,7 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { MenuItemListItem } from "types/MenuItemTypes"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
-import { cleanZeroSugar, CupFormField, NoteFormField, ZeroSugarFormField } from "../shared/ItemFormFields"
+import {
+  cleanFlatOrSparkling,
+  cleanZeroSugar,
+  CupFormField,
+  FlatOrSparklingFormField,
+  NoteFormField,
+  ZeroSugarFormField,
+} from "../shared/ItemFormFields"
 import { Switch } from "../ui/switch"
 import MenuItemCustomOrder from "./MenuItemCustomOrder"
 import { useState } from "react"
@@ -17,6 +24,7 @@ import { useDidMountEffect } from "utils/SharedUtils"
 import { ScrollArea } from "../ui/scroll-area"
 import { Card, CardContent } from "../ui/card"
 import { useGetPriceQuery } from "services/orders"
+import { WATER_BEVERAGE_NAME } from "constants/SodaConstants"
 
 interface Props {
   menuItem: MenuItemListItem
@@ -28,27 +36,50 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
   const [isCustomized, setIsCustomized] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
 
-  const formSchema = z.object({
-    menu_item: z.number(),
-    order__location: z.number(),
-    cup: z.string().min(1, { message: "You need to select a size" }),
-    low_sugar: z.enum(["normal", "low_sugar"], {
-      required_error: "You need to select a soda type",
-    }),
-    note: z.string().optional(),
-    custom_order__soda: z.string(),
-    custom_order_flavors: z.array(z.number()),
-  })
+  const formSchema = z
+    .object({
+      menu_item: z.number(),
+      order__location: z.number(),
+      cup: z.string().min(1, { message: "You need to select a size" }),
+      low_sugar: z.enum(["normal", "low_sugar"], {
+        required_error: "You need to select a soda type",
+      }),
+      note: z.string().optional(),
+      custom_order__soda: z.string(),
+      custom_order_flavors: z.array(z.number()),
+
+      // TODO: REMOVE LATER
+      flat_or_sparkling: z.enum(["", "flat", "sparkling"]),
+    })
+    .superRefine((val, ctx) => {
+      const menuItemSodaName = menuItem?.soda__name
+      if (menuItemSodaName === WATER_BEVERAGE_NAME) {
+        if (!val.flat_or_sparkling && !["1", "2", "3", "4"].includes(val.custom_order__soda)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["flat_or_sparkling"],
+            message: "You need to select flat or sparkling",
+          })
+        }
+      } else if (!val.flat_or_sparkling && val.custom_order__soda === "5") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["flat_or_sparkling"],
+          message: "You need to select flat or sparkling",
+        })
+      }
+    })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       menu_item: menuItem.id,
       order__location: Number(locationId),
-      low_sugar: "normal",
+      low_sugar: menuItem?.soda__name === WATER_BEVERAGE_NAME ? "low_sugar" : "normal",
       note: "",
       custom_order__soda: "",
       custom_order_flavors: [],
+      flat_or_sparkling: menuItem?.soda__name === WATER_BEVERAGE_NAME ? "sparkling" : "",
     },
   })
 
@@ -68,6 +99,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
     updatedValues = cleanZeroSugar(updatedValues)
+    updatedValues = cleanFlatOrSparkling(updatedValues)
     dispatch(createOrderItem(cleanFormData(updatedValues))).then((data) => {
       if (data.meta.requestStatus === "fulfilled") {
         form.reset()
@@ -88,6 +120,18 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     }
   }, [isCustomized])
 
+  const showFlatOrSparkling = () => {
+    const customSoda = form.watch("custom_order__soda")
+    const menuItemSodaName = menuItem?.soda__name
+    if (menuItemSodaName === WATER_BEVERAGE_NAME) {
+      if (!["1", "2", "3", "4"].includes(customSoda)) {
+        return true
+      }
+    } else if (customSoda === "5") {
+      return true
+    }
+  }
+
   return (
     <Form {...form}>
       <form>
@@ -95,6 +139,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
           <div className="flex flex-col gap-4">
             <CupFormField form={form} />
             <ZeroSugarFormField form={form} />
+            {showFlatOrSparkling() ? <FlatOrSparklingFormField form={form} /> : null}
             <div className="p-8">
               <Card>
                 <CardContent className="pt-4">

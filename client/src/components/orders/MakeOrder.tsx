@@ -9,6 +9,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "store"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
+import { WATER_BEVERAGE_NAME } from "constants/SodaConstants"
 
 const MakeOrder = () => {
   const [updateOrderProgress, { isSuccess }] = useUpdateOrderProgressMutation()
@@ -94,8 +95,9 @@ const MakeOrder = () => {
                         {order_item.cup__size__display}
                       </div>
                       <div>
-                        <strong>Soda: </strong>
-                        {order_item.soda_name} {order_item.low_sugar && "Zero Sugar"}
+                        <strong>Beverage: </strong>
+                        {order_item.soda_name}{" "}
+                        {order_item.low_sugar && order_item.soda_name !== WATER_BEVERAGE_NAME && "Zero Sugar"}
                       </div>
                       <div className="my-4">
                         {Object.entries(order_item.order_item_flavors).map(([key, value]) => (
