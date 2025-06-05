@@ -15,9 +15,10 @@ import { ScrollArea } from "../ui/scroll-area"
 interface Props {
   order: OrderListItem
   client: w3cwebsocket | null
+  showRecipe?: boolean
 }
 
-const StartOrder = ({ order, client }: Props) => {
+const StartOrder = ({ order, client, showRecipe = false }: Props) => {
   const { data } = useGetOrderItemListQuery({ order: order.id }, { refetchOnMountOrArgChange: true })
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const navigate = useNavigate()
@@ -44,7 +45,7 @@ const StartOrder = ({ order, client }: Props) => {
   }, [isSuccess])
 
   return (
-    <ScrollArea>
+    <ScrollArea className="max-h-[80vh]">
       <div className="max-h-screen">
         {isDesktop ? (
           <DialogHeader className="mb-4">
@@ -56,7 +57,7 @@ const StartOrder = ({ order, client }: Props) => {
           </DrawerHeader>
         )}
         <div>
-          <OrderContentItems data={data} />
+          <OrderContentItems data={data} showRecipe={showRecipe} />
           <div>
             {client ? (
               <Button onClick={handleClick}>Start Order</Button>

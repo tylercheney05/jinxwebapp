@@ -11,9 +11,10 @@ interface Props {
   data: OrderItemListItems | undefined
   readOnly?: boolean
   refetch?: any
+  showRecipe?: boolean
 }
 
-const OrderContentItems = ({ data, readOnly = true, refetch }: Props) => {
+const OrderContentItems = ({ data, readOnly = true, refetch, showRecipe = false }: Props) => {
   const [deleteOrderItem, result] = useDeleteOrderItemMutation()
 
   useEffect(() => {
@@ -48,9 +49,25 @@ const OrderContentItems = ({ data, readOnly = true, refetch }: Props) => {
             )}
           </div>
           <div className="pl-8">
-            <div>- {item.cup__size__display}</div>
-            <div>- ${item.price.toFixed(2)}</div>
-            {item.note && <div>- {item.note}</div>}
+            <>
+              <div>- {item.cup__size__display}</div>
+              <div>- ${item.price.toFixed(2)}</div>
+            </>
+            {showRecipe ? (
+              <div>
+                {Object.entries(item.order_item_flavors).map((flavor, index) => (
+                  <div key={index}>
+                    - {flavor[0]}: {flavor[1]}
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            {item.note && (
+              <div>
+                - <strong>NOTES: </strong>
+                {item.note}
+              </div>
+            )}
           </div>
         </div>
       ))}

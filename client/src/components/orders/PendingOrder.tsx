@@ -18,9 +18,10 @@ import { RootState } from "store"
 interface Props {
   order: OrderListItem
   client: w3cwebsocket | null
+  showRecipe?: boolean
 }
 
-const PendingOrder = ({ order, client }: Props) => {
+const PendingOrder = ({ order, client, showRecipe = false }: Props) => {
   const [open, setOpen] = useState<boolean>(false)
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -140,7 +141,11 @@ const PendingOrder = ({ order, client }: Props) => {
             {card}
           </DialogTrigger>
           <DialogContent>
-            {order.is_complete ? <PendingCompleteOrder order={order} /> : <StartOrder order={order} client={client} />}
+            {order.is_complete ? (
+              <PendingCompleteOrder order={order} />
+            ) : (
+              <StartOrder order={order} client={client} showRecipe={showRecipe} />
+            )}
           </DialogContent>
         </Dialog>
       ) : (
@@ -149,7 +154,11 @@ const PendingOrder = ({ order, client }: Props) => {
             {card}
           </DrawerTrigger>
           <DrawerContent>
-            {order.is_complete ? <PendingCompleteOrder order={order} /> : <StartOrder order={order} client={client} />}
+            {order.is_complete ? (
+              <PendingCompleteOrder order={order} />
+            ) : (
+              <StartOrder order={order} client={client} showRecipe={showRecipe} />
+            )}
           </DrawerContent>
         </Drawer>
       )}

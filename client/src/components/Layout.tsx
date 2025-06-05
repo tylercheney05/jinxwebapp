@@ -5,11 +5,11 @@ import { cn } from "lib/utils"
 interface Props {
   title: string
   content: string
-  backgroundColor?: "blue" | "white"
+  backgroundColor?: "jinxBlue-background" | "white" | "secondary"
   children: React.ReactNode
 }
 
-const Layout = ({ title, content, backgroundColor = "blue", children }: Props) => {
+const Layout = ({ title, content, backgroundColor = "jinxBlue-background", children }: Props) => {
   return (
     <>
       <Helmet>
@@ -17,9 +17,7 @@ const Layout = ({ title, content, backgroundColor = "blue", children }: Props) =
         <meta name="description" content={content} />
       </Helmet>
       <Navbar />
-      <div className={cn("min-h-screen pt-11 pb-5 px-5", backgroundColor === "blue" ? "bg-jinxBlue-background" : "")}>
-        {children}
-      </div>
+      <div className={cn("min-h-screen pt-11 pb-5 px-5", `bg-${backgroundColor}`)}>{children}</div>
     </>
   )
 }

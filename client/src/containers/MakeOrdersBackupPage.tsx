@@ -17,14 +17,15 @@ const MakeOrdersBackupPage = () => {
   )
 
   return (
-    <Layout title="Jinx | Make Orders" content="Make Orders Page">
+    <Layout title="Jinx | Make Orders" content="Make Orders Page" backgroundColor="secondary">
       <LocationNeededRoute>
         {loading || user == null ? (
           <LoadingIcon />
         ) : (
           <div className="flex flex-col items-center">
+            <div className="mt-4 font-bold text-2xl">Backup Page</div>
             <div className="mt-4 font-bold text-lg">Please make orders from top to bottom</div>
-            <PendingOrders ordersQueued={data} client={null} />
+            <PendingOrders ordersQueued={data} client={null} showRecipe={true} />
           </div>
         )}
       </LocationNeededRoute>
