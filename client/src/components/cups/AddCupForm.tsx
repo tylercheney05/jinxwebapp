@@ -8,7 +8,7 @@ import { SelectFormField } from "../forminputs/Select"
 import { Button } from "../ui/button"
 import { EditIcon, PlusIcon } from "../Icons"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
-import { CupListItem } from "types/CupTypes"
+import { Cup } from "types"
 import { useEffect } from "react"
 import { useCreateCupMutation, useGetCupsListQuery } from "services/cups"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet"
@@ -48,10 +48,10 @@ const AddCupForm = () => {
   return (
     <Form {...form}>
       {data?.length && data?.length > 0 ? <FormLabel>Existing Cups</FormLabel> : null}
-      {data?.map((cup: CupListItem) => (
+      {data?.map((cup: Cup) => (
         <div key={cup.id} className="h-10 pl-2 flex items-center text-sm gap-1 justify-between">
           <div>
-            {cup.size__display} - ${cup.price}
+            {cup.size.display} - ${cup.price}
           </div>
           <Sheet>
             <SheetTrigger>
@@ -61,7 +61,7 @@ const AddCupForm = () => {
               <SheetHeader>
                 <SheetTitle>Edit Cup</SheetTitle>
                 <SheetDescription>
-                  Make changes to the {cup.size__display} cup. Click save when you're done.
+                  Make changes to the {cup.size.display} cup. Click save when you're done.
                 </SheetDescription>
               </SheetHeader>
               <EditCupForm cup={cup} refetch={refetch} />

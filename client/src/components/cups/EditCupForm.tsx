@@ -2,7 +2,7 @@ import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CupListItem } from "types/CupTypes"
+import { Cup } from "types"
 import { Input } from "../ui/input"
 import { SIZE_OPTIONS } from "constants/CupConstants"
 import { SelectFormField } from "../forminputs/Select"
@@ -14,7 +14,7 @@ import { FetchArgs, FetchBaseQueryError, QueryActionCreatorResult, QueryDefiniti
 import { BaseQueryFn } from "@reduxjs/toolkit/query"
 
 interface Props {
-  cup: CupListItem
+  cup: Cup
   refetch: () => QueryActionCreatorResult<
     QueryDefinition<
       | {
@@ -46,8 +46,8 @@ const EditCupForm = ({ cup, refetch }: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       size: {
-        value: cup.size,
-        label: cup.size__display,
+        value: cup.size.value,
+        label: cup.size.display,
       },
       price: String(cup.price),
       conversion_factor: String(cup.conversion_factor),
