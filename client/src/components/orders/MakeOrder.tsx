@@ -9,7 +9,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "store"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
-import { WATER_BEVERAGE_NAME } from "constants/SodaConstants"
+import { WATER_BEVERAGE_NAME } from "../../utils/constants/soda"
 
 const MakeOrder = () => {
   const [updateOrderProgress, { isSuccess }] = useUpdateOrderProgressMutation()

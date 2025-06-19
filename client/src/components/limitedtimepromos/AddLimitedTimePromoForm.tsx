@@ -12,7 +12,7 @@ import { LimitedTimePromoListItem } from "types/LimitedTimePromoTypes"
 import { EditIcon } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet"
-import { limitedTimePromoFormSchema } from "constants/LimitedTimePromoConstants"
+import { limitedTimePromoFormSchema } from "utils/constants/LimitedTimePromoConstants"
 import EditLimitedTimePromoForm from "./EditLimitedTimePromoForm"
 
 const AddLimitedTimePromoForm = () => {

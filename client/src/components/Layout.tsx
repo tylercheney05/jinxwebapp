@@ -10,6 +10,7 @@ interface Props {
 }
 
 const Layout = ({ title, content, backgroundColor = "jinxBlue-background", children }: Props) => {
+  const background = backgroundColor === "jinxBlue-background" ? "bg-jinxBlue-background" : `bg-${backgroundColor}`
   return (
     <>
       <Helmet>
@@ -17,7 +18,7 @@ const Layout = ({ title, content, backgroundColor = "jinxBlue-background", child
         <meta name="description" content={content} />
       </Helmet>
       <Navbar />
-      <div className={cn("min-h-screen pt-11 pb-5 px-5", `bg-${backgroundColor}`)}>{children}</div>
+      <div className={cn("min-h-screen pt-11 pb-5 px-5", background)}>{children}</div>
     </>
   )
 }

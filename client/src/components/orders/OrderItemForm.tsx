@@ -24,7 +24,7 @@ import { useDidMountEffect } from "utils/SharedUtils"
 import { ScrollArea } from "../ui/scroll-area"
 import { Card, CardContent } from "../ui/card"
 import { useGetPriceQuery } from "services/orders"
-import { WATER_BEVERAGE_NAME } from "constants/SodaConstants"
+import { WATER_BEVERAGE_NAME } from "utils/constants"
 
 interface Props {
   menuItem: MenuItemListItem

@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { limitedTimePromoFormSchema } from "constants/LimitedTimePromoConstants"
+import { limitedTimePromoFormSchema } from "utils/constants/LimitedTimePromoConstants"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "../ui/input"

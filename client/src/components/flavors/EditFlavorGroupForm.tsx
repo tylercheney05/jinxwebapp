@@ -15,7 +15,7 @@ import { Input } from "../ui/input"
 import { SelectFormField } from "../forminputs/Select"
 import { Button } from "../ui/button"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
-import { UOM_OPTIONS } from "constants/FlavorConstants"
+import { UOM_OPTIONS } from "utils/constants/FlavorConstants"
 import { useEffect } from "react"
 
 interface Props {

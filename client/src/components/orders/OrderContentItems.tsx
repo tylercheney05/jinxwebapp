@@ -6,6 +6,7 @@ import DoubleClickButton from "../ui/button/doubleclickbutton"
 import { useDeleteOrderItemMutation } from "services/orders"
 import { useEffect } from "react"
 import { toast } from "react-toastify"
+import { WATER_BEVERAGE_NAME } from "utils/constants"
 
 interface Props {
   data: OrderItemListItems | undefined
@@ -55,6 +56,13 @@ const OrderContentItems = ({ data, readOnly = true, refetch, showRecipe = false 
             </>
             {showRecipe ? (
               <div>
+                <div>
+                  -{" "}
+                  <span className="underline">
+                    {item.soda_name}
+                    {item.low_sugar && item.soda_name !== WATER_BEVERAGE_NAME ? " Zero" : ""}
+                  </span>
+                </div>
                 {Object.entries(item.order_item_flavors).map((flavor, index) => (
                   <div key={index}>
                     - {flavor[0]}: {flavor[1]}
