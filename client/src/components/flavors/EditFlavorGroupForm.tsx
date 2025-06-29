@@ -4,36 +4,17 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { useUpdateFlavorGroupMutation } from "services/flavors"
-import {
-  BaseQueryFn,
-  FetchArgs,
-  FetchBaseQueryError,
-  QueryActionCreatorResult,
-  QueryDefinition,
-} from "@reduxjs/toolkit/query"
 import { Input } from "../ui/input"
 import { SelectFormField } from "../forminputs/Select"
 import { Button } from "../ui/button"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
 import { UOM_OPTIONS } from "utils/constants/FlavorConstants"
 import { useEffect } from "react"
+import { Refetch } from "types/shared"
 
 interface Props {
   flavorGroup: FlavorGroupListItem
-  refetch: () => QueryActionCreatorResult<
-    QueryDefinition<
-      | {
-          name?: string
-          uom?: string
-          price?: number
-        }
-      | undefined,
-      BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-      never,
-      any,
-      "cupsApi"
-    >
-  >
+  refetch: Refetch
 }
 
 const EditFlavorGroupForm = ({ flavorGroup, refetch }: Props) => {

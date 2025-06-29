@@ -1,5 +1,6 @@
 import { UseFormReturn } from "react-hook-form"
 import { toast } from "react-toastify"
+import { Refetch, Result } from "types/shared"
 
 export const convertToOptions = (data: Array<object>, fieldsForDropdownLabel: Array<string>) => {
   return data.map((option: any) => ({
@@ -32,11 +33,11 @@ export const cleanFormData = (values: object) => {
 }
 
 export const handleFormSubmitResponse = (
-  result: any,
+  result: Result,
   form: any,
   successMsg: string,
   httpRequest: "post" | "put" | "delete",
-  refetch?: any
+  refetch?: Refetch
 ) => {
   if (result.isSuccess) {
     if (httpRequest === "post") {

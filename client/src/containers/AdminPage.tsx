@@ -11,6 +11,7 @@ import { useEffect, useState } from "react"
 import AddOrderNameForm from "components/orders/ordername/AddOrderNameForm"
 import AddLimitedTimePromoForm from "components/limitedtimepromos/AddLimitedTimePromoForm"
 import AddDiscountForm from "components/discounts/AddDiscountForm"
+import { AddMenuForm } from "components/menus"
 
 const AdminPage = () => {
   const [width, setWidth] = useState<number>(window.innerWidth)
@@ -40,14 +41,33 @@ const AdminPage = () => {
             ) : (
               <Tabs defaultValue="cups" orientation="vertical" className="flex">
                 <TabsList className="justify-start">
-                  <TabsTrigger value="cups">Cups</TabsTrigger>
-                  <TabsTrigger value="sodas">Sodas</TabsTrigger>
-                  <TabsTrigger value="flavors">Flavors</TabsTrigger>
-                  <TabsTrigger value="menuItems">Menu Items</TabsTrigger>
-                  <TabsTrigger value="locations">Locations</TabsTrigger>
-                  <TabsTrigger value="orderNames">Order Names</TabsTrigger>
-                  <TabsTrigger value="limitedTimePromos">Limited Time Promos</TabsTrigger>
-                  <TabsTrigger value="discounts">Discounts</TabsTrigger>
+                  <TabsTrigger value="cups" className="justify-start">
+                    Cups
+                  </TabsTrigger>
+                  <TabsTrigger value="discounts" className="justify-start">
+                    Discounts
+                  </TabsTrigger>
+                  <TabsTrigger value="flavors" className="justify-start">
+                    Flavors
+                  </TabsTrigger>
+                  <TabsTrigger value="limitedTimePromos" className="justify-start">
+                    Limited Time Promos
+                  </TabsTrigger>
+                  <TabsTrigger value="locations" className="justify-start">
+                    Locations
+                  </TabsTrigger>
+                  <TabsTrigger value="menus" className="justify-start">
+                    Menus
+                  </TabsTrigger>
+                  <TabsTrigger value="menuItems" className="justify-start">
+                    Menu Items
+                  </TabsTrigger>
+                  <TabsTrigger value="orderNames" className="justify-start">
+                    Order Names
+                  </TabsTrigger>
+                  <TabsTrigger value="sodas" className="justify-start">
+                    Sodas
+                  </TabsTrigger>
                 </TabsList>
                 <TabsContent value="cups">
                   <div className="px-4">
@@ -81,6 +101,11 @@ const AdminPage = () => {
                         </CardContent>
                       </Card>
                     </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="menus" className="w-full">
+                  <div className="px-4">
+                    <AddMenuForm />
                   </div>
                 </TabsContent>
                 <TabsContent value="menuItems" className="w-full">

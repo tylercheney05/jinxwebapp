@@ -1,6 +1,6 @@
 import React from "react"
 import { FormItem, FormLabel, FormControl, FormMessage } from "../form"
-import { LabelType } from "types/SharedTypes"
+import { LabelType } from "/types/shared"
 import { Skeleton } from "../skeleton"
 
 interface Props {

@@ -11,6 +11,7 @@ import { sodasApi } from "./services/sodas"
 import { locationsApi } from "./services/locations"
 import { limitedTimePromosApi } from "./services/limitedtimepromos"
 import { discountsApi } from "./services/discounts"
+import { menusApi } from "./services/menu"
 
 export const store = configureStore({
   reducer: {
@@ -28,11 +29,12 @@ export const store = configureStore({
     [locationsApi.reducerPath]: locationsApi.reducer,
     [limitedTimePromosApi.reducerPath]: limitedTimePromosApi.reducer,
     [discountsApi.reducerPath]: discountsApi.reducer,
+    [menusApi.reducerPath]: menusApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       ordersApi.middleware,
-      orderItemsApi.middleware, 
+      orderItemsApi.middleware,
       orderNamesApi.middleware,
       cupsApi.middleware,
       flavorGroupsApi.middleware,
@@ -42,6 +44,7 @@ export const store = configureStore({
       locationsApi.middleware,
       limitedTimePromosApi.middleware,
       discountsApi.middleware,
+      menusApi.middleware
     ),
   devTools: process.env.NODE_ENV !== "production",
 })
@@ -51,6 +54,6 @@ setupListeners(store.dispatch)
 // Get the type of our store variable
 export type AppStore = typeof store
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<AppStore['getState']>
+export type RootState = ReturnType<AppStore["getState"]>
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = AppStore['dispatch']
+export type AppDispatch = AppStore["dispatch"]

@@ -83,6 +83,10 @@ const listDiscountsRoute = require("./routes/discounts/list")
 const createDiscountRoute = require("./routes/discounts/create")
 const dropdownDiscountRoute = require("./routes/discounts/dropdown")
 
+// import menu routes
+const listMenusRoute = require("./routes/menus/list")
+const createMenuRoute = require("./routes/menus/create")
+
 const app = express()
 
 app.use(express.json())
@@ -166,6 +170,10 @@ app.use(updateLimitedTimePromoRoute)
 app.use(listDiscountsRoute)
 app.use(createDiscountRoute)
 app.use(dropdownDiscountRoute)
+
+// Menu Routes
+app.use(listMenusRoute)
+app.use(createMenuRoute)
 
 app.use(express.static("client/build"))
 app.get("*", (req, res) => {
