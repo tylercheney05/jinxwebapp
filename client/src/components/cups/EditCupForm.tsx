@@ -10,28 +10,14 @@ import { Button } from "../ui/button"
 import { useUpdateCupMutation } from "services/cups"
 import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
 import { useEffect } from "react"
-import { FetchArgs, FetchBaseQueryError, QueryActionCreatorResult, QueryDefinition } from "@reduxjs/toolkit/query"
-import { BaseQueryFn } from "@reduxjs/toolkit/query"
+import { Refetch } from "types/shared"
 
 interface Props {
-  cup: Cup
-  refetch: () => QueryActionCreatorResult<
-    QueryDefinition<
-      | {
-          size?: number
-          price?: number
-          conversion_factor?: number
-        }
-      | undefined,
-      BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-      never,
-      any,
-      "cupsApi"
-    >
-  >
+  obj: Cup
+  refetch: Refetch
 }
 
-const EditCupForm = ({ cup, refetch }: Props) => {
+const EditCupForm = ({ obj, refetch }: Props) => {
   const [updateCup, result] = useUpdateCupMutation()
 
   const formSchema = z.object({
@@ -46,16 +32,16 @@ const EditCupForm = ({ cup, refetch }: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       size: {
-        value: cup.size.value,
-        label: cup.size.display,
+        value: obj.size.value,
+        label: obj.size.display,
       },
-      price: String(cup.price),
-      conversion_factor: String(cup.conversion_factor),
+      price: String(obj.price),
+      conversion_factor: String(obj.conversion_factor),
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    updateCup({ id: cup.id, ...cleanFormData(values) })
+    updateCup({ id: obj.id, ...cleanFormData(values) })
   }
 
   useEffect(() => {
