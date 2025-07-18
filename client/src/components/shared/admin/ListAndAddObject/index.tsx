@@ -34,7 +34,7 @@ const ListAndAddObject = ({
   const [createObj, result] = useCreateObjectMutation()
 
   useEffect(() => {
-    handleFormSubmitResponse(result, form, "Cup added successfully", "post", refetch)
+    handleFormSubmitResponse(result, form, "Success", "post", refetch)
   }, [result])
 
   return (

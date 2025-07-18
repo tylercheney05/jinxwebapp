@@ -50,7 +50,7 @@ const AddFlavorGroupForm = () => {
       {data?.map((flavorGroup) => (
         <div key={flavorGroup.id} className="h-10 pl-2 flex items-center text-sm gap-1 justify-between">
           <div>
-            {flavorGroup.name} - ${flavorGroup.price} per {flavorGroup.uom__display}
+            {flavorGroup.name} - ${flavorGroup.price} per {flavorGroup.uom.display}
           </div>
           <Sheet>
             <SheetTrigger>

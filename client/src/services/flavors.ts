@@ -1,6 +1,6 @@
 import { baseQueryWithReauth } from "./baseQuery"
 import { createApi } from "@reduxjs/toolkit/query/react"
-import { FlavorGroupListItems } from "/types/FlavorTypes"
+import { Flavor, FlavorGroup } from "/types"
 
 export const flavorGroupsApi = createApi({
   reducerPath: "flavorGroupsApi",
@@ -28,7 +28,7 @@ export const flavorGroupsApi = createApi({
         body: JSON.stringify({ name, uom, price }),
       }),
     }),
-    getFlavorGroupsList: builder.query<FlavorGroupListItems, object>({
+    getFlavorGroupsList: builder.query<FlavorGroup[], object>({
       query: () => "/api/flavor-groups",
     }),
     getFlavorGroupsDropdown: builder.query({
@@ -52,7 +52,7 @@ export const flavorsApi = createApi({
         body: JSON.stringify({ name, flavor_group, sugar_free_available }),
       }),
     }),
-    getFlavorsList: builder.query({
+    getFlavorsList: builder.query<Flavor[], object>({
       query: (params: Record<string, string>) => {
         const queryParams = new URLSearchParams(params).toString()
         return `/api/flavors?${queryParams}`
@@ -61,7 +61,7 @@ export const flavorsApi = createApi({
     getFlavorsDropdown: builder.query({
       query: () => "/api/flavors/autocomplete",
     }),
-    getFlavorDetail: builder.query({
+    getFlavorDetail: builder.query<Flavor, { id: number }>({
       query: ({ id }) => `/api/flavors/${id}`,
     }),
   }),

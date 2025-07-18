@@ -2,13 +2,13 @@ import { UseFormReturn } from "react-hook-form"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { SodaListItem, SodaListItems } from "types/SodaTypes"
-import { FlavorListItems } from "/types/FlavorTypes"
 import { Checkbox } from "../ui/checkbox"
+import { Flavor } from "types"
 
 interface Props {
   form: UseFormReturn<any>
   sodaData: SodaListItems | undefined
-  flavorData: FlavorListItems | undefined
+  flavorData: Flavor[] | undefined
 }
 
 const CustomOrderFlavorForm = ({ form, sodaData, flavorData }: Props) => {

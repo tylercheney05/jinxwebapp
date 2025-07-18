@@ -262,7 +262,7 @@ const Price = ({ menuItem, form, isCustomized }: PriceProps) => {
   const [cups, setCups] = useState<any>({})
 
   useEffect(() => {
-    if (flavorsData?.length > 0) {
+    if (flavorsData && flavorsData?.length > 0) {
       setFlavors(
         flavorsData.reduce((acc: any, { id, flavor_group__price }: any) => {
           acc[id] = flavor_group__price

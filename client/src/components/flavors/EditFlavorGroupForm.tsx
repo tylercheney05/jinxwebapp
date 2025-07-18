@@ -1,5 +1,4 @@
 import { z } from "zod"
-import { FlavorGroupListItem } from "types/FlavorTypes"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
@@ -11,9 +10,10 @@ import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
 import { UOM_OPTIONS } from "utils/constants/FlavorConstants"
 import { useEffect } from "react"
 import { Refetch } from "types/shared"
+import { FlavorGroup } from "/types"
 
 interface Props {
-  flavorGroup: FlavorGroupListItem
+  flavorGroup: FlavorGroup
   refetch: Refetch
 }
 
@@ -33,8 +33,8 @@ const EditFlavorGroupForm = ({ flavorGroup, refetch }: Props) => {
     defaultValues: {
       name: flavorGroup.name,
       uom: {
-        value: flavorGroup.uom,
-        label: flavorGroup.uom__display,
+        value: flavorGroup.uom.value,
+        label: flavorGroup.uom.display,
       },
       price: String(flavorGroup.price),
     },
