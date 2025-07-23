@@ -48,7 +48,7 @@ const MenuItemCard = ({ menuItem, isClickable = false }: Props) => {
           <div className="text-jinxBlue flex gap-4 mt-2">
             {menuItem.cup_prices.map((cup_price) => (
               <div>
-                <div>{cup_price.size__display}</div>
+                <div>{cup_price.size.display}</div>
                 <strong>${cup_price.price.toFixed(2)}</strong>
               </div>
             ))}
