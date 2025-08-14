@@ -8,7 +8,7 @@ import { PlusIcon } from "../Icons"
 import { useEffect } from "react"
 import { useCreateSodaMutation, useGetSodasListQuery } from "services/sodas"
 import { handleFormSubmitResponse } from "utils/FormUtils"
-import { SodaListItem } from "/types/SodaTypes"
+import { Soda } from "types"
 
 const AddSodaForm = () => {
   const [createSoda, result] = useCreateSodaMutation()
@@ -34,7 +34,7 @@ const AddSodaForm = () => {
   return (
     <Form {...form}>
       {data?.length && data?.length > 0 ? <FormLabel>Existing Sodas</FormLabel> : null}
-      {data?.map((soda: SodaListItem) => (
+      {data?.map((soda: Soda) => (
         <div key={soda.id} className="h-10 pl-2 flex items-center text-sm gap-1">
           {soda.name}
         </div>

@@ -8,9 +8,8 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/
 import { UseFormReturn } from "react-hook-form"
 import { flavorsApi, useGetFlavorsListQuery } from "services/flavors"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
-import { Cup } from "types"
+import { Cup, Flavor, MenuItem } from "types"
 import { cupsApi, useGetCupsListQuery } from "services/cups"
-import { MenuItemListItem } from "types/MenuItemTypes"
 import { Textarea } from "../ui/textarea"
 import { Separator } from "../ui/separator"
 
@@ -36,7 +35,7 @@ interface FormProps {
 }
 
 interface PriceProps {
-  menuItem?: MenuItemListItem
+  menuItem?: MenuItem
   form: UseFormReturn<any>
   isCustomized: boolean
 }
@@ -55,9 +54,9 @@ const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProp
         form.watch(fieldName)[index].flavor.value
       ) {
         dispatch(flavorsApi.endpoints.getFlavorDetail.initiate({ id: form.watch(fieldName)[index].flavor.value })).then(
-          (data: any) => {
+          (data) => {
             if (data.status === "fulfilled") {
-              setUom(`${data.data.flavor_group__uom__display}(s)`)
+              setUom(`${data.data.flavor_group.uom.display}(s)`)
             }
           }
         )

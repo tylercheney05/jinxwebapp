@@ -1,6 +1,6 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQueryWithReauth } from "./baseQuery";
-import { SodaListItems } from "/types/SodaTypes";
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { baseQueryWithReauth } from "./baseQuery"
+import { Soda } from "types"
 
 export const sodasApi = createApi({
   reducerPath: "sodasApi",
@@ -17,7 +17,7 @@ export const sodasApi = createApi({
         body: JSON.stringify({ name }),
       }),
     }),
-    getSodasList: builder.query<SodaListItems, object>({
+    getSodasList: builder.query<Soda[], object>({
       query: () => "/api/sodas",
     }),
     getSodasDropdown: builder.query({

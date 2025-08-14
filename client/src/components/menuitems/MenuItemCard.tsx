@@ -1,10 +1,10 @@
 import useMediaQuery from "@mui/material/useMediaQuery"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
-import { MenuItemListItem } from "/types/MenuItemTypes"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { cn } from "lib/utils"
+import { Menu, MenuItem, MenuItemFlavor } from "types"
 
 interface Props {
-  menuItem: MenuItemListItem
+  menuItem: MenuItem
   isClickable?: boolean
 }
 
@@ -12,7 +12,7 @@ const MenuItemCard = ({ menuItem, isClickable = false }: Props) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const flavorsString = menuItem.flavors
-    .map((flavor) => flavor.flavor__name)
+    .map((flavor: MenuItemFlavor) => flavor.flavor.name)
     .reduce((acc, flavor, index, array) => {
       if (index === 0) {
         return flavor
@@ -37,8 +37,8 @@ const MenuItemCard = ({ menuItem, isClickable = false }: Props) => {
         {isDesktop && (
           <div className="text-muted-foreground text-left">
             {menuItem.flavors.map((flavor) => (
-              <div key={flavor.flavor__name}>
-                {flavor.quantity} {flavor.flavor__flavor_group__uom__display} of {flavor.flavor__name}
+              <div key={flavor.flavor.name}>
+                {flavor.quantity} {flavor.flavor.flavor_group.uom.display} of {flavor.flavor.name}
               </div>
             ))}
           </div>

@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form"
 import { Form, FormLabel } from "../ui/form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { MenuItemListItem } from "types/MenuItemTypes"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import {
@@ -25,9 +24,10 @@ import { ScrollArea } from "../ui/scroll-area"
 import { Card, CardContent } from "../ui/card"
 import { useGetPriceQuery } from "services/orders"
 import { WATER_BEVERAGE_NAME } from "utils/constants"
+import { MenuItem } from "/types"
 
 interface Props {
-  menuItem: MenuItemListItem
+  menuItem: MenuItem
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -52,7 +52,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
       flat_or_sparkling: z.enum(["", "flat", "sparkling"]),
     })
     .superRefine((val, ctx) => {
-      const menuItemSodaName = menuItem?.soda__name
+      const menuItemSodaName = menuItem?.soda?.name
       if (menuItemSodaName === WATER_BEVERAGE_NAME) {
         if (!val.flat_or_sparkling && !["1", "2", "3", "4"].includes(val.custom_order__soda)) {
           ctx.addIssue({
@@ -75,11 +75,11 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
     defaultValues: {
       menu_item: menuItem.id,
       order__location: Number(locationId),
-      low_sugar: menuItem?.soda__name === WATER_BEVERAGE_NAME ? "low_sugar" : "normal",
+      low_sugar: menuItem?.soda?.name === WATER_BEVERAGE_NAME ? "low_sugar" : "normal",
       note: "",
       custom_order__soda: "",
       custom_order_flavors: [],
-      flat_or_sparkling: menuItem?.soda__name === WATER_BEVERAGE_NAME ? "sparkling" : "",
+      flat_or_sparkling: menuItem?.soda?.name === WATER_BEVERAGE_NAME ? "sparkling" : "",
     },
   })
 
@@ -122,7 +122,7 @@ const OrderItemForm = ({ menuItem, setOpen }: Props) => {
 
   const showFlatOrSparkling = () => {
     const customSoda = form.watch("custom_order__soda")
-    const menuItemSodaName = menuItem?.soda__name
+    const menuItemSodaName = menuItem?.soda?.name
     if (menuItemSodaName === WATER_BEVERAGE_NAME) {
       if (!["1", "2", "3", "4"].includes(customSoda)) {
         return true

@@ -9,7 +9,6 @@ import { cleanFormData } from "utils/FormUtils"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
 import { ItemFlavorFormField, cleanFlavorsData } from "../shared/ItemFormFields"
-import { SodaListItem } from "types/SodaTypes"
 import ListMenuItems from "./ListMenuItems"
 import { useCreateMenuItemMutation } from "services/menuitems"
 import { sodasApi, useGetSodasListQuery } from "services/sodas"
@@ -17,6 +16,7 @@ import { Switch } from "../ui/switch"
 import { Label } from "../ui/label"
 import { limitedTimePromosApi, useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
 import { LimitedTimePromoListItem } from "/types/LimitedTimePromoTypes"
+import { Soda } from "types"
 
 const AddMenuItemForm = () => {
   const [isLimitedTime, setIsLimitedTime] = useState<boolean>(false)
@@ -35,7 +35,7 @@ const AddMenuItemForm = () => {
         value: z.number().int(),
         label: z.string(),
       }),
-      menu_item_flavors: z.array(
+      flavors: z.array(
         z.object({
           flavor: z.object({
             value: z.number().int(),
@@ -44,22 +44,42 @@ const AddMenuItemForm = () => {
           quantity: z.string(),
         })
       ),
-      limited_time_promo: z.object({
-        value: z.number().int(),
-        label: z.string(),
-      }),
+      limited_time_menu_item: z
+        .object({
+          limited_time_promo: z.object({
+            value: z.number().int(),
+            label: z.string(),
+          }),
+        })
+        .nullable()
+        .optional(),
       price: z
         .object({
-          price: z.string().min(1, { message: "Price is required" }),
+          price: z.string().optional(),
         })
-        .nullable(),
+        .nullable()
+        .optional(),
     })
     .superRefine((val, ctx) => {
-      if (val.menu_item_flavors.length < 2) {
+      if (val.flavors.length < 2) {
         return ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          path: ["menu_item_flavors"],
-          message: "Please add at least 1 flavors",
+          path: ["flavors"],
+          message: "Please add at least 1 flavor",
+        })
+      }
+      if (isLimitedTime && !val.limited_time_menu_item?.limited_time_promo) {
+        return ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["limited_time_menu_item"],
+          message: "Please select a limited time promo",
+        })
+      }
+      if (manualPrice && !val.price) {
+        return ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["price"],
+          message: "Please enter a price",
         })
       }
     })
@@ -71,7 +91,7 @@ const AddMenuItemForm = () => {
         value: 0,
         label: "Select a Soda",
       },
-      menu_item_flavors: [
+      flavors: [
         {
           flavor: {
             value: 0,
@@ -80,11 +100,6 @@ const AddMenuItemForm = () => {
           quantity: "",
         },
       ],
-      limited_time_promo: {
-        value: 0,
-        label: "Select a limited time promo",
-      },
-      price: null,
     },
   })
 
@@ -102,6 +117,29 @@ const AddMenuItemForm = () => {
     }
   }, [result])
 
+  useEffect(() => {
+    if (!manualPrice) {
+      form.setValue("price", null)
+    }
+  }, [manualPrice])
+
+  useEffect(() => {
+    if (!isLimitedTime) {
+      form.setValue("limited_time_menu_item", null)
+    }
+  }, [isLimitedTime])
+
+  const cleanLimitedTimeMenuItemData = (values: any) => {
+    if (!values.limited_time_menu_item) {
+      return values
+    }
+    let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
+    updatedValues["limited_time_menu_item"] = {
+      limited_time_promo: values.limited_time_menu_item.limited_time_promo.value,
+    }
+    return updatedValues
+  }
+
   const cleanPriceData = (values: any) => {
     if (!values.price) {
       return values
@@ -115,42 +153,16 @@ const AddMenuItemForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     let updatedValues = values
-    updatedValues = cleanFlavorsData(updatedValues, "menu_item_flavors")
+    updatedValues = cleanFlavorsData(updatedValues, "flavors")
+    updatedValues = cleanLimitedTimeMenuItemData(updatedValues)
     updatedValues = cleanPriceData(updatedValues)
     createMenuItem(cleanFormData(updatedValues))
   }
 
+  console.log("form", form.formState.errors)
+
   return (
     <Form {...form}>
-      {sodaData?.length && sodaData?.length > 0 ? <FormLabel className="text-md">Existing Menu Items</FormLabel> : null}
-      <div>
-        {sodaData?.map((soda: SodaListItem) => (
-          <div key={soda.id}>
-            <div className="grid grid-cols-5 items-center">
-              <div className="bg-black h-1 col-span-2 rounded-sm"></div>
-              <div className="text-center text-lg">{soda.name}</div>
-              <div className="bg-black h-1 col-span-2 rounded-sm"></div>
-            </div>
-            <div className="my-2">
-              <ListMenuItems soda={soda} resetSodas={resetSodas} setResetSodas={setResetSodas} />
-            </div>
-          </div>
-        ))}
-        {limitedTimePromosData?.length && limitedTimePromosData?.length > 0
-          ? limitedTimePromosData?.map((promo: LimitedTimePromoListItem) => (
-              <div key={promo.id}>
-                <div className="grid grid-cols-5 items-center">
-                  <div className="bg-black h-1 col-span-2 rounded-sm"></div>
-                  <div className="text-center text-lg">{promo.name}</div>
-                  <div className="bg-black h-1 col-span-2 rounded-sm"></div>
-                </div>
-                <div className="my-2">
-                  <ListMenuItems promo={promo} resetSodas={resetSodas} setResetSodas={setResetSodas} />
-                </div>
-              </div>
-            ))
-          : null}
-      </div>
       <form className="flex gap-4 flex-col">
         <div className="items-center gap-4 grid grid-cols-2">
           <div>
@@ -182,12 +194,12 @@ const AddMenuItemForm = () => {
         <div className="items-center gap-4 grid grid-cols-1">
           <FormField
             control={form.control}
-            name="menu_item_flavors"
+            name="flavors"
             render={() => (
               <>
                 <FormLabel>Flavors</FormLabel>
-                {form.watch("menu_item_flavors").map((flavor, index) => (
-                  <ItemFlavorFormField key={index} form={form} index={index} fieldName="menu_item_flavors" />
+                {form.watch("flavors").map((flavor, index) => (
+                  <ItemFlavorFormField key={index} form={form} index={index} fieldName="flavors" />
                 ))}
                 <FormMessage />
               </>
@@ -202,7 +214,7 @@ const AddMenuItemForm = () => {
           <div>
             <SelectFromApiFormField
               form={form}
-              name="limited_time_promo"
+              name="limited_time_menu_item.limited_time_promo"
               placeholder="Select a limited time promo"
               loadOptionsApi={limitedTimePromosApi.endpoints.getLimitedTimePromosDropdown.initiate}
               fieldsForDropdownLabel={["name"]}
@@ -234,11 +246,40 @@ const AddMenuItemForm = () => {
           </div>
         )}
         <div>
-          <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+          <Button className="float-right" type="submit" onClick={form.handleSubmit(onSubmit)}>
             Add Menu Item
           </Button>
         </div>
       </form>
+      {sodaData?.length && sodaData?.length > 0 ? <FormLabel className="text-md">Existing Menu Items</FormLabel> : null}
+      <div>
+        {sodaData?.map((soda: Soda) => (
+          <div key={soda.id}>
+            <div className="grid grid-cols-5 items-center">
+              <div className="bg-black h-1 col-span-2 rounded-sm"></div>
+              <div className="text-center text-lg">{soda.name}</div>
+              <div className="bg-black h-1 col-span-2 rounded-sm"></div>
+            </div>
+            <div className="my-2">
+              <ListMenuItems soda={soda} resetSodas={resetSodas} setResetSodas={setResetSodas} />
+            </div>
+          </div>
+        ))}
+        {limitedTimePromosData?.length && limitedTimePromosData?.length > 0
+          ? limitedTimePromosData?.map((promo: LimitedTimePromoListItem) => (
+              <div key={promo.id}>
+                <div className="grid grid-cols-5 items-center">
+                  <div className="bg-black h-1 col-span-2 rounded-sm"></div>
+                  <div className="text-center text-lg">{promo.name}</div>
+                  <div className="bg-black h-1 col-span-2 rounded-sm"></div>
+                </div>
+                <div className="my-2">
+                  <ListMenuItems promo={promo} resetSodas={resetSodas} setResetSodas={setResetSodas} />
+                </div>
+              </div>
+            ))
+          : null}
+      </div>
     </Form>
   )
 }

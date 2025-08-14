@@ -7,14 +7,14 @@ export const menuItemsApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     createMenuItem: builder.mutation({
-      query: ({ name, soda, menu_item_flavors, limited_time_promo, price }) => ({
+      query: ({ name, soda, flavors, limited_time_menu_item, price }) => ({
         url: "/api/menu-items",
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, soda, menu_item_flavors, limited_time_promo, price }),
+        body: JSON.stringify({ name, soda, flavors, limited_time_menu_item, price }),
       }),
     }),
     getMenuItemsList: builder.query({

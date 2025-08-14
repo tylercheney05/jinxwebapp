@@ -2,14 +2,14 @@ import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import MenuItemCard from "./MenuItemCard"
 import OrderItemForm from "../orders/OrderItemForm"
-import { MenuItemListItem } from "/types/MenuItemTypes"
 import { ScrollArea } from "../ui/scroll-area"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer"
+import { MenuItem } from "/types"
 
 interface Props {
   isClickable?: boolean
-  menuItem: MenuItemListItem
+  menuItem: MenuItem
 }
 
 const ListMenuItem = ({ isClickable = false, menuItem }: Props) => {

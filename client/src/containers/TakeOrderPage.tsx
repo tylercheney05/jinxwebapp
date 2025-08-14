@@ -2,7 +2,6 @@ import Layout from "components/Layout"
 import { RootState } from "store"
 import { useSelector } from "react-redux"
 import { LoadingIcon } from "components/Icons"
-import { SodaListItem } from "types/SodaTypes"
 import ListMenuItems from "components/menuitems/ListMenuItems"
 import { useGetSodasListQuery } from "services/sodas"
 import LocationNeededRoute from "components/routes/LocationNeededRoute"
@@ -14,6 +13,7 @@ import useMediaQuery from "@mui/material/useMediaQuery"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "components/ui/drawer"
 import { useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
 import { LimitedTimePromoListItem } from "types/LimitedTimePromoTypes"
+import { Soda } from "types"
 
 const TakeOrderPage = () => {
   const { user, loading } = useSelector((state: RootState) => state.user)
@@ -61,7 +61,7 @@ const TakeOrderPage = () => {
         ) : (
           <div>
             <div className="flex justify-end p-2">{isDesktop ? dialogComponent : drawerComponent}</div>
-            {sodaData?.map((soda: SodaListItem) => (
+            {sodaData?.map((soda: Soda) => (
               <div key={soda.id}>
                 <div className="grid md:grid-cols-11 items-center">
                   <div className="sm:bg-transparent md:bg-black h-1 md:col-span-5 rounded-sm"></div>

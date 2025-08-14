@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
-import { MenuItemListItems } from "types/MenuItemTypes"
-import { SodaListItem } from "types/SodaTypes"
 import ListMenuItem from "./ListMenuItem"
 import { menuItemsApi } from "services/menuitems"
 import { LimitedTimePromoListItem } from "types/LimitedTimePromoTypes"
+import { MenuItem, Soda } from "types"
 
 interface Props {
-  soda?: SodaListItem
+  soda?: Soda
   promo?: LimitedTimePromoListItem
   resetSodas?: boolean
   setResetSodas?: React.Dispatch<React.SetStateAction<boolean>> | undefined
@@ -16,7 +15,7 @@ interface Props {
 }
 
 const ListMenuItems = ({ soda, promo, resetSodas = false, setResetSodas = undefined, isClickable = false }: Props) => {
-  const [menuItems, setMenuItems] = useState<MenuItemListItems>([])
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
