@@ -159,8 +159,6 @@ const AddMenuItemForm = () => {
     createMenuItem(cleanFormData(updatedValues))
   }
 
-  console.log("form", form.formState.errors)
-
   return (
     <Form {...form}>
       <form className="flex gap-4 flex-col">

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 import DoubleClickButton from "../ui/button/doubleclickbutton"
 import { deleteOrder } from "features/orders"
 import { toast } from "react-toastify"
+import useMediaQuery from "@mui/material/useMediaQuery"
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -23,6 +24,7 @@ const OrderCart = ({ setOpen }: Props) => {
     },
     { refetchOnMountOrArgChange: true }
   )
+  const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const totalPrice = data?.reduce((acc, item) => acc + item.price, 0) || 0
 
@@ -51,7 +53,7 @@ const OrderCart = ({ setOpen }: Props) => {
   }
 
   return (
-    <div className="xs:w-[200px] sm:w-[500px] p-8 max-h-[800px] overflow-auto">
+    <div className={`xs:w-[200px] sm:w-[500px] p-8 max-h-[${isDesktop ? 600 : 800}px] overflow-auto`}>
       {data && data?.length > 0 && (
         <div className="mb-8 flex gap-4">
           <Button variant="default" onClick={handleClick}>

@@ -27,7 +27,7 @@ const MenuItemCustomOrder = ({ menuItem, form }: Props) => {
 
   useEffect(() => {
     if (isSuccess && sodaIsSuccess) {
-      form.setValue("custom_order__soda", String(data.soda))
+      form.setValue("custom_order__soda", String(data.soda.id))
     }
   }, [isSuccess, sodaIsSuccess, form.watch("cup")])
 
@@ -37,7 +37,7 @@ const MenuItemCustomOrder = ({ menuItem, form }: Props) => {
       // Wrap the loop in an async function
       const updateFlavorsAsync = async () => {
         for (const flavor of data.flavors) {
-          newData.unshift(flavor.flavor)
+          newData.unshift(flavor.flavor.id)
           form.setValue("custom_order_flavors", newData)
           await new Promise((resolve) => setTimeout(resolve, 250)) // Wait for half a second after setting the value
         }

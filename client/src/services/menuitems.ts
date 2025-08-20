@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react"
 import { baseQueryWithReauth } from "./baseQuery"
 import { convertBooleanToString } from "utils/SharedUtils"
+import { MenuItem } from "/types"
 
 export const menuItemsApi = createApi({
   reducerPath: "menuItemsApi",
@@ -30,7 +31,7 @@ export const menuItemsApi = createApi({
         return `/api/menu-items?${queryParams}`
       },
     }),
-    getMenuItemDetail: builder.query({
+    getMenuItemDetail: builder.query<MenuItem, { id: number }>({
       query: ({ id }) => `/api/menu-items/${id}`,
     }),
   }),
