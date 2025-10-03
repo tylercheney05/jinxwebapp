@@ -1,4 +1,4 @@
-import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { FormControl, FormItem, FormLabel, FormMessage } from "../../ui/form"
 import { LabelType } from "/types/shared"
 
 interface Props {

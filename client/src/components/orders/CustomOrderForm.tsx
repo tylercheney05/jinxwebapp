@@ -9,7 +9,7 @@ import {
   ZeroSugarFormField,
   cleanFlatOrSparkling,
   cleanZeroSugar,
-} from "../shared/ItemFormFields"
+} from "../menuitems/ItemFormFields"
 import CustomOrderFlavorForm from "./CustomOrderFlavorForm"
 import { Button } from "../ui/button"
 import { useDispatch, useSelector } from "react-redux"

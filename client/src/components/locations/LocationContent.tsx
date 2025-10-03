@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "store"
 import { Form } from "../ui/form"
-import { SelectFromApiFormField } from "../forminputs/Select"
+import { SelectFromApiFormField } from "../shared/forminputs/Select"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"

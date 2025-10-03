@@ -11,7 +11,7 @@ import {
   FlatOrSparklingFormField,
   NoteFormField,
   ZeroSugarFormField,
-} from "../shared/ItemFormFields"
+} from "../menuitems/ItemFormFields"
 import { Switch } from "../ui/switch"
 import MenuItemCustomOrder from "./MenuItemCustomOrder"
 import { useState } from "react"

@@ -10,7 +10,7 @@ import { cleanFormData, handleFormSubmitResponse } from "utils/FormUtils"
 import { useEffect } from "react"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { Switch } from "../ui/switch"
-import { SelectFromApiFormField } from "../forminputs/Select"
+import { SelectFromApiFormField } from "../shared/forminputs/Select"
 import { cupsApi } from "services/cups"
 
 const AddDiscountForm = () => {

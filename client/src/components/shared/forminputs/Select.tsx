@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { UseFormReturn, ControllerRenderProps } from "react-hook-form"
-import { FormField } from "../ui/form"
+import { FormField } from "../../ui/form"
 import { convertToOptions } from "utils/FormUtils"
 import Select from "react-select"
 import { useDispatch } from "react-redux"
