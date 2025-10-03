@@ -43,6 +43,7 @@ const ListMenuItems = ({ soda, promo, resetSodas = false, setResetSodas = undefi
             {
               limited_time_promotions__limited_time_promo: promo.id.toString(),
               limited_time_promotions__limited_time_promo__is_archived: false,
+              is_archived: false,
             },
             { forceRefetch: true }
           )
