@@ -33,6 +33,7 @@ const detailFlavorRoute = require("./routes/flavors/detail")
 const createMenuItemRoute = require("./routes/menuitems/create")
 const listMenuItemsRoute = require("./routes/menuitems/list")
 const detailMenuItemRoute = require("./routes/menuitems/detail")
+const partialUpdateMenuItemRoute = require("./routes/menuitems/partialupdate")
 
 // import cup routes
 const createCupRoute = require("./routes/cups/create")
@@ -121,6 +122,7 @@ app.use(detailFlavorRoute)
 app.use(createMenuItemRoute)
 app.use(listMenuItemsRoute)
 app.use(detailMenuItemRoute)
+app.use(partialUpdateMenuItemRoute)
 
 // Cup Routes
 app.use(createCupRoute)

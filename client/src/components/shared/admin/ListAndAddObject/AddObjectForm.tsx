@@ -1,7 +1,6 @@
 import { Button } from "components/ui"
 import { PlusIcon } from "components/Icons"
 import { UseFormReturn } from "react-hook-form"
-import { z } from "zod"
 
 interface Props {
   form: UseFormReturn<any>
@@ -11,14 +10,14 @@ interface Props {
 
 const AddObjectForm = ({ form, onSubmit, children }: Props) => {
   return (
-    <form className="items-center gap-4 grid grid-cols-10">
+    <div>
       {children}
-      <div className="text-right">
-        <Button type="submit" className="mt-10" onClick={form.handleSubmit(onSubmit)}>
+      <div className="text-left">
+        <Button type="submit" className="mt-3 mb-4" onClick={form.handleSubmit(onSubmit)}>
           <PlusIcon />
         </Button>
       </div>
-    </form>
+    </div>
   )
 }
 

@@ -5,7 +5,7 @@ import { Refetch, TypeEditObjectFormComponent } from "types/shared"
 
 interface Props {
   data: Menu[] | undefined
-  objTxtFn: (item: Menu) => string
+  objTxtFn: ((item: any) => string) | ((item: any) => JSX.Element)
   canEdit?: boolean
   editFormTitle?: string
   EditObjectFormComponent?: TypeEditObjectFormComponent

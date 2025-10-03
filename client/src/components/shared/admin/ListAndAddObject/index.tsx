@@ -5,17 +5,18 @@ import Objects from "./Objects"
 import AddObjectForm from "./AddObjectForm"
 import { useEffect } from "react"
 import { handleFormSubmitResponse } from "utils/FormUtils"
-import { TypeEditObjectFormComponent } from "types/shared"
+import { Result, TypeEditObjectFormComponent } from "types/shared"
 
 interface Props {
   form: UseFormReturn<any>
   title: string
-  objTxtFn: (item: any) => string
+  objTxtFn: ((item: any) => string) | ((item: any) => JSX.Element)
   useGetObjectsListQuery: any
-  useCreateObjectMutation: any
   canEdit?: boolean
   editFormTitle?: string
   EditObjectFormComponent?: TypeEditObjectFormComponent
+  onSubmit: (values: any) => void
+  result: Result
   children: React.ReactNode
 }
 
@@ -24,14 +25,14 @@ const ListAndAddObject = ({
   title,
   objTxtFn,
   useGetObjectsListQuery,
-  useCreateObjectMutation,
   canEdit = false,
   editFormTitle,
   EditObjectFormComponent,
+  onSubmit,
+  result,
   children,
 }: Props) => {
   const { data, refetch } = useGetObjectsListQuery({}, { refetchOnMountOrArgChange: true })
-  const [createObj, result] = useCreateObjectMutation()
 
   useEffect(() => {
     handleFormSubmitResponse(result, form, "Success", "post", refetch)
@@ -39,6 +40,9 @@ const ListAndAddObject = ({
 
   return (
     <Form {...form}>
+      <AddObjectForm form={form} onSubmit={onSubmit}>
+        {children}
+      </AddObjectForm>
       <Header data={data} title={title} />
       <Objects
         data={data}
@@ -48,9 +52,6 @@ const ListAndAddObject = ({
         EditObjectFormComponent={EditObjectFormComponent}
         refetch={refetch}
       />
-      <AddObjectForm form={form} onSubmit={createObj}>
-        {children}
-      </AddObjectForm>
     </Form>
   )
 }

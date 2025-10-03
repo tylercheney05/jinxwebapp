@@ -18,6 +18,17 @@ export const menuItemsApi = createApi({
         body: JSON.stringify({ name, soda, flavors, limited_time_menu_item, price }),
       }),
     }),
+    partialUpdateMenuItem: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/api/menu-items/${id}`,
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }),
+    }),
     getMenuItemsList: builder.query({
       query: (
         params: {
@@ -25,6 +36,7 @@ export const menuItemsApi = createApi({
           limited_time_promotions__limited_time_promo?: string
           limited_time_promotions__isnull?: boolean
           limited_time_promotions__limited_time_promo__is_archived?: boolean
+          is_archived?: boolean
         } = {}
       ) => {
         const queryParams = convertBooleanToString(params)
@@ -37,4 +49,9 @@ export const menuItemsApi = createApi({
   }),
 })
 
-export const { useCreateMenuItemMutation, useGetMenuItemDetailQuery } = menuItemsApi
+export const {
+  useCreateMenuItemMutation,
+  useGetMenuItemDetailQuery,
+  usePartialUpdateMenuItemMutation,
+  useGetMenuItemsListQuery,
+} = menuItemsApi

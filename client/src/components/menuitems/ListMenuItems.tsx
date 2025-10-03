@@ -23,7 +23,7 @@ const ListMenuItems = ({ soda, promo, resetSodas = false, setResetSodas = undefi
       soda.id &&
         dispatch(
           menuItemsApi.endpoints.getMenuItemsList.initiate(
-            { soda: soda.id.toString(), limited_time_promotions__isnull: true },
+            { soda: soda.id.toString(), limited_time_promotions__isnull: true, is_archived: false },
             { forceRefetch: true }
           )
         ).then((data) => {

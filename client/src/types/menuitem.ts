@@ -16,6 +16,7 @@ export interface MenuItem {
   id: number
   name: string
   soda: Soda
+  is_archived: boolean
   flavors: MenuItemFlavor[]
   cup_prices: CupPrice[]
 }

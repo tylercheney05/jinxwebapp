@@ -1,33 +1,30 @@
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "../ui/input"
-import { SelectFromApiFormField } from "../forminputs/Select"
-import { Button } from "../ui/button"
+import { SelectFromApiFormField } from "../shared/forminputs/Select"
 import { cleanFormData } from "utils/FormUtils"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
-import { ItemFlavorFormField, cleanFlavorsData } from "../shared/ItemFormFields"
-import ListMenuItems from "./ListMenuItems"
-import { useCreateMenuItemMutation } from "services/menuitems"
-import { sodasApi, useGetSodasListQuery } from "services/sodas"
+import { ItemFlavorFormField } from "./ItemFormFields"
+import { useCreateMenuItemMutation, useGetMenuItemsListQuery } from "services/menuitems"
+import { sodasApi } from "services/sodas"
 import { Switch } from "../ui/switch"
 import { Label } from "../ui/label"
-import { limitedTimePromosApi, useGetLimitedTimePromosListQuery } from "services/limitedtimepromos"
-import { LimitedTimePromoListItem } from "/types/LimitedTimePromoTypes"
-import { Soda } from "types"
+import { limitedTimePromosApi } from "services/limitedtimepromos"
+import { MenuItem } from "types"
+import { cleanFlavorsData } from "utils/MenuItemUtils"
+import { ListAndAddObject } from "../shared"
+import EditMenuItemForm from "./EditMenuItemForm"
+import { ArchivedIcon, CircleCheckIcon } from "../Icons"
 
 const AddMenuItemForm = () => {
   const [isLimitedTime, setIsLimitedTime] = useState<boolean>(false)
   const [manualPrice, setManualPrice] = useState<boolean>(false)
   const [createMenuItem, result] = useCreateMenuItemMutation()
-  const { data: sodaData } = useGetSodasListQuery({}, { refetchOnMountOrArgChange: true })
-  const { data: limitedTimePromosData } = useGetLimitedTimePromosListQuery(
-    { is_archived: false },
-    { refetchOnMountOrArgChange: true }
-  )
   const [resetSodas, setResetSodas] = useState<boolean>(false)
+
   const formSchema = z
     .object({
       name: z.string().min(1, { message: "Name is required" }),
@@ -159,8 +156,35 @@ const AddMenuItemForm = () => {
     createMenuItem(cleanFormData(updatedValues))
   }
 
+  const objTxtFn = (item: MenuItem) => (
+    <div key={item.id} className="h-10 pl-2 flex items-center text-sm gap-1 justify-between">
+      <div className="flex gap-4 items-center">
+        {item.is_archived ? (
+          <div title={`${item.name} menu item is archived`}>
+            <ArchivedIcon size="18px" />
+          </div>
+        ) : (
+          <div title={`${item.name} menu item is active`}>
+            <CircleCheckIcon size="18px" />
+          </div>
+        )}
+        {item.name}
+      </div>
+    </div>
+  )
+
   return (
-    <Form {...form}>
+    <ListAndAddObject
+      form={form}
+      title="Existing Menu Items"
+      objTxtFn={objTxtFn}
+      useGetObjectsListQuery={useGetMenuItemsListQuery}
+      canEdit
+      editFormTitle="Edit Menu Item"
+      EditObjectFormComponent={EditMenuItemForm}
+      onSubmit={onSubmit}
+      result={result}
+    >
       <form className="flex gap-4 flex-col">
         <div className="items-center gap-4 grid grid-cols-2">
           <div>
@@ -243,42 +267,8 @@ const AddMenuItemForm = () => {
             />
           </div>
         )}
-        <div>
-          <Button className="float-right" type="submit" onClick={form.handleSubmit(onSubmit)}>
-            Add Menu Item
-          </Button>
-        </div>
       </form>
-      {sodaData?.length && sodaData?.length > 0 ? <FormLabel className="text-md">Existing Menu Items</FormLabel> : null}
-      <div>
-        {sodaData?.map((soda: Soda) => (
-          <div key={soda.id}>
-            <div className="grid grid-cols-5 items-center">
-              <div className="bg-black h-1 col-span-2 rounded-sm"></div>
-              <div className="text-center text-lg">{soda.name}</div>
-              <div className="bg-black h-1 col-span-2 rounded-sm"></div>
-            </div>
-            <div className="my-2">
-              <ListMenuItems soda={soda} resetSodas={resetSodas} setResetSodas={setResetSodas} />
-            </div>
-          </div>
-        ))}
-        {limitedTimePromosData?.length && limitedTimePromosData?.length > 0
-          ? limitedTimePromosData?.map((promo: LimitedTimePromoListItem) => (
-              <div key={promo.id}>
-                <div className="grid grid-cols-5 items-center">
-                  <div className="bg-black h-1 col-span-2 rounded-sm"></div>
-                  <div className="text-center text-lg">{promo.name}</div>
-                  <div className="bg-black h-1 col-span-2 rounded-sm"></div>
-                </div>
-                <div className="my-2">
-                  <ListMenuItems promo={promo} resetSodas={resetSodas} setResetSodas={setResetSodas} />
-                </div>
-              </div>
-            ))
-          : null}
-      </div>
-    </Form>
+    </ListAndAddObject>
   )
 }
 

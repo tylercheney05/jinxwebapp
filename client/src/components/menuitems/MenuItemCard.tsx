@@ -1,7 +1,7 @@
 import useMediaQuery from "@mui/material/useMediaQuery"
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "components/ui"
 import { cn } from "lib/utils"
-import { Menu, MenuItem, MenuItemFlavor } from "types"
+import { MenuItem, MenuItemFlavor } from "types"
 
 interface Props {
   menuItem: MenuItem

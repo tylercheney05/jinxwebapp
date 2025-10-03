@@ -4,7 +4,7 @@ import { Refetch, TypeEditObjectFormComponent } from "types/shared"
 
 interface Props {
   obj: any
-  text: string | number
+  text: string | number | JSX.Element
   canEdit?: boolean
   editFormTitle?: string
   EditObjectFormComponent?: TypeEditObjectFormComponent

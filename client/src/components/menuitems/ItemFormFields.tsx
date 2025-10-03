@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { convertToOptions } from "utils/FormUtils"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "store"
-import { SelectInput } from "../forminputs/Select"
+import { SelectInput } from "../shared/forminputs/Select"
 import { Input } from "../ui/input"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { UseFormReturn } from "react-hook-form"
@@ -22,12 +22,14 @@ interface FlavorFormFieldProps {
 interface QuantityFormFieldProps {
   field: any
   index: number
+  className?: string
 }
 
 interface ItemFlavorFormFieldProps {
   form: UseFormReturn<any>
   index: number
   fieldName: string
+  quantityFieldClassName?: string
 }
 
 interface FormProps {
@@ -40,7 +42,7 @@ interface PriceProps {
   isCustomized: boolean
 }
 
-const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProps) => {
+const ItemFlavorFormField = ({ form, index, fieldName, quantityFieldClassName }: ItemFlavorFormFieldProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const [uom, setUom] = useState<string>("")
 
@@ -75,7 +77,7 @@ const ItemFlavorFormField = ({ form, index, fieldName }: ItemFlavorFormFieldProp
             <FlavorFormField field={field} index={index} form={form} />
           </div>
           <div>
-            <QuantityFormField field={field} index={index} />
+            <QuantityFormField field={field} index={index} className={quantityFieldClassName} />
           </div>
           <div className="text-sm flex items-center">{uom}</div>
           <Separator className="mt-2" />
@@ -158,9 +160,10 @@ const FlavorFormField = ({ field, index, form }: FlavorFormFieldProps) => {
 }
 FlavorFormField.displayName = "FlavorFormField"
 
-const QuantityFormField = ({ field, index }: QuantityFormFieldProps) => {
+const QuantityFormField = ({ field, index, className }: QuantityFormFieldProps) => {
   return (
     <Input
+      className={className}
       type="number"
       placeholder="Enter quantity"
       value={field.value[index].quantity}
@@ -176,19 +179,6 @@ const QuantityFormField = ({ field, index }: QuantityFormFieldProps) => {
   )
 }
 QuantityFormField.displayName = "QuantityFormField"
-
-const cleanFlavorsData = (values: any, fieldName: string) => {
-  let updatedValues: any = { ...values } // Create a shallow copy to avoid mutating the original object
-  updatedValues[fieldName] = values[fieldName]
-    .filter((flavor: any) => flavor.flavor.value !== 0) // Filter out flavors with value 0
-    .map((flavor: any) => {
-      return {
-        flavor: flavor.flavor.value,
-        quantity: flavor.quantity,
-      }
-    }) // Transform the array to contain just the value
-  return updatedValues
-}
 
 const CupFormField = ({ form }: FormProps) => {
   const { data } = useGetCupsListQuery({}, { refetchOnMountOrArgChange: true })
@@ -396,7 +386,6 @@ export {
   FlavorFormField,
   QuantityFormField,
   ItemFlavorFormField,
-  cleanFlavorsData,
   CupFormField,
   ZeroSugarFormField,
   Price,
